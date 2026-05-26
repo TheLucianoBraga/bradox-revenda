@@ -147,15 +147,15 @@ function Dashboard() {
           <div className="absolute -right-20 bottom-0 h-40 w-40 rounded-full bg-violet-500/20 blur-3xl" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">
-              <Sparkles className="h-3 w-3" /> Aurora · AI Co-pilot
+              <Sparkles className="h-3 w-3" /> Aurora · Copiloto IA
             </div>
-            <div className="font-display text-xl text-white mt-1">Insights this week</div>
+            <div className="font-display text-xl text-white mt-1">Insights da semana</div>
             <ul className="mt-4 space-y-3 text-sm">
               {[
-                "Reactivation flow lifted 7-day retention by 18.4%.",
-                "Latency in Instagram inbox down 240ms — within SLO.",
-                "Reseller ‘Aurora Tech’ converted 12 new tenants.",
-                "Suggested: throttle Telegram broadcasts after 21:00 UTC.",
+                "Fluxo de reativação elevou a retenção de 7 dias em 18,4%.",
+                "Latência da caixa do Instagram caiu 240ms — dentro do SLO.",
+                "Revenda ‘Aurora Tech’ converteu 12 novos clientes.",
+                "Sugestão: limitar broadcasts no Telegram após 21:00.",
               ].map((t, i) => (
                 <li key={i} className="flex gap-3">
                   <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" />
@@ -164,8 +164,8 @@ function Dashboard() {
               ))}
             </ul>
             <div className="mt-5 flex gap-2">
-              <NeonButton><span className="flex items-center gap-2">Apply suggestions <ArrowUpRight className="h-4 w-4" /></span></NeonButton>
-              <NeonButton variant="ghost"><span className="flex items-center gap-2"><Globe2 className="h-4 w-4" /> Full report</span></NeonButton>
+              <NeonButton><span className="flex items-center gap-2">Aplicar sugestões <ArrowUpRight className="h-4 w-4" /></span></NeonButton>
+              <NeonButton variant="ghost"><span className="flex items-center gap-2"><Globe2 className="h-4 w-4" /> Relatório completo</span></NeonButton>
             </div>
           </div>
         </GlassCard>
