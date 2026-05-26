@@ -529,3 +529,98 @@ function WhatsPreview({ content, media }: { content: string; media?: Media | nul
     </div>
   );
 }
+
+/* ---------- Media Uploader ---------- */
+const MAX_BYTES = 4 * 1024 * 1024; // 4MB (localStorage budget)
+
+function MediaUploader({
+  media, onChange,
+}: {
+  media: Media | null;
+  onChange: (m: Media | null) => void;
+}) {
+  const imgRef = useRef<HTMLInputElement>(null);
+  const vidRef = useRef<HTMLInputElement>(null);
+
+  function handleFile(file: File, kind: MediaKind) {
+    if (file.size > MAX_BYTES) {
+      toast.error(`Arquivo muito grande (máx. 4MB). Atual: ${(file.size / 1024 / 1024).toFixed(1)}MB`);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      onChange({ kind, url: String(reader.result), name: file.name, size: file.size });
+      toast.success(`${kind === "image" ? "Imagem" : "Vídeo"} anexado`);
+    };
+    reader.onerror = () => toast.error("Falha ao ler arquivo");
+    reader.readAsDataURL(file);
+  }
+
+  return (
+    <div>
+      <label className="block text-[11px] text-[#9CA3AF] mb-1.5 flex items-center gap-1.5">
+        <Paperclip className="h-3 w-3" /> Mídia (opcional)
+      </label>
+
+      {!media ? (
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => imgRef.current?.click()}
+            className="flex items-center gap-2 h-10 px-3 rounded-[10px] bg-[#0E1014] border border-white/[0.06] hover:border-[#FFC247]/40 text-[12.5px] text-[#D4D4D8] transition"
+          >
+            <ImagePlus className="h-4 w-4 text-[#FFC247]" /> Anexar imagem
+          </button>
+          <button
+            onClick={() => vidRef.current?.click()}
+            className="flex items-center gap-2 h-10 px-3 rounded-[10px] bg-[#0E1014] border border-white/[0.06] hover:border-[#FFC247]/40 text-[12.5px] text-[#D4D4D8] transition"
+          >
+            <Film className="h-4 w-4 text-[#FFC247]" /> Anexar vídeo
+          </button>
+          <input
+            ref={imgRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0], "image")}
+          />
+          <input
+            ref={vidRef}
+            type="file"
+            accept="video/*"
+            className="hidden"
+            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0], "video")}
+          />
+        </div>
+      ) : (
+        <div className="flex items-center gap-3 p-2.5 rounded-[10px] bg-[#0E1014] border border-white/[0.06]">
+          <div className="h-12 w-12 rounded-[8px] overflow-hidden bg-black grid place-items-center shrink-0">
+            {media.kind === "image" ? (
+              <img src={media.url} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <Film className="h-5 w-5 text-white/70" />
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 text-[12px] text-[#F5F7FA] truncate">
+              {media.kind === "image" ? <FileImage className="h-3.5 w-3.5 text-[#FFC247]" /> : <Film className="h-3.5 w-3.5 text-[#FFC247]" />}
+              <span className="truncate">{media.name}</span>
+            </div>
+            <div className="text-[10.5px] text-[#6B7280] mt-0.5">
+              {(media.size / 1024).toFixed(0)} KB · {media.kind === "image" ? "Imagem" : "Vídeo"}
+            </div>
+          </div>
+          <button
+            onClick={() => onChange(null)}
+            className="h-8 w-8 grid place-items-center rounded-[8px] hover:bg-rose-500/10 text-rose-400/80"
+            title="Remover"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+      <div className="mt-1.5 text-[10.5px] text-[#6B7280]">
+        Máximo 4MB. Para vídeos maiores, use link no corpo da mensagem.
+      </div>
+    </div>
+  );
+}
