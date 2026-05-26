@@ -312,7 +312,8 @@
   /* === BUTTONS === */
   .btn-primary {
     position: relative;
-    background: linear-gradient(180deg, #E0B45C 0%, #C8932D 100%);
+    background: linear-gradient(180deg, #E0BC72 0%, #B98A3D 100%);
+
     color: #1A1308;
     font-weight: 600;
     letter-spacing: -0.005em;
