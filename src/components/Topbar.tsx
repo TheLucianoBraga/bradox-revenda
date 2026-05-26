@@ -32,7 +32,7 @@ export function Topbar() {
             <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-cyan-400 to-violet-500" />
             <div className="hidden md:block leading-tight pr-2">
               <div className="text-xs text-white">Alex Mercer</div>
-              <div className="text-[10px] text-slate-400">Admin · Acme Corp</div>
+              <div className="text-[10px] text-slate-400">Administrador · Br Revenda</div>
             </div>
           </div>
         </div>
