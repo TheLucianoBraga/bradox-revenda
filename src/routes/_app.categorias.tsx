@@ -9,7 +9,7 @@ import {
   Star, Heart, Flame, Zap, Sparkles, Crown, Gift, Tag, Bookmark, Pin,
   Megaphone, Bell, MessageCircle, MessageSquare, Mail, Phone, Send,
   Users, User, UserCheck, ShieldCheck, Lock, Key,
-  Server, Cloud, Database, Wifi, Globe, Link2, Settings, Wrench, Tool,
+  Server, Cloud, Database, Wifi, Globe, Link2, Settings, Wrench, PenTool as Tool,
   CreditCard, DollarSign, Wallet, Receipt, ShoppingCart, Package, Truck,
   Calendar, Clock, AlertTriangle, CheckCircle2, Info, HelpCircle, FileText, BookOpen,
   Tv2, Smartphone, Monitor, Gamepad2,
