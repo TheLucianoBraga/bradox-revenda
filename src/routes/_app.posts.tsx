@@ -90,7 +90,7 @@ function Posts() {
         {list.map((p) => {
           const Icon = typeIcon[p.tipo];
           return (
-            <GlassCard key={p.id} className="col-span-12 sm:col-span-6 xl:col-span-4 p-0 overflow-hidden group">
+            <GlassCard key={p.id} className="col-span-12 sm:col-span-6 xl:col-span-4 p-0 overflow-hidden group cursor-pointer" onClick={() => setViewing(p)}>
               <div className={`relative h-40 bg-gradient-to-br ${p.thumb} grid place-items-center`}>
                 <Icon className="h-10 w-10 text-white/70" />
                 <span className={`absolute top-3 left-3 text-[10px] px-2 py-0.5 rounded-full border ${p.status === "publicado" ? "bg-emerald-400/15 border-emerald-400/40 text-emerald-200" : "bg-amber-400/15 border-amber-400/40 text-amber-200"}`}>
@@ -98,7 +98,7 @@ function Posts() {
                 </span>
                 <span className="absolute top-3 right-3 text-[10px] px-2 py-0.5 rounded-full bg-black/40 border border-white/10 text-slate-200">{p.categoria}</span>
                 {p.youtube && (
-                  <button onClick={() => setVideo(p.youtube!)} className="absolute inset-0 grid place-items-center group/play">
+                  <button onClick={(e) => { e.stopPropagation(); setVideo(p.youtube!); }} className="absolute inset-0 grid place-items-center group/play">
                     <span className="h-14 w-14 rounded-full bg-black/60 border border-amber-400/50 grid place-items-center group-hover/play:scale-110 transition">
                       <Play className="h-5 w-5 text-amber-300 ml-0.5" fill="currentColor" />
                     </span>
@@ -108,7 +108,7 @@ function Posts() {
               <div className="p-5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="font-display text-base text-white flex-1">{p.titulo}</div>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition" onClick={(e) => e.stopPropagation()}>
                     <button onClick={() => onEdit(p)} className="p-1.5 rounded-md border border-white/10 bg-white/5 hover:border-amber-400/40 text-slate-300" title="Editar">
                       <Edit3 className="h-3.5 w-3.5" />
                     </button>
@@ -117,9 +117,9 @@ function Posts() {
                     </button>
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 mt-1.5">{p.resumo}</p>
+                <p className="text-xs text-slate-400 mt-1.5 line-clamp-2">{stripHtml(p.resumo)}</p>
                 {p.botaoLabel && p.botaoUrl && (
-                  <a href={p.botaoUrl} className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 text-black text-xs font-medium">
+                  <a href={p.botaoUrl} onClick={(e) => e.stopPropagation()} className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 text-black text-xs font-medium">
                     {p.botaoLabel} <ExternalLink className="h-3 w-3" />
                   </a>
                 )}
