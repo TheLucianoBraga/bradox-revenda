@@ -120,12 +120,12 @@ function Dashboard() {
           </div>
           <ul className="space-y-2">
             {[
-              { who: "Aurora AI", what: "resolved ticket #4821", when: "12s", tag: "AI", color: "violet" },
-              { who: "Maya Chen", what: "closed deal · Enterprise · $48,000", when: "2m", tag: "CRM", color: "cyan" },
-              { who: "WhatsApp Bot", what: "triggered flow ‘Reactivation 7d’", when: "5m", tag: "Flow", color: "cyan" },
-              { who: "Reseller · Lima", what: "provisioned new tenant", when: "11m", tag: "Tenant", color: "emerald" },
-              { who: "Instagram", what: "32 DMs auto-replied", when: "18m", tag: "Inbox", color: "violet" },
-              { who: "Telegram Bot", what: "broadcast delivered to 12.4k", when: "27m", tag: "Cast", color: "cyan" },
+              { who: "Aurora IA", what: "resolveu o ticket #4821", when: "12s", tag: "IA", color: "violet" },
+              { who: "Maya Chen", what: "fechou negócio · Enterprise · R$ 48.000", when: "2m", tag: "CRM", color: "cyan" },
+              { who: "Bot WhatsApp", what: "disparou o fluxo ‘Reativação 7d’", when: "5m", tag: "Fluxo", color: "cyan" },
+              { who: "Revenda · Lima", what: "provisionou nova revenda", when: "11m", tag: "Revenda", color: "emerald" },
+              { who: "Instagram", what: "32 DMs respondidos automaticamente", when: "18m", tag: "Caixa", color: "violet" },
+              { who: "Bot Telegram", what: "broadcast entregue para 12,4 mil", when: "27m", tag: "Envio", color: "cyan" },
             ].map((r, i) => (
               <motion.li key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
                 className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition group">
