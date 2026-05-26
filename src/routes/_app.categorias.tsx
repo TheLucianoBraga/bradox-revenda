@@ -242,7 +242,7 @@ function CategoriaModal({
     if (!n) return setErro("Informe o nome da categoria.");
     if (!s) return setErro("Slug inválido.");
     if (existing.some((c) => c.slug === s && c.id !== editing?.id)) return setErro("Já existe uma categoria com este slug.");
-    onSave({ nome: n, slug: s, descricao: descricao.trim(), cor, icone, imagem });
+    onSave({ nome: n, slug: s, descricao: descricao.trim(), cor, corHex, icone, imagem });
   };
 
   const iconsFiltrados = ICON_KEYS.filter((k) => k.includes(iconBusca.toLowerCase()));
