@@ -65,6 +65,8 @@ const cores: { v: Cor; cls: string }[] = [
 ];
 
 const corClass = (c: Cor) => cores.find((x) => x.v === c)!.cls;
+const swatchStyle = (hex?: string): React.CSSProperties | undefined =>
+  hex ? { backgroundColor: `${hex}33`, borderColor: `${hex}88`, color: hex } : undefined;
 const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
