@@ -6,6 +6,7 @@ import {
   Megaphone, Users, Send, Image as ImgIcon, Paperclip, Filter, Gauge,
   Clock, Repeat, Pause, Play, X, CheckCircle2, AlertTriangle, ListChecks,
   Calendar, ChevronDown, Tag, Server as ServerIcon, Store, Layers,
+  Bold, Italic, Strikethrough, Code, Sparkles, Copy, FileText, Smile,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/broadcast")({ component: Broadcast });
