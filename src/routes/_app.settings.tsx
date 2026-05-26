@@ -69,9 +69,9 @@ function Settings() {
 
           {tab === "branding" && (
             <div className="space-y-5">
-              <div className="font-display text-xl text-white">White-label</div>
+              <div className="font-display text-xl text-white">Marca branca</div>
               <div className="grid md:grid-cols-2 gap-4">
-                {[["Brand name", "Nexus by Acme"], ["Primary color", "#F59E0B"], ["Domain", "ops.acme.io"], ["Support email", "support@acme.io"]].map(([l, v]) => (
+                {[["Nome da marca", "Br Revenda"], ["Cor primária", "#F59E0B"], ["Domínio", "painel.brrevenda.com"], ["E-mail de suporte", "suporte@brrevenda.com"]].map(([l, v]) => (
                   <div key={l}>
                     <label className="text-xs text-slate-400">{l}</label>
                     <input defaultValue={v} className="mt-1.5 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-400/50 focus:outline-none text-sm" />
@@ -79,8 +79,8 @@ function Settings() {
                 ))}
               </div>
               <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-violet-500/10 border border-cyan-400/20">
-                <div className="text-sm text-white">Preview</div>
-                <div className="mt-2 h-24 rounded-xl bg-[#0B0F14] border border-white/10 grid place-items-center font-display text-2xl text-gradient">Nexus by Acme</div>
+                <div className="text-sm text-white">Pré-visualização</div>
+                <div className="mt-2 h-24 rounded-xl bg-black border border-white/10 grid place-items-center font-display text-2xl text-gradient">Br Revenda</div>
               </div>
             </div>
           )}
