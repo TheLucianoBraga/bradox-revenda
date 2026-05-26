@@ -5,17 +5,22 @@ import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import {
   MessageSquareText, Plus, Search, Pencil, Trash2, Copy, X,
-  Bold, Italic, Strikethrough, Code, Check, CheckCheck, Tag,
+  Bold, Italic, Strikethrough, Code, CheckCheck, Tag,
+  ImagePlus, Film, Paperclip, FileImage,
 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/templates")({ component: TemplatesPage });
+
+type MediaKind = "image" | "video";
+type Media = { kind: MediaKind; url: string; name: string; size: number };
 
 type Template = {
   id: string;
   nome: string;
   categoria: string;
   conteudo: string;
+  media?: Media | null;
   updatedAt: number;
 };
 
