@@ -415,12 +415,34 @@
     color: var(--text-1);
   }
   .nav-item.active {
-    background: linear-gradient(180deg, rgba(205,164,92,0.11), rgba(205,164,92,0.04));
+    background: linear-gradient(180deg, rgba(205,164,92,0.10), rgba(205,164,92,0.025));
     color: #F2DCA8;
     box-shadow:
-      inset 0 0 0 1px rgba(205,164,92,0.20),
       inset 0 1px 0 rgba(255,255,255,0.05),
       0 1px 2px rgba(0,0,0,0.3);
+  }
+  /* Floating vertical selection rail + soft halo behind icon */
+  .nav-item.active::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 18px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #E8C886, #B98A3D);
+    box-shadow: 0 0 12px rgba(224,188,114,0.55), 0 0 2px rgba(224,188,114,0.9);
+  }
+  .nav-item.active::after {
+    content: "";
+    position: absolute;
+    left: 4px; top: 50%;
+    width: 22px; height: 22px;
+    transform: translateY(-50%);
+    border-radius: 8px;
+    background: radial-gradient(circle, rgba(224,188,114,0.18), transparent 70%);
+    pointer-events: none;
   }
 
   .label-eyebrow {
@@ -430,6 +452,79 @@
     letter-spacing: 0.18em;
     color: var(--text-4);
     font-family: var(--font-sans);
+  }
+
+  /* === METRIC NUMBER GRADIENT === */
+  .metric-number {
+    background: linear-gradient(180deg, #FFFFFF 0%, #EDEDEA 55%, #C9B98E 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-feature-settings: "ss01", "tnum", "lnum";
+    text-shadow: 0 1px 0 rgba(255,255,255,0.02);
+  }
+
+  /* === FLOATING DELTA PILLS === */
+  .pill-delta {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid transparent;
+    transition: transform 0.25s var(--ease-premium), box-shadow 0.25s var(--ease-premium);
+  }
+  .pill-delta.up {
+    color: #6EE7B7;
+    background: rgba(16,185,129,0.10);
+    border-color: rgba(110,231,183,0.25);
+    box-shadow:
+      0 0 0 1px rgba(110,231,183,0.04),
+      0 0 14px -2px rgba(16,185,129,0.30),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .pill-delta.gold {
+    color: #E8C886;
+    background: rgba(205,164,92,0.10);
+    border-color: rgba(224,188,114,0.25);
+    box-shadow:
+      0 0 14px -3px rgba(205,164,92,0.30),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .pill-delta.down {
+    color: #FCA5A5;
+    background: rgba(239,68,68,0.10);
+    border-color: rgba(252,165,165,0.25);
+    box-shadow: 0 0 14px -3px rgba(239,68,68,0.25);
+  }
+
+  /* === PRO UPGRADE CARD === */
+  .pro-card {
+    position: relative;
+    border-radius: 14px;
+    padding: 14px;
+    background:
+      radial-gradient(120% 120% at 0% 0%, rgba(224,188,114,0.07), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,0.025), transparent 60%),
+      var(--surface);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      0 14px 28px -14px rgba(0,0,0,0.7);
+    overflow: hidden;
+  }
+  .pro-card::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(232,200,134,0.55), rgba(184,138,61,0.18) 45%, rgba(255,255,255,0.05) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
   }
 
 
