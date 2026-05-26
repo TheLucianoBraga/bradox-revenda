@@ -179,6 +179,15 @@ function Servidores() {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmModal
+        open={!!toDelete}
+        title="Excluir servidor"
+        description={toDelete ? `Tem certeza que deseja apagar "${toDelete.nome}"? Esta ação não pode ser desfeita.` : ""}
+        confirmLabel="Excluir servidor"
+        onConfirm={confirmDelete}
+        onClose={() => setToDelete(null)}
+      />
     </>
   );
 }
