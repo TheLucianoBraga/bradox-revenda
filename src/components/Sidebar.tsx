@@ -45,8 +45,8 @@ export function Sidebar() {
             <Sparkles className="h-3.5 w-3.5 text-[#1A1308]" strokeWidth={2.25} />
           </div>
           <div className="leading-tight">
-            <div className="font-display text-[13.5px] font-bold text-white tracking-[-0.02em]">BR Revenda</div>
-            <div className="text-[9.5px] text-[#52525B] font-medium tracking-[0.18em] uppercase mt-0.5">IPTV Control</div>
+            <div className="font-display text-[15px] font-semibold text-white tracking-[-0.025em]">BR Revenda</div>
+            <div className="text-[9.5px] text-[#52525B] font-semibold tracking-[0.18em] uppercase mt-1">IPTV Control</div>
           </div>
         </div>
 
