@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { Server, Plus, Calendar, Coins, Edit3, Trash2, X, Search } from "lucide-react";
 
 export const Route = createFileRoute("/_app/servidores")({ component: Servidores });
@@ -47,6 +48,7 @@ function Servidores() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Servidor | null>(null);
+  const [toDelete, setToDelete] = useState<Servidor | null>(null);
 
   const filtered = items.filter(
     (s) =>
@@ -62,11 +64,13 @@ function Servidores() {
     setEditing(s);
     setOpen(true);
   };
-  const onDelete = (s: Servidor) => {
-    if (!confirm(`Apagar o servidor "${s.nome}"?`)) return;
-    setItems((prev) => prev.filter((i) => i.id !== s.id));
+  const onDelete = (s: Servidor) => setToDelete(s);
+  const confirmDelete = () => {
+    if (!toDelete) return;
+    setItems((prev) => prev.filter((i) => i.id !== toDelete.id));
     toast.success("Servidor removido");
   };
+
   const onSave = (data: Omit<Servidor, "id"> & { id?: number }) => {
     if (data.id != null) {
       setItems((prev) => prev.map((i) => (i.id === data.id ? ({ ...i, ...data } as Servidor) : i)));
@@ -175,6 +179,15 @@ function Servidores() {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmModal
+        open={!!toDelete}
+        title="Excluir servidor"
+        description={toDelete ? `Tem certeza que deseja apagar "${toDelete.nome}"? Esta ação não pode ser desfeita.` : ""}
+        confirmLabel="Excluir servidor"
+        onConfirm={confirmDelete}
+        onClose={() => setToDelete(null)}
+      />
     </>
   );
 }
