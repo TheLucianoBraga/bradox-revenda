@@ -52,12 +52,12 @@ function Settings() {
                 <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 glow-cyan" />
                 <div>
                   <div className="font-display text-xl text-white">Alex Mercer</div>
-                  <div className="text-xs text-slate-400">Admin · Acme Corp · Quantum tier</div>
-                  <button className="mt-2 text-xs text-cyan-300 hover:text-cyan-200">Change avatar</button>
+                  <div className="text-xs text-slate-400">Administrador · Br Revenda · Plano Quantum</div>
+                  <button className="mt-2 text-xs text-cyan-300 hover:text-cyan-200">Alterar avatar</button>
                 </div>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
-                {[["Full name", "Alex Mercer"], ["Email", "alex@acme.io"], ["Role", "Administrator"], ["Timezone", "UTC+1 · Madrid"]].map(([l, v]) => (
+                {[["Nome completo", "Alex Mercer"], ["E-mail", "contato@brrevenda.com"], ["Função", "Administrador"], ["Fuso horário", "UTC-3 · São Paulo"]].map(([l, v]) => (
                   <div key={l}>
                     <label className="text-xs text-slate-400">{l}</label>
                     <input defaultValue={v} className="mt-1.5 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-400/50 focus:outline-none text-sm" />
