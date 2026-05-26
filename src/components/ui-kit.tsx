@@ -43,21 +43,27 @@ export function PageHeader({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
-      className="flex flex-wrap items-end justify-between gap-4 mb-10"
+      transition={{ duration: 0.55, ease: [0.32, 0.72, 0, 1] }}
+      className="flex flex-wrap items-end justify-between gap-6 mb-14 pt-4"
     >
-      <div>
-        <div className="label-eyebrow">{eyebrow}</div>
-        <h1 className="font-display text-[34px] md:text-[40px] leading-[1.02] text-white mt-2.5 tracking-[-0.034em]">
+      <div className="max-w-3xl">
+        <div className="flex items-center gap-2.5">
+          <span className="h-px w-8 bg-gradient-to-r from-transparent via-[rgba(205,164,92,0.6)] to-transparent" />
+          <span className="label-eyebrow text-[#CDA45C]">{eyebrow}</span>
+        </div>
+        <h1 className="font-display mt-5 text-[#F5F5F3]"
+            style={{ fontSize: "clamp(44px, 5.6vw, 64px)", fontWeight: 700, lineHeight: 0.94, letterSpacing: "-0.042em" }}>
           {title}
         </h1>
         {subtitle && (
-          <p className="text-[#A1A1AA] mt-3 max-w-2xl text-[14px] leading-relaxed">{subtitle}</p>
+          <p className="mt-5 max-w-xl text-[15px] leading-[1.7] text-[#A1A1AA] font-normal">
+            {subtitle}
+          </p>
         )}
       </div>
-      {actions && <div className="flex items-center gap-2">{actions}</div>}
+      {actions && <div className="flex items-center gap-2 pb-2">{actions}</div>}
     </motion.div>
   );
 }

@@ -10,8 +10,8 @@ export function Topbar() {
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-[13px] w-[13px] text-[#71717A]" strokeWidth={1.6} />
               <input
-                placeholder="Buscar revendas, clientes, fluxos…"
-                className="input-ghost w-full h-9 pl-9 pr-16 rounded-[10px] text-[12.5px]"
+                placeholder="Pesquisar ou executar comando…"
+                className="input-ghost w-full h-10 pl-10 pr-16 rounded-[11px] text-[13.5px] font-display tracking-[-0.012em] placeholder:font-sans placeholder:font-normal"
               />
               <kbd className="hidden lg:flex items-center gap-1 absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-[#A1A1AA]
                               bg-[rgba(0,0,0,0.35)] border border-[rgba(255,255,255,0.06)] rounded-[6px] px-1.5 py-0.5 font-medium font-mono">
