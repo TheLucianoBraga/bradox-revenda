@@ -34,6 +34,13 @@ const seed: Post[] = [
 
 const typeIcon = { video: Play, foto: ImgIcon, link: Link2 };
 
+function stripHtml(html: string) {
+  if (typeof document === "undefined") return html.replace(/<[^>]*>/g, "");
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || "").trim();
+}
+
 function Posts() {
   const [items, setItems] = useState<Post[]>(seed);
   const [filter, setFilter] = useState<"all" | "rascunho" | "publicado">("all");
