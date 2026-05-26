@@ -57,12 +57,12 @@ function Dashboard() {
         <GlassCard className="col-span-12 xl:col-span-8 p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Throughput</div>
-              <div className="font-display text-xl text-white">Messages · AI Handovers</div>
+              <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Vazão</div>
+              <div className="font-display text-xl text-white">Mensagens · Atendimentos por IA</div>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" /> Messages</span>
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-violet-400 shadow-[0_0_8px_#F97316]" /> AI</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" /> Mensagens</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-violet-400 shadow-[0_0_8px_#F97316]" /> IA</span>
             </div>
           </div>
           <div className="h-72">
