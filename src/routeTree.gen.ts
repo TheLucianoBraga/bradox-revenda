@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppWaConexaoRouteImport } from './routes/_app.wa-conexao'
+import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTelegramRouteImport } from './routes/_app.telegram'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppServidoresRouteImport } from './routes/_app.servidores'
@@ -56,6 +57,11 @@ const AppWhatsappRoute = AppWhatsappRouteImport.update({
 const AppWaConexaoRoute = AppWaConexaoRouteImport.update({
   id: '/wa-conexao',
   path: '/wa-conexao',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTemplatesRoute = AppTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTelegramRoute = AppTelegramRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/servidores': typeof AppServidoresRoute
   '/settings': typeof AppSettingsRoute
   '/telegram': typeof AppTelegramRoute
+  '/templates': typeof AppTemplatesRoute
   '/wa-conexao': typeof AppWaConexaoRoute
   '/whatsapp': typeof AppWhatsappRoute
 }
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/servidores': typeof AppServidoresRoute
   '/settings': typeof AppSettingsRoute
   '/telegram': typeof AppTelegramRoute
+  '/templates': typeof AppTemplatesRoute
   '/wa-conexao': typeof AppWaConexaoRoute
   '/whatsapp': typeof AppWhatsappRoute
 }
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/_app/servidores': typeof AppServidoresRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/telegram': typeof AppTelegramRoute
+  '/_app/templates': typeof AppTemplatesRoute
   '/_app/wa-conexao': typeof AppWaConexaoRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
 }
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/servidores'
     | '/settings'
     | '/telegram'
+    | '/templates'
     | '/wa-conexao'
     | '/whatsapp'
   fileRoutesByTo: FileRoutesByTo
@@ -280,6 +290,7 @@ export interface FileRouteTypes {
     | '/servidores'
     | '/settings'
     | '/telegram'
+    | '/templates'
     | '/wa-conexao'
     | '/whatsapp'
   id:
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/_app/servidores'
     | '/_app/settings'
     | '/_app/telegram'
+    | '/_app/templates'
     | '/_app/wa-conexao'
     | '/_app/whatsapp'
   fileRoutesById: FileRoutesById
@@ -351,6 +363,13 @@ declare module '@tanstack/react-router' {
       path: '/wa-conexao'
       fullPath: '/wa-conexao'
       preLoaderRoute: typeof AppWaConexaoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/templates': {
+      id: '/_app/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof AppTemplatesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/telegram': {
@@ -509,6 +528,7 @@ interface AppRouteChildren {
   AppServidoresRoute: typeof AppServidoresRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTelegramRoute: typeof AppTelegramRoute
+  AppTemplatesRoute: typeof AppTemplatesRoute
   AppWaConexaoRoute: typeof AppWaConexaoRoute
   AppWhatsappRoute: typeof AppWhatsappRoute
 }
@@ -533,6 +553,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppServidoresRoute: AppServidoresRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTelegramRoute: AppTelegramRoute,
+  AppTemplatesRoute: AppTemplatesRoute,
   AppWaConexaoRoute: AppWaConexaoRoute,
   AppWhatsappRoute: AppWhatsappRoute,
 }
