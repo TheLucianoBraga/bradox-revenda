@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Inbox } from "@/components/Inbox";
-export const Route = createFileRoute("/_app/telegram")({ component: TelegramAuto });
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { Bot, Zap, Users, ShieldCheck, Megaphone } from "lucide-react";
+
+export const Route = createFileRoute("/_app/telegram")({ component: TelegramAuto });
 
 function TelegramAuto() {
   return (
