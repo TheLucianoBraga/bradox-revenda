@@ -336,8 +336,10 @@ function PostModal({
                 </div>
               </div>
               <div className="col-span-12">
-                <div className={label}>Resumo</div>
-                <textarea value={resumo} onChange={(e) => setResumo(e.target.value)} className={`${field} min-h-[80px]`} placeholder="Descrição curta do conteúdo" />
+                <div className={label}>Conteúdo</div>
+                <div className="mt-1">
+                  <RichTextEditor value={resumo} onChange={setResumo} placeholder="Descreva o conteúdo com formatação..." minHeight={180} />
+                </div>
               </div>
               {tipo === "video" && (
                 <div className="col-span-12">
