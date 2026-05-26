@@ -18,7 +18,7 @@ const tabs = [
 function Toggle({ on = true }: { on?: boolean }) {
   const [v, setV] = useState(on);
   return (
-    <button onClick={() => setV(!v)} className={`relative h-6 w-11 rounded-full border transition ${v ? "bg-gradient-to-r from-cyan-400 to-violet-500 border-cyan-400/50 shadow-[0_0_15px_-3px_#00E5FF]" : "bg-white/5 border-white/10"}`}>
+    <button onClick={() => setV(!v)} className={`relative h-6 w-11 rounded-full border transition ${v ? "bg-gradient-to-r from-cyan-400 to-violet-500 border-cyan-400/50 shadow-[0_0_15px_-3px_#F59E0B]" : "bg-white/5 border-white/10"}`}>
       <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${v ? "translate-x-5" : ""}`} />
     </button>
   );
@@ -71,7 +71,7 @@ function Settings() {
             <div className="space-y-5">
               <div className="font-display text-xl text-white">White-label</div>
               <div className="grid md:grid-cols-2 gap-4">
-                {[["Brand name", "Nexus by Acme"], ["Primary color", "#00E5FF"], ["Domain", "ops.acme.io"], ["Support email", "support@acme.io"]].map(([l, v]) => (
+                {[["Brand name", "Nexus by Acme"], ["Primary color", "#F59E0B"], ["Domain", "ops.acme.io"], ["Support email", "support@acme.io"]].map(([l, v]) => (
                   <div key={l}>
                     <label className="text-xs text-slate-400">{l}</label>
                     <input defaultValue={v} className="mt-1.5 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-400/50 focus:outline-none text-sm" />

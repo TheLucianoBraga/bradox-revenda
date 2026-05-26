@@ -12,7 +12,7 @@ export function Particles({ density = 50 }: { density?: number }) {
     type P = { x: number; y: number; vx: number; vy: number; r: number; c: string };
     let parts: P[] = [];
 
-    const colors = ["#00D8FF", "#00E5FF", "#7C3AED"];
+    const colors = ["#FBBF24", "#F59E0B", "#EA580C"];
     const resize = () => {
       w = canvas.width = canvas.offsetWidth * devicePixelRatio;
       h = canvas.height = canvas.offsetHeight * devicePixelRatio;

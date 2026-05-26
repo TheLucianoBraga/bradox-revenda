@@ -9,7 +9,7 @@ const ts = Array.from({ length: 30 }, (_, i) => ({
   rev: 4000 + Math.round(Math.sin(i / 4) * 1200 + i * 90 + Math.random() * 400),
   users: 2000 + Math.round(Math.cos(i / 5) * 800 + i * 50 + Math.random() * 300),
 }));
-const ring = [{ name: "Goal", value: 73, fill: "#00E5FF" }];
+const ring = [{ name: "Goal", value: 73, fill: "#F59E0B" }];
 
 function Analytics() {
   return (
@@ -34,15 +34,15 @@ function Analytics() {
               <AreaChart data={ts}>
                 <defs>
                   <linearGradient id="ar1" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#00E5FF" stopOpacity={0.6} />
-                    <stop offset="100%" stopColor="#00E5FF" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#F59E0B" stopOpacity={0.6} />
+                    <stop offset="100%" stopColor="#F59E0B" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
                 <XAxis dataKey="d" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ background: "rgba(11,15,20,0.9)", border: "1px solid rgba(0,216,255,0.3)", borderRadius: 12 }} />
-                <Area type="monotone" dataKey="rev" stroke="#00E5FF" strokeWidth={2} fill="url(#ar1)" />
+                <Area type="monotone" dataKey="rev" stroke="#F59E0B" strokeWidth={2} fill="url(#ar1)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -73,8 +73,8 @@ function Analytics() {
                 <XAxis dataKey="d" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ background: "rgba(11,15,20,0.9)", border: "1px solid rgba(0,216,255,0.3)", borderRadius: 12 }} />
-                <Line type="monotone" dataKey="users" stroke="#9333EA" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="rev" stroke="#00E5FF" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="users" stroke="#F97316" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="rev" stroke="#F59E0B" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
