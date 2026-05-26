@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import {
   Megaphone, Users, Send, Image as ImgIcon, Paperclip, Filter, Gauge,
   Clock, Repeat, Pause, Play, X, CheckCircle2, AlertTriangle, ListChecks,
   Calendar, ChevronDown, Tag, Server as ServerIcon, Store, Layers,
+  Bold, Italic, Strikethrough, Code, Sparkles, Copy, FileText, Smile,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/broadcast")({ component: Broadcast });
@@ -45,6 +46,65 @@ const FILA_INICIAL = [
   { id: "c-011", nome: "Boas-vindas novos", status: "Concluída", total: 88, enviadas: 86, falhas: 2, rate: 25, eta: "0m", canal: "WhatsApp" },
 ];
 
+const TEMPLATES = [
+  {
+    id: "t1",
+    nome: "Aviso de vencimento",
+    categoria: "Cobrança",
+    cor: "amber",
+    conteudo:
+      "Olá *{nome}*! 👋\n\nSeu plano *{plano}* no servidor _{servidor}_ vence em *{vencimento}*.\n\nRenove agora e ganhe *10% OFF* 🚀\n\n— Equipe {revenda}",
+  },
+  {
+    id: "t2",
+    nome: "Boas-vindas",
+    categoria: "Onboarding",
+    cor: "emerald",
+    conteudo:
+      "Seja muito bem-vindo(a), *{nome}*! 🎉\n\nSeu acesso ao *{plano}* já está ativo no servidor _{servidor}_.\n\nQualquer dúvida, fale com a *{revenda}*. Bom streaming! 📺",
+  },
+  {
+    id: "t3",
+    nome: "Reativação cliente inativo",
+    categoria: "Retenção",
+    cor: "violet",
+    conteudo:
+      "Oi, *{nome}*! Sentimos sua falta. 💜\n\nVoltando hoje no plano *{plano}*, você ganha *7 dias extras* grátis.\n\nResponda *EU QUERO* que ativamos pra você.\n\n— {revenda}",
+  },
+  {
+    id: "t4",
+    nome: "Promo flash",
+    categoria: "Promoção",
+    cor: "rose",
+    conteudo:
+      "🔥 *PROMO RELÂMPAGO* 🔥\n\n*{nome}*, só hoje: *50% OFF* na renovação do *{plano}*!\n\n⏰ Válido até às 23h59.\n\nClique para garantir 👉",
+  },
+  {
+    id: "t5",
+    nome: "Aviso de manutenção",
+    categoria: "Operacional",
+    cor: "cyan",
+    conteudo:
+      "⚙️ *Aviso técnico*\n\nOlá, *{nome}*. O servidor _{servidor}_ passará por manutenção em *{vencimento}*, das 03h às 05h.\n\nAgradecemos a compreensão.\n— {revenda}",
+  },
+  {
+    id: "t6",
+    nome: "Confirmação de pagamento",
+    categoria: "Financeiro",
+    cor: "emerald",
+    conteudo:
+      "✅ Pagamento confirmado!\n\n*{nome}*, recebemos sua renovação do *{plano}*.\n\nNovo vencimento: *{vencimento}*\nServidor: _{servidor}_\n\nObrigado pela confiança! 💛",
+  },
+];
+
+const VARIAVEIS = [
+  { tag: "{nome}", desc: "Nome do cliente", exemplo: "Lucas" },
+  { tag: "{plano}", desc: "Plano contratado", exemplo: "Pro" },
+  { tag: "{vencimento}", desc: "Data de vencimento", exemplo: "10/12/2026" },
+  { tag: "{servidor}", desc: "Servidor IPTV", exemplo: "SX Server" },
+  { tag: "{revenda}", desc: "Nome da revenda", exemplo: "Master BR" },
+];
+
 /* ---------- Component ---------- */
 
 function Broadcast() {
@@ -64,6 +124,63 @@ function Broadcast() {
   );
 
   const [fila, setFila] = useState(FILA_INICIAL);
+  const [templateAtivo, setTemplateAtivo] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const insertAtCursor = (text: string) => {
+    const ta = textareaRef.current;
+    if (!ta) { setMsg(msg + text); return; }
+    const start = ta.selectionStart ?? msg.length;
+    const end = ta.selectionEnd ?? msg.length;
+    const next = msg.slice(0, start) + text + msg.slice(end);
+    setMsg(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      const pos = start + text.length;
+      ta.setSelectionRange(pos, pos);
+    });
+  };
+
+  const wrapSelection = (token: string) => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart ?? 0;
+    const end = ta.selectionEnd ?? 0;
+    const sel = msg.slice(start, end) || "texto";
+    const next = msg.slice(0, start) + token + sel + token + msg.slice(end);
+    setMsg(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      ta.setSelectionRange(start + token.length, start + token.length + sel.length);
+    });
+  };
+
+  const aplicarTemplate = (id: string) => {
+    const t = TEMPLATES.find(x => x.id === id);
+    if (!t) return;
+    setMsg(t.conteudo);
+    setTemplateAtivo(id);
+  };
+
+  const renderWhatsapp = (raw: string) => {
+    const filled = raw
+      .replace(/{nome}/g, "Lucas")
+      .replace(/{plano}/g, "Pro")
+      .replace(/{vencimento}/g, "10/12/2026")
+      .replace(/{servidor}/g, "SX Server")
+      .replace(/{revenda}/g, "Master BR");
+    // WhatsApp-like formatting: *bold* _italic_ ~strike~ ```mono```
+    const escaped = filled
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return escaped
+      .replace(/```([^`]+)```/g, '<code class="px-1 py-0.5 rounded bg-black/40 text-amber-200 font-mono text-[12px]">$1</code>')
+      .replace(/(^|\s)\*([^*\n]+)\*(?=\s|$|[.,!?])/g, '$1<strong class="text-white">$2</strong>')
+      .replace(/(^|\s)_([^_\n]+)_(?=\s|$|[.,!?])/g, '$1<em class="italic text-slate-100">$2</em>')
+      .replace(/(^|\s)~([^~\n]+)~(?=\s|$|[.,!?])/g, '$1<span class="line-through text-slate-400">$2</span>');
+  };
+
+  const caracteres = msg.length;
+  const segmentos_sms = Math.ceil(caracteres / 160) || 1;
 
   /* Audience math (mock) */
   const audience = useMemo(() => {
@@ -182,37 +299,128 @@ function Broadcast() {
 
         {/* MENSAGEM + FILA SETTINGS */}
         <div className="col-span-12 xl:col-span-8 space-y-5">
+          {/* TEMPLATES */}
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-cyan-300/80">
+                  <FileText className="h-3 w-3" /> Templates
+                </div>
+                <div className="font-display text-lg text-white mt-1">Modelos prontos</div>
+              </div>
+              <button className="text-[11px] text-slate-400 hover:text-white flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-amber-300" /> Gerar com IA
+              </button>
+            </div>
+
+            <div className="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              {TEMPLATES.map((t) => {
+                const ativo = templateAtivo === t.id;
+                const corMap: Record<string, string> = {
+                  amber: "from-amber-400/20 to-orange-500/10 border-amber-400/40",
+                  emerald: "from-emerald-400/20 to-emerald-600/10 border-emerald-400/40",
+                  violet: "from-violet-400/20 to-violet-600/10 border-violet-400/40",
+                  rose: "from-rose-400/20 to-rose-600/10 border-rose-400/40",
+                  cyan: "from-cyan-400/20 to-cyan-600/10 border-cyan-400/40",
+                };
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => aplicarTemplate(t.id)}
+                    className={`group text-left p-3 rounded-xl border transition bg-gradient-to-br ${
+                      ativo ? corMap[t.cor] : "border-white/10 from-white/[0.03] to-transparent hover:border-white/20"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-[10px] uppercase tracking-widest text-slate-400">{t.categoria}</div>
+                      {ativo && <CheckCircle2 className="h-3.5 w-3.5 text-amber-300" />}
+                    </div>
+                    <div className="text-sm text-white mt-1">{t.nome}</div>
+                    <div className="text-[11px] text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
+                      {t.conteudo.replace(/[*_~`]/g, "").slice(0, 80)}…
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </GlassCard>
+
           <GlassCard className="p-6">
             <div className="text-[10px] uppercase tracking-widest text-cyan-300/80">Mensagem</div>
             <div className="font-display text-lg text-white mt-1">Componha o broadcast</div>
 
-            <textarea
-              value={msg}
-              onChange={(e) => setMsg(e.target.value)}
-              rows={6}
-              className="mt-4 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm focus:outline-none focus:border-cyan-400/50 resize-none font-sans"
-              placeholder="Escreva a mensagem… use {nome}, {plano}, {vencimento}, {servidor}, {revenda} como variáveis."
-            />
-
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              {["{nome}", "{plano}", "{vencimento}", "{servidor}", "{revenda}"].map((v) => (
-                <button key={v} onClick={() => setMsg(msg + " " + v)} className="text-[11px] px-2 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300 hover:border-cyan-400/40">{v}</button>
-              ))}
-              <div className="ml-auto flex gap-2">
-                <button className="h-9 w-9 grid place-items-center rounded-lg bg-white/5 border border-white/10 hover:border-cyan-400/40 text-slate-300" title="Anexar imagem"><ImgIcon className="h-4 w-4" /></button>
-                <button className="h-9 w-9 grid place-items-center rounded-lg bg-white/5 border border-white/10 hover:border-cyan-400/40 text-slate-300" title="Anexar arquivo"><Paperclip className="h-4 w-4" /></button>
+            {/* Formatting toolbar */}
+            <div className="mt-4 flex flex-wrap items-center gap-1.5 p-1.5 rounded-xl bg-white/5 border border-white/10">
+              <FmtBtn title="Negrito · *texto*" onClick={() => wrapSelection("*")}><Bold className="h-3.5 w-3.5" /></FmtBtn>
+              <FmtBtn title="Itálico · _texto_" onClick={() => wrapSelection("_")}><Italic className="h-3.5 w-3.5" /></FmtBtn>
+              <FmtBtn title="Tachado · ~texto~" onClick={() => wrapSelection("~")}><Strikethrough className="h-3.5 w-3.5" /></FmtBtn>
+              <FmtBtn title="Monoespaçado · ```texto```" onClick={() => wrapSelection("```")}><Code className="h-3.5 w-3.5" /></FmtBtn>
+              <div className="w-px h-5 bg-white/10 mx-1" />
+              <FmtBtn title="Emoji" onClick={() => insertAtCursor(" 🚀")}><Smile className="h-3.5 w-3.5" /></FmtBtn>
+              <div className="ml-auto flex items-center gap-2 pr-1">
+                <span className="text-[10px] uppercase tracking-widest text-slate-500">{caracteres} car · {segmentos_sms} seg</span>
               </div>
             </div>
 
-            <div className="mt-5 p-4 rounded-xl bg-emerald-500/5 border border-emerald-400/20">
-              <div className="text-[10px] uppercase tracking-widest text-emerald-300 flex items-center gap-2"><Megaphone className="h-3 w-3" /> Pré-visualização</div>
-              <div className="mt-2 text-sm text-slate-200 whitespace-pre-wrap">
-                {msg
-                  .replace(/{nome}/g, "Lucas")
-                  .replace(/{plano}/g, "Pro")
-                  .replace(/{vencimento}/g, "10/12")
-                  .replace(/{servidor}/g, "SX Server")
-                  .replace(/{revenda}/g, "Master BR")}
+            <textarea
+              ref={textareaRef}
+              value={msg}
+              onChange={(e) => { setMsg(e.target.value); setTemplateAtivo(null); }}
+              rows={7}
+              className="mt-2 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm focus:outline-none focus:border-cyan-400/50 resize-none font-mono leading-relaxed"
+              placeholder="Escreva a mensagem… use *negrito*, _itálico_, ~tachado~ e variáveis como {nome}."
+            />
+
+            {/* Variables guide */}
+            <div className="mt-3 grid sm:grid-cols-2 gap-1.5">
+              {VARIAVEIS.map((v) => (
+                <button
+                  key={v.tag}
+                  onClick={() => insertAtCursor(v.tag)}
+                  className="group flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/10 hover:border-amber-400/40 transition text-left"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <code className="text-[11px] px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30 text-amber-200 font-mono shrink-0">{v.tag}</code>
+                    <span className="text-[11px] text-slate-400 truncate">{v.desc}</span>
+                  </div>
+                  <span className="text-[10px] text-slate-500 group-hover:text-slate-300 truncate">→ {v.exemplo}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-3 flex items-center gap-2">
+              <button className="h-9 w-9 grid place-items-center rounded-lg bg-white/5 border border-white/10 hover:border-cyan-400/40 text-slate-300" title="Anexar imagem"><ImgIcon className="h-4 w-4" /></button>
+              <button className="h-9 w-9 grid place-items-center rounded-lg bg-white/5 border border-white/10 hover:border-cyan-400/40 text-slate-300" title="Anexar arquivo"><Paperclip className="h-4 w-4" /></button>
+              <div className="ml-auto text-[10px] uppercase tracking-widest text-slate-500 flex items-center gap-1.5">
+                <Sparkles className="h-3 w-3 text-amber-300" /> Dica: use *negrito* para destacar valores e datas
+              </div>
+            </div>
+
+            {/* WhatsApp-like preview */}
+            <div className="mt-5">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-[10px] uppercase tracking-widest text-emerald-300 flex items-center gap-2"><Megaphone className="h-3 w-3" /> Pré-visualização</div>
+                <button
+                  onClick={() => navigator.clipboard?.writeText(msg)}
+                  className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1"
+                >
+                  <Copy className="h-3 w-3" /> Copiar
+                </button>
+              </div>
+              <div className="p-4 rounded-2xl bg-[#0b141a] border border-emerald-400/10 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-[0.04] pointer-events-none"
+                  style={{ backgroundImage: "radial-gradient(circle at 20% 30%, #25D366 0, transparent 40%), radial-gradient(circle at 80% 70%, #128C7E 0, transparent 40%)" }} />
+                <div className="relative max-w-[85%] ml-auto">
+                  <div className="px-3.5 py-2.5 rounded-2xl rounded-tr-sm bg-[#005c4b] text-slate-100 text-sm shadow-lg">
+                    <div
+                      className="whitespace-pre-wrap leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: renderWhatsapp(msg) }}
+                    />
+                    <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-emerald-300/70">
+                      14:32 <CheckCircle2 className="h-3 w-3" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </GlassCard>
@@ -461,6 +669,19 @@ function IconAct({ children, title, onClick, danger = false }: { children: React
           ? "border-white/10 bg-white/5 text-slate-400 hover:text-rose-300 hover:border-rose-400/40"
           : "border-white/10 bg-white/5 text-slate-300 hover:text-white hover:border-cyan-400/40"
       }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function FmtBtn({ children, title, onClick }: { children: React.ReactNode; title: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      title={title}
+      onClick={onClick}
+      className="h-7 w-7 grid place-items-center rounded-md text-slate-300 hover:text-white hover:bg-white/10 transition"
     >
       {children}
     </button>
