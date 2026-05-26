@@ -377,15 +377,17 @@
   .input-ghost::placeholder { color: var(--text-3); font-weight: 400; }
   .input-ghost:focus {
     outline: none;
-    border-color: rgba(214,168,79,0.45);
+    border-color: rgba(205,164,92,0.45);
     background:
       linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0) 30%),
       var(--surface-2);
     box-shadow:
       0 1px 0 rgba(255,255,255,0.04) inset,
       0 2px 4px rgba(0,0,0,0.2) inset,
-      0 0 0 3px rgba(214,168,79,0.10);
+      0 0 0 3px rgba(205,164,92,0.10),
+      0 0 24px -4px rgba(205,164,92,0.15);
   }
+
 
   /* === SIDEBAR NAV === */
   .nav-item {
