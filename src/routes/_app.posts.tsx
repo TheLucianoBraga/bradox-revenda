@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { YoutubeModal } from "@/components/YoutubeModal";
+import { RichTextEditor } from "@/components/RichTextEditor";
+import { RichTextView } from "@/components/RichTextView";
 import { Play, Image as ImgIcon, Link2, Plus, ExternalLink, Edit3, Trash2, X } from "lucide-react";
 
 export const Route = createFileRoute("/_app/posts")({ component: Posts });
@@ -32,12 +34,20 @@ const seed: Post[] = [
 
 const typeIcon = { video: Play, foto: ImgIcon, link: Link2 };
 
+function stripHtml(html: string) {
+  if (typeof document === "undefined") return html.replace(/<[^>]*>/g, "");
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || "").trim();
+}
+
 function Posts() {
   const [items, setItems] = useState<Post[]>(seed);
   const [filter, setFilter] = useState<"all" | "rascunho" | "publicado">("all");
   const [video, setVideo] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Post | null>(null);
+  const [viewing, setViewing] = useState<Post | null>(null);
 
   const list = items.filter((p) => filter === "all" || p.status === filter);
 
@@ -87,7 +97,8 @@ function Posts() {
         {list.map((p) => {
           const Icon = typeIcon[p.tipo];
           return (
-            <GlassCard key={p.id} className="col-span-12 sm:col-span-6 xl:col-span-4 p-0 overflow-hidden group">
+            <div key={p.id} className="col-span-12 sm:col-span-6 xl:col-span-4 cursor-pointer" onClick={() => setViewing(p)}>
+            <GlassCard className="p-0 overflow-hidden group h-full">
               <div className={`relative h-40 bg-gradient-to-br ${p.thumb} grid place-items-center`}>
                 <Icon className="h-10 w-10 text-white/70" />
                 <span className={`absolute top-3 left-3 text-[10px] px-2 py-0.5 rounded-full border ${p.status === "publicado" ? "bg-emerald-400/15 border-emerald-400/40 text-emerald-200" : "bg-amber-400/15 border-amber-400/40 text-amber-200"}`}>
@@ -95,7 +106,7 @@ function Posts() {
                 </span>
                 <span className="absolute top-3 right-3 text-[10px] px-2 py-0.5 rounded-full bg-black/40 border border-white/10 text-slate-200">{p.categoria}</span>
                 {p.youtube && (
-                  <button onClick={() => setVideo(p.youtube!)} className="absolute inset-0 grid place-items-center group/play">
+                  <button onClick={(e) => { e.stopPropagation(); setVideo(p.youtube!); }} className="absolute inset-0 grid place-items-center group/play">
                     <span className="h-14 w-14 rounded-full bg-black/60 border border-amber-400/50 grid place-items-center group-hover/play:scale-110 transition">
                       <Play className="h-5 w-5 text-amber-300 ml-0.5" fill="currentColor" />
                     </span>
@@ -105,7 +116,7 @@ function Posts() {
               <div className="p-5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="font-display text-base text-white flex-1">{p.titulo}</div>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition" onClick={(e) => e.stopPropagation()}>
                     <button onClick={() => onEdit(p)} className="p-1.5 rounded-md border border-white/10 bg-white/5 hover:border-amber-400/40 text-slate-300" title="Editar">
                       <Edit3 className="h-3.5 w-3.5" />
                     </button>
@@ -114,14 +125,15 @@ function Posts() {
                     </button>
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 mt-1.5">{p.resumo}</p>
+                <p className="text-xs text-slate-400 mt-1.5 line-clamp-2">{stripHtml(p.resumo)}</p>
                 {p.botaoLabel && p.botaoUrl && (
-                  <a href={p.botaoUrl} className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 text-black text-xs font-medium">
+                  <a href={p.botaoUrl} onClick={(e) => e.stopPropagation()} className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 text-black text-xs font-medium">
                     {p.botaoLabel} <ExternalLink className="h-3 w-3" />
                   </a>
                 )}
               </div>
             </GlassCard>
+            </div>
           );
         })}
         {list.length === 0 && (
@@ -131,7 +143,86 @@ function Posts() {
 
       <YoutubeModal url={video ?? ""} open={!!video} onOpenChange={(o) => !o && setVideo(null)} />
       <PostModal open={open} onClose={() => setOpen(false)} initial={editing} onSave={onSave} />
+      <PostViewModal
+        post={viewing}
+        onClose={() => setViewing(null)}
+        onPlay={(u) => setVideo(u)}
+        onEdit={(p) => { setViewing(null); onEdit(p); }}
+      />
     </>
+  );
+}
+
+function PostViewModal({
+  post,
+  onClose,
+  onPlay,
+  onEdit,
+}: {
+  post: Post | null;
+  onClose: () => void;
+  onPlay: (url: string) => void;
+  onEdit: (p: Post) => void;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    if (post) window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [post, onClose]);
+
+  return (
+    <AnimatePresence>
+      {post && (
+        <motion.div
+          className="fixed inset-0 z-50 grid place-items-center bg-black/70 backdrop-blur-sm p-4"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ y: 16, opacity: 0, scale: 0.98 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 16, opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0f1115] shadow-2xl overflow-hidden"
+          >
+            <div className={`relative h-48 bg-gradient-to-br ${post.thumb} grid place-items-center`}>
+              <span className={`absolute top-3 left-3 text-[10px] px-2 py-0.5 rounded-full border ${post.status === "publicado" ? "bg-emerald-400/15 border-emerald-400/40 text-emerald-200" : "bg-amber-400/15 border-amber-400/40 text-amber-200"}`}>
+                {post.status === "publicado" ? "Publicado" : "Rascunho"}
+              </span>
+              <span className="absolute top-3 right-12 text-[10px] px-2 py-0.5 rounded-full bg-black/40 border border-white/10 text-slate-200">{post.categoria}</span>
+              <button onClick={onClose} className="absolute top-2 right-2 p-2 rounded-md text-slate-200 hover:text-white hover:bg-white/10">
+                <X className="h-4 w-4" />
+              </button>
+              {post.youtube && (
+                <button onClick={() => onPlay(post.youtube!)} className="absolute inset-0 grid place-items-center">
+                  <span className="h-16 w-16 rounded-full bg-black/60 border border-amber-400/50 grid place-items-center hover:scale-110 transition">
+                    <Play className="h-6 w-6 text-amber-300 ml-0.5" fill="currentColor" />
+                  </span>
+                </button>
+              )}
+            </div>
+            <div className="px-6 py-5 max-h-[55vh] overflow-y-auto scrollbar-thin">
+              <h2 className="font-display text-xl text-white">{post.titulo}</h2>
+              <div className="mt-3">
+                <RichTextView html={post.resumo} className="text-sm text-slate-200" />
+              </div>
+              {post.botaoLabel && post.botaoUrl && (
+                <a href={post.botaoUrl} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 text-black text-sm font-medium">
+                  {post.botaoLabel} <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )}
+            </div>
+            <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-white/10 bg-black/20">
+              <button onClick={onClose} className="px-4 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5">Fechar</button>
+              <NeonButton onClick={() => onEdit(post)}>
+                <span className="flex items-center gap-2"><Edit3 className="h-4 w-4" /> Editar</span>
+              </NeonButton>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -175,7 +266,7 @@ function PostModal({
 
   const submit = () => {
     if (!titulo.trim()) return toast.error("Informe o título");
-    if (!resumo.trim()) return toast.error("Informe um resumo");
+    if (!stripHtml(resumo)) return toast.error("Informe um conteúdo");
     onSave({
       id: initial?.id,
       titulo: titulo.trim(),
@@ -245,8 +336,10 @@ function PostModal({
                 </div>
               </div>
               <div className="col-span-12">
-                <div className={label}>Resumo</div>
-                <textarea value={resumo} onChange={(e) => setResumo(e.target.value)} className={`${field} min-h-[80px]`} placeholder="Descrição curta do conteúdo" />
+                <div className={label}>Conteúdo</div>
+                <div className="mt-1">
+                  <RichTextEditor value={resumo} onChange={setResumo} placeholder="Descreva o conteúdo com formatação..." minHeight={180} />
+                </div>
               </div>
               {tipo === "video" && (
                 <div className="col-span-12">
