@@ -53,7 +53,7 @@ function LoginPage() {
       <div className="relative flex items-center justify-center p-6 lg:p-12">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           className="w-full max-w-md glass-strong rounded-3xl p-8 border-gradient relative">
-          <div className="text-[10px] tracking-[0.3em] text-cyan-300/80 uppercase">Welcome back</div>
+          <div className="text-[10px] tracking-[0.3em] text-cyan-300/80 uppercase">Bem-vindo de volta</div>
           <h2 className="font-display text-3xl mt-1">Entrar no Br Revenda</h2>
           <p className="text-sm text-slate-400 mt-2">Acesse seu painel e gerencie toda a sua operação IPTV.</p>
 
@@ -67,30 +67,30 @@ function LoginPage() {
           </div>
 
           <div className="my-6 flex items-center gap-3 text-[10px] text-slate-500 uppercase tracking-widest">
-            <div className="h-px flex-1 bg-white/10" /> or with email <div className="h-px flex-1 bg-white/10" />
+            <div className="h-px flex-1 bg-white/10" /> ou com e-mail <div className="h-px flex-1 bg-white/10" />
           </div>
 
           <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
             <div>
-              <label className="text-xs text-slate-400">Email</label>
-              <input type="email" defaultValue="alex@acme.io" className="mt-1.5 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-400/50 focus:outline-none text-sm" />
+              <label className="text-xs text-slate-400">E-mail</label>
+              <input type="email" defaultValue="contato@brrevenda.com" className="mt-1.5 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-400/50 focus:outline-none text-sm" />
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <label className="text-xs text-slate-400">Password</label>
-                <a className="text-xs text-cyan-300 hover:text-cyan-200" href="#">Forgot?</a>
+                <label className="text-xs text-slate-400">Senha</label>
+                <a className="text-xs text-cyan-300 hover:text-cyan-200" href="#">Esqueci a senha</a>
               </div>
               <input type="password" defaultValue="••••••••••" className="mt-1.5 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-400/50 focus:outline-none text-sm" />
             </div>
             <Link to="/dashboard" className="block">
               <button type="button" className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-500 text-black font-medium glow-cyan">
-                Enter workspace →
+                Entrar no painel →
               </button>
             </Link>
           </form>
 
           <p className="mt-6 text-center text-xs text-slate-500">
-            No account? <a className="text-cyan-300 hover:text-cyan-200" href="#">Request access</a>
+            Não tem conta? <a className="text-cyan-300 hover:text-cyan-200" href="#">Solicitar acesso</a>
           </p>
         </motion.div>
       </div>
