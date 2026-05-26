@@ -46,7 +46,7 @@ function LoginPage() {
         </div>
 
         <div className="relative text-xs text-slate-500 flex items-center gap-2">
-          <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" /> SOC 2 · ISO 27001 · GDPR compliant
+          <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" /> Conformidade SOC 2 · ISO 27001 · LGPD
         </div>
       </div>
 
