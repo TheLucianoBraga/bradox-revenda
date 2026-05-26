@@ -674,3 +674,16 @@ function IconAct({ children, title, onClick, danger = false }: { children: React
     </button>
   );
 }
+
+function FmtBtn({ children, title, onClick }: { children: React.ReactNode; title: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      title={title}
+      onClick={onClick}
+      className="h-7 w-7 grid place-items-center rounded-md text-slate-300 hover:text-white hover:bg-white/10 transition"
+    >
+      {children}
+    </button>
+  );
+}
