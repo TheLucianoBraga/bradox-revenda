@@ -29,9 +29,9 @@ function Settings() {
   return (
     <>
       <PageHeader
-        title="Settings"
-        subtitle="Workspace, branding, AI, security and integrations."
-        actions={<NeonButton>Save changes</NeonButton>}
+        title="Configurações"
+        subtitle="Workspace, marca, IA, segurança e integrações."
+        actions={<NeonButton>Salvar alterações</NeonButton>}
       />
 
       <div className="grid grid-cols-12 gap-5">
