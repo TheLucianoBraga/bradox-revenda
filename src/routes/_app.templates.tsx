@@ -239,6 +239,18 @@ function TemplatesPage() {
               </div>
             </div>
 
+            {t.media && (
+              <div className="mt-3 rounded-[10px] overflow-hidden border border-white/[0.06] bg-black/30">
+                {t.media.kind === "image" ? (
+                  <img src={t.media.url} alt="" className="w-full h-32 object-cover" />
+                ) : (
+                  <div className="relative w-full h-32 bg-black grid place-items-center">
+                    <Film className="h-6 w-6 text-white/60" />
+                    <span className="absolute bottom-1.5 left-2 text-[10px] text-white/70 truncate max-w-[90%]">{t.media.name}</span>
+                  </div>
+                )}
+              </div>
+            )}
             <div
               className="mt-3 text-[12.5px] text-[#A1A1AA] leading-[1.55] line-clamp-5 whitespace-pre-wrap break-words"
               dangerouslySetInnerHTML={{ __html: renderWhatsapp(t.conteudo, false) }}
