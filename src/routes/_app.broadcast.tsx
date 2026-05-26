@@ -124,6 +124,63 @@ function Broadcast() {
   );
 
   const [fila, setFila] = useState(FILA_INICIAL);
+  const [templateAtivo, setTemplateAtivo] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const insertAtCursor = (text: string) => {
+    const ta = textareaRef.current;
+    if (!ta) { setMsg(msg + text); return; }
+    const start = ta.selectionStart ?? msg.length;
+    const end = ta.selectionEnd ?? msg.length;
+    const next = msg.slice(0, start) + text + msg.slice(end);
+    setMsg(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      const pos = start + text.length;
+      ta.setSelectionRange(pos, pos);
+    });
+  };
+
+  const wrapSelection = (token: string) => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart ?? 0;
+    const end = ta.selectionEnd ?? 0;
+    const sel = msg.slice(start, end) || "texto";
+    const next = msg.slice(0, start) + token + sel + token + msg.slice(end);
+    setMsg(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      ta.setSelectionRange(start + token.length, start + token.length + sel.length);
+    });
+  };
+
+  const aplicarTemplate = (id: string) => {
+    const t = TEMPLATES.find(x => x.id === id);
+    if (!t) return;
+    setMsg(t.conteudo);
+    setTemplateAtivo(id);
+  };
+
+  const renderWhatsapp = (raw: string) => {
+    const filled = raw
+      .replace(/{nome}/g, "Lucas")
+      .replace(/{plano}/g, "Pro")
+      .replace(/{vencimento}/g, "10/12/2026")
+      .replace(/{servidor}/g, "SX Server")
+      .replace(/{revenda}/g, "Master BR");
+    // WhatsApp-like formatting: *bold* _italic_ ~strike~ ```mono```
+    const escaped = filled
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return escaped
+      .replace(/```([^`]+)```/g, '<code class="px-1 py-0.5 rounded bg-black/40 text-amber-200 font-mono text-[12px]">$1</code>')
+      .replace(/(^|\s)\*([^*\n]+)\*(?=\s|$|[.,!?])/g, '$1<strong class="text-white">$2</strong>')
+      .replace(/(^|\s)_([^_\n]+)_(?=\s|$|[.,!?])/g, '$1<em class="italic text-slate-100">$2</em>')
+      .replace(/(^|\s)~([^~\n]+)~(?=\s|$|[.,!?])/g, '$1<span class="line-through text-slate-400">$2</span>');
+  };
+
+  const caracteres = msg.length;
+  const segmentos_sms = Math.ceil(caracteres / 160) || 1;
 
   /* Audience math (mock) */
   const audience = useMemo(() => {
