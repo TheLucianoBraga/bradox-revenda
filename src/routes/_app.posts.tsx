@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { YoutubeModal } from "@/components/YoutubeModal";
+import { RichTextEditor } from "@/components/RichTextEditor";
+import { RichTextView } from "@/components/RichTextView";
 import { Play, Image as ImgIcon, Link2, Plus, ExternalLink, Edit3, Trash2, X } from "lucide-react";
 
 export const Route = createFileRoute("/_app/posts")({ component: Posts });
