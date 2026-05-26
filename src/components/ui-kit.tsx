@@ -16,14 +16,14 @@ export function GlassCard({
   const Cmp: any = interactive ? motion.div : "div";
   const motionProps = interactive
     ? {
-        whileHover: { y: -2 },
-        transition: { type: "spring", stiffness: 280, damping: 26 },
+        whileHover: { y: -3 },
+        transition: { type: "spring", stiffness: 260, damping: 24 },
       }
     : {};
   return (
     <Cmp
       {...motionProps}
-      className={`relative rounded-[20px] glass overflow-hidden ${glow ? "glow-cyan" : ""} ${className}`}
+      className={`relative rounded-[18px] glass overflow-hidden ${glow ? "glow-cyan" : ""} ${className}`}
     >
       {children}
     </Cmp>
@@ -43,18 +43,18 @@ export function PageHeader({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="flex flex-wrap items-end justify-between gap-4 mb-8"
+      transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+      className="flex flex-wrap items-end justify-between gap-4 mb-10"
     >
       <div>
         <div className="label-eyebrow">{eyebrow}</div>
-        <h1 className="font-display text-[28px] md:text-[32px] leading-tight text-white mt-2">
+        <h1 className="font-display text-[34px] md:text-[40px] leading-[1.02] text-white mt-2.5 tracking-[-0.034em]">
           {title}
         </h1>
         {subtitle && (
-          <p className="text-slate-400 mt-2 max-w-2xl text-[14px] leading-relaxed">{subtitle}</p>
+          <p className="text-[#A1A1AA] mt-3 max-w-2xl text-[14px] leading-relaxed">{subtitle}</p>
         )}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
