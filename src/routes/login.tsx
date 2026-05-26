@@ -33,9 +33,9 @@ function LoginPage() {
 
           <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
             {[
-              { k: "12.4M", v: "Conversations" },
-              { k: "99.99%", v: "Uptime" },
-              { k: "180+", v: "Integrations" },
+              { k: "12,4M", v: "Conversas" },
+              { k: "99,99%", v: "Disponibilidade" },
+              { k: "180+", v: "Integrações" },
             ].map((s) => (
               <div key={s.v} className="glass rounded-2xl p-4">
                 <div className="font-display text-2xl text-white">{s.k}</div>
