@@ -28,7 +28,7 @@ const nav = [
   ]},
   { group: "Sistema", items: [
     { to: "/settings", label: "Configurações", icon: Settings },
-    { to: "/login", label: "Login", icon: LogIn },
+    { to: "/login", label: "Entrar", icon: LogIn },
   ]},
 ];
 
