@@ -113,10 +113,10 @@ function Dashboard() {
         <GlassCard className="col-span-12 xl:col-span-7 p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Live Feed</div>
-              <div className="font-display text-xl text-white">Recent activity</div>
+              <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Feed ao vivo</div>
+              <div className="font-display text-xl text-white">Atividade recente</div>
             </div>
-            <NeonButton variant="ghost">View all</NeonButton>
+            <NeonButton variant="ghost">Ver tudo</NeonButton>
           </div>
           <ul className="space-y-2">
             {[
