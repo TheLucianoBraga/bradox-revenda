@@ -271,7 +271,10 @@ function CategoriaModal({
 
           {/* Preview + Nome / Slug */}
           <div className="flex gap-4 items-start">
-            <div className={`h-20 w-20 shrink-0 rounded-2xl grid place-items-center border overflow-hidden ${imagem ? "bg-white/5 border-white/10" : corClass(cor)}`}>
+            <div
+              className={`h-20 w-20 shrink-0 rounded-2xl grid place-items-center border overflow-hidden ${imagem ? "bg-white/5 border-white/10" : (corHex ? "" : corClass(cor))}`}
+              style={imagem ? undefined : swatchStyle(corHex)}
+            >
               {imagem ? <img src={imagem} alt="" className="h-full w-full object-cover" /> : <PreviewIcon className="h-9 w-9" />}
             </div>
             <div className="flex-1 space-y-3">
