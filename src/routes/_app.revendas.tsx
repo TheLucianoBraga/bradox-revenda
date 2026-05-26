@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { MoneyInput } from "@/components/MoneyInput";
 import {
   Store, Plus, ChevronDown, Coins, Receipt, Package, Edit3, Trash2, X,
   Search, Mail, Phone, Lock, User as UserIcon, Eye, EyeOff, Check,
@@ -436,15 +437,11 @@ function RevendaModal({
                         </button>
                         <span className="text-sm text-white flex-1">{nome}</span>
                         {sel && (
-                          <div className="flex items-center gap-1">
-                            <span className="text-[10px] text-slate-500">R$</span>
-                            <input
-                              type="number" step="0.01" min={0}
-                              value={sel.valor}
-                              onChange={(e) => setServValor(nome, Number(e.target.value) || 0)}
-                              className="w-20 bg-white/5 border border-white/10 rounded-md px-2 py-1 text-xs text-amber-200 focus:outline-none focus:border-amber-400/50"
-                            />
-                          </div>
+                          <MoneyInput
+                            value={sel.valor}
+                            onChange={(v) => setServValor(nome, v)}
+                            className="w-28 bg-white/5 border border-white/10 rounded-md px-2 py-1 text-xs text-amber-200 focus:outline-none focus:border-amber-400/50 text-right"
+                          />
                         )}
                       </div>
                     );
@@ -467,15 +464,11 @@ function RevendaModal({
                           {p.nome} <span className="text-[10px] text-slate-500">· padrão {fmtBRL(p.padrao)}</span>
                         </span>
                         {sel && (
-                          <div className="flex items-center gap-1">
-                            <span className="text-[10px] text-slate-500">R$</span>
-                            <input
-                              type="number" step="0.01" min={0}
-                              value={sel.valor}
-                              onChange={(e) => setPlanoValor(p.nome, Number(e.target.value) || 0)}
-                              className="w-20 bg-white/5 border border-white/10 rounded-md px-2 py-1 text-xs text-amber-200 focus:outline-none focus:border-amber-400/50"
-                            />
-                          </div>
+                          <MoneyInput
+                            value={sel.valor}
+                            onChange={(v) => setPlanoValor(p.nome, v)}
+                            className="w-28 bg-white/5 border border-white/10 rounded-md px-2 py-1 text-xs text-amber-200 focus:outline-none focus:border-amber-400/50 text-right"
+                          />
                         )}
                       </div>
                     );
