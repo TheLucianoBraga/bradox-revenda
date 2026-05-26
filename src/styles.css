@@ -286,11 +286,12 @@
   }
 
   .text-gradient {
-    background: linear-gradient(180deg, #F2DCA8 0%, #D6A84F 55%, #A8791E 100%);
+    background: linear-gradient(180deg, #F2DCA8 0%, #CDA45C 55%, #8E6A2D 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
+
 
   .border-gradient { position: relative; }
   .border-gradient::before {
