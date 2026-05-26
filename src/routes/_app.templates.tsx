@@ -22,12 +22,28 @@ type Template = {
 const STORAGE_KEY = "wa_templates_v1";
 
 const VARIAVEIS = [
+  { token: "{saudacao}", label: "Saudação", sample: saudacaoAtual() },
   { token: "{nome}", label: "Nome", sample: "João Silva" },
   { token: "{plano}", label: "Plano", sample: "Pro" },
+  { token: "{valor}", label: "Valor", sample: "R$ 49,90" },
   { token: "{vencimento}", label: "Vencimento", sample: "12/06/2026" },
+  { token: "{dias_restantes}", label: "Dias restantes", sample: "3" },
   { token: "{servidor}", label: "Servidor", sample: "SX Server" },
   { token: "{revenda}", label: "Revenda", sample: "Master BR" },
+  { token: "{whatsapp}", label: "WhatsApp", sample: "(11) 99999-9999" },
+  { token: "{usuario}", label: "Usuário", sample: "joaosilva" },
+  { token: "{senha}", label: "Senha", sample: "••••••" },
+  { token: "{link_pagamento}", label: "Link pagamento", sample: "https://pag.br/abc123" },
+  { token: "{pix}", label: "Chave PIX", sample: "contato@revenda.com" },
+  { token: "{data}", label: "Data atual", sample: new Date().toLocaleDateString("pt-BR") },
 ] as const;
+
+function saudacaoAtual() {
+  const h = new Date().getHours();
+  if (h < 12) return "Bom dia";
+  if (h < 18) return "Boa tarde";
+  return "Boa noite";
+}
 
 const CATEGORIAS = ["Cobrança", "Boas-vindas", "Promoção", "Suporte", "Aviso", "Outros"];
 
