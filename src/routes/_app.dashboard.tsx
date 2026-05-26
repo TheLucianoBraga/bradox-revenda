@@ -90,8 +90,8 @@ function Dashboard() {
         </GlassCard>
 
         <GlassCard className="col-span-12 xl:col-span-4 p-6">
-          <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Channels</div>
-          <div className="font-display text-xl text-white">Volume mix</div>
+          <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Canais</div>
+          <div className="font-display text-xl text-white">Distribuição de volume</div>
           <div className="h-72 mt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bars} layout="vertical" margin={{ left: 10 }}>
