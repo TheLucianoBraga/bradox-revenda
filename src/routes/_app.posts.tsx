@@ -90,7 +90,8 @@ function Posts() {
         {list.map((p) => {
           const Icon = typeIcon[p.tipo];
           return (
-            <GlassCard key={p.id} className="col-span-12 sm:col-span-6 xl:col-span-4 p-0 overflow-hidden group cursor-pointer" onClick={() => setViewing(p)}>
+            <div key={p.id} className="col-span-12 sm:col-span-6 xl:col-span-4 cursor-pointer" onClick={() => setViewing(p)}>
+            <GlassCard className="p-0 overflow-hidden group h-full">
               <div className={`relative h-40 bg-gradient-to-br ${p.thumb} grid place-items-center`}>
                 <Icon className="h-10 w-10 text-white/70" />
                 <span className={`absolute top-3 left-3 text-[10px] px-2 py-0.5 rounded-full border ${p.status === "publicado" ? "bg-emerald-400/15 border-emerald-400/40 text-emerald-200" : "bg-amber-400/15 border-amber-400/40 text-amber-200"}`}>
