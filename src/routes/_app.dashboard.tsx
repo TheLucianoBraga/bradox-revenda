@@ -11,7 +11,7 @@ const series = Array.from({ length: 24 }, (_, i) => ({
   msgs: 200 + Math.round(Math.sin(i / 3) * 80 + Math.random() * 60),
   ai: 120 + Math.round(Math.cos(i / 4) * 60 + Math.random() * 50),
 }));
-const bars = ["WhatsApp", "Instagram", "Telegram", "Email", "Web", "API"].map((c) => ({
+const bars = ["WhatsApp", "Instagram", "Telegram", "E-mail", "Web", "API"].map((c) => ({
   c, v: Math.round(Math.random() * 80 + 20),
 }));
 
@@ -19,22 +19,22 @@ function Dashboard() {
   return (
     <>
       <PageHeader
-        title="Mission Control"
-        subtitle="Real-time pulse across every channel, every agent, every customer."
+        title="Central de Controle"
+        subtitle="Pulso em tempo real de cada canal, cada agente e cada cliente."
         actions={
           <>
-            <NeonButton variant="ghost"><span className="flex items-center gap-2"><Activity className="h-4 w-4" /> Live</span></NeonButton>
-            <NeonButton><span className="flex items-center gap-2"><Plus className="h-4 w-4" /> New automation</span></NeonButton>
+            <NeonButton variant="ghost"><span className="flex items-center gap-2"><Activity className="h-4 w-4" /> Ao vivo</span></NeonButton>
+            <NeonButton><span className="flex items-center gap-2"><Plus className="h-4 w-4" /> Nova automação</span></NeonButton>
           </>
         }
       />
 
       <div className="grid grid-cols-12 gap-5">
         {[
-          { label: "Active Conversations", value: "8,492", delta: "+12.4%", icon: MessageCircle, accent: "cyan" },
-          { label: "AI Resolved", value: "73.2%", delta: "+4.1%", icon: Bot, accent: "violet" },
-          { label: "MRR", value: "$184,902", delta: "+8.7%", icon: Zap, accent: "emerald" },
-          { label: "Workspaces", value: "1,204", delta: "+22", icon: Users, accent: "cyan" },
+          { label: "Conversas ativas", value: "8.492", delta: "+12,4%", icon: MessageCircle, accent: "cyan" },
+          { label: "Resolvidas por IA", value: "73,2%", delta: "+4,1%", icon: Bot, accent: "violet" },
+          { label: "Receita mensal", value: "R$ 184.902", delta: "+8,7%", icon: Zap, accent: "emerald" },
+          { label: "Revendas", value: "1.204", delta: "+22", icon: Users, accent: "cyan" },
         ].map((k, i) => (
           <motion.div key={k.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
             className="col-span-12 sm:col-span-6 xl:col-span-3">
@@ -57,12 +57,12 @@ function Dashboard() {
         <GlassCard className="col-span-12 xl:col-span-8 p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Throughput</div>
-              <div className="font-display text-xl text-white">Messages · AI Handovers</div>
+              <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Vazão</div>
+              <div className="font-display text-xl text-white">Mensagens · Atendimentos por IA</div>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" /> Messages</span>
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-violet-400 shadow-[0_0_8px_#F97316]" /> AI</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" /> Mensagens</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-violet-400 shadow-[0_0_8px_#F97316]" /> IA</span>
             </div>
           </div>
           <div className="h-72">
@@ -90,8 +90,8 @@ function Dashboard() {
         </GlassCard>
 
         <GlassCard className="col-span-12 xl:col-span-4 p-6">
-          <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Channels</div>
-          <div className="font-display text-xl text-white">Volume mix</div>
+          <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Canais</div>
+          <div className="font-display text-xl text-white">Distribuição de volume</div>
           <div className="h-72 mt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bars} layout="vertical" margin={{ left: 10 }}>
@@ -113,19 +113,19 @@ function Dashboard() {
         <GlassCard className="col-span-12 xl:col-span-7 p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Live Feed</div>
-              <div className="font-display text-xl text-white">Recent activity</div>
+              <div className="text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">Feed ao vivo</div>
+              <div className="font-display text-xl text-white">Atividade recente</div>
             </div>
-            <NeonButton variant="ghost">View all</NeonButton>
+            <NeonButton variant="ghost">Ver tudo</NeonButton>
           </div>
           <ul className="space-y-2">
             {[
-              { who: "Aurora AI", what: "resolved ticket #4821", when: "12s", tag: "AI", color: "violet" },
-              { who: "Maya Chen", what: "closed deal · Enterprise · $48,000", when: "2m", tag: "CRM", color: "cyan" },
-              { who: "WhatsApp Bot", what: "triggered flow ‘Reactivation 7d’", when: "5m", tag: "Flow", color: "cyan" },
-              { who: "Reseller · Lima", what: "provisioned new tenant", when: "11m", tag: "Tenant", color: "emerald" },
-              { who: "Instagram", what: "32 DMs auto-replied", when: "18m", tag: "Inbox", color: "violet" },
-              { who: "Telegram Bot", what: "broadcast delivered to 12.4k", when: "27m", tag: "Cast", color: "cyan" },
+              { who: "Aurora IA", what: "resolveu o ticket #4821", when: "12s", tag: "IA", color: "violet" },
+              { who: "Maya Chen", what: "fechou negócio · Enterprise · R$ 48.000", when: "2m", tag: "CRM", color: "cyan" },
+              { who: "Bot WhatsApp", what: "disparou o fluxo ‘Reativação 7d’", when: "5m", tag: "Fluxo", color: "cyan" },
+              { who: "Revenda · Lima", what: "provisionou nova revenda", when: "11m", tag: "Revenda", color: "emerald" },
+              { who: "Instagram", what: "32 DMs respondidos automaticamente", when: "18m", tag: "Caixa", color: "violet" },
+              { who: "Bot Telegram", what: "broadcast entregue para 12,4 mil", when: "27m", tag: "Envio", color: "cyan" },
             ].map((r, i) => (
               <motion.li key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
                 className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition group">
@@ -147,15 +147,15 @@ function Dashboard() {
           <div className="absolute -right-20 bottom-0 h-40 w-40 rounded-full bg-violet-500/20 blur-3xl" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase text-cyan-300/80">
-              <Sparkles className="h-3 w-3" /> Aurora · AI Co-pilot
+              <Sparkles className="h-3 w-3" /> Aurora · Copiloto IA
             </div>
-            <div className="font-display text-xl text-white mt-1">Insights this week</div>
+            <div className="font-display text-xl text-white mt-1">Insights da semana</div>
             <ul className="mt-4 space-y-3 text-sm">
               {[
-                "Reactivation flow lifted 7-day retention by 18.4%.",
-                "Latency in Instagram inbox down 240ms — within SLO.",
-                "Reseller ‘Aurora Tech’ converted 12 new tenants.",
-                "Suggested: throttle Telegram broadcasts after 21:00 UTC.",
+                "Fluxo de reativação elevou a retenção de 7 dias em 18,4%.",
+                "Latência da caixa do Instagram caiu 240ms — dentro do SLO.",
+                "Revenda ‘Aurora Tech’ converteu 12 novos clientes.",
+                "Sugestão: limitar broadcasts no Telegram após 21:00.",
               ].map((t, i) => (
                 <li key={i} className="flex gap-3">
                   <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" />
@@ -164,8 +164,8 @@ function Dashboard() {
               ))}
             </ul>
             <div className="mt-5 flex gap-2">
-              <NeonButton><span className="flex items-center gap-2">Apply suggestions <ArrowUpRight className="h-4 w-4" /></span></NeonButton>
-              <NeonButton variant="ghost"><span className="flex items-center gap-2"><Globe2 className="h-4 w-4" /> Full report</span></NeonButton>
+              <NeonButton><span className="flex items-center gap-2">Aplicar sugestões <ArrowUpRight className="h-4 w-4" /></span></NeonButton>
+              <NeonButton variant="ghost"><span className="flex items-center gap-2"><Globe2 className="h-4 w-4" /> Relatório completo</span></NeonButton>
             </div>
           </div>
         </GlassCard>

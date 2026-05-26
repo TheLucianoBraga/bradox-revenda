@@ -8,7 +8,7 @@ export function Topbar() {
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
             <input
-              placeholder="Search workspaces, contacts, flows…"
+              placeholder="Buscar revendas, clientes, fluxos…"
               className="w-full pl-9 pr-20 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm placeholder:text-slate-500 focus:outline-none focus:border-cyan-400/50 focus:bg-white/[0.07] transition"
             />
             <kbd className="hidden lg:flex items-center gap-1 absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 bg-white/5 border border-white/10 rounded px-1.5 py-0.5">
@@ -19,7 +19,7 @@ export function Topbar() {
 
         <div className="ml-auto flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/30 text-xs text-emerald-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" /> All systems operational
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" /> Sistemas operando normalmente
           </div>
           <button className="relative h-9 w-9 grid place-items-center rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/40 transition">
             <Zap className="h-4 w-4 text-cyan-300" />
@@ -32,7 +32,7 @@ export function Topbar() {
             <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-cyan-400 to-violet-500" />
             <div className="hidden md:block leading-tight pr-2">
               <div className="text-xs text-white">Alex Mercer</div>
-              <div className="text-[10px] text-slate-400">Admin · Acme Corp</div>
+              <div className="text-[10px] text-slate-400">Administrador · Br Revenda</div>
             </div>
           </div>
         </div>
