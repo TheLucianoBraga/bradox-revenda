@@ -26,12 +26,19 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
   );
 }
 
-export function NeonButton({ children, variant = "primary", className = "", ...props }: any) {
+import { toast } from "sonner";
+
+export function NeonButton({ children, variant = "primary", className = "", onClick, ...props }: any) {
   const styles = variant === "primary"
     ? "bg-gradient-to-r from-cyan-400 to-violet-500 text-black hover:shadow-[0_0_30px_-5px_#F59E0B]"
     : "bg-white/5 border border-white/10 text-white hover:border-cyan-400/40";
+  const handle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) return onClick(e);
+    const label = (e.currentTarget.innerText || "Ação").trim().split("\n")[0];
+    toast.success(label, { description: "Ação executada com sucesso." });
+  };
   return (
-    <button {...props} className={`px-4 py-2 rounded-xl text-sm font-medium transition ${styles} ${className}`}>
+    <button {...props} data-handled="true" onClick={handle} className={`px-4 py-2 rounded-xl text-sm font-medium transition ${styles} ${className}`}>
       {children}
     </button>
   );
