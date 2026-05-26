@@ -11,7 +11,7 @@ const series = Array.from({ length: 24 }, (_, i) => ({
   msgs: 200 + Math.round(Math.sin(i / 3) * 80 + Math.random() * 60),
   ai: 120 + Math.round(Math.cos(i / 4) * 60 + Math.random() * 50),
 }));
-const bars = ["WhatsApp", "Instagram", "Telegram", "Email", "Web", "API"].map((c) => ({
+const bars = ["WhatsApp", "Instagram", "Telegram", "E-mail", "Web", "API"].map((c) => ({
   c, v: Math.round(Math.random() * 80 + 20),
 }));
 
