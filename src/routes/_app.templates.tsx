@@ -481,16 +481,27 @@ function WhatsPreview({ content, media }: { content: string; media?: Media | nul
       >
         <div className="flex justify-end">
           <div
-            className="max-w-[85%] rounded-[10px] rounded-br-[2px] px-3 py-2 text-[13px] leading-[1.5] text-[#E8F5E9] shadow"
+            className="max-w-[85%] rounded-[10px] rounded-br-[2px] p-1.5 text-[13px] leading-[1.5] text-[#E8F5E9] shadow"
             style={{ background: "#005c4b" }}
           >
-            <div
-              className="whitespace-pre-wrap break-words wa-body"
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-            <div className="mt-1 flex items-center justify-end gap-1 text-[10px] text-emerald-100/70">
-              {hh}:{mm}
-              <CheckCheck className="h-3 w-3" />
+            {media && (
+              <div className="rounded-[8px] overflow-hidden mb-1 bg-black/40">
+                {media.kind === "image" ? (
+                  <img src={media.url} alt="" className="w-full max-h-64 object-cover" />
+                ) : (
+                  <video src={media.url} controls className="w-full max-h-64 bg-black" />
+                )}
+              </div>
+            )}
+            <div className="px-2 pb-1 pt-0.5">
+              <div
+                className="whitespace-pre-wrap break-words wa-body"
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+              <div className="mt-1 flex items-center justify-end gap-1 text-[10px] text-emerald-100/70">
+                {hh}:{mm}
+                <CheckCheck className="h-3 w-3" />
+              </div>
             </div>
           </div>
         </div>
