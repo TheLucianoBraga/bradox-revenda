@@ -31,10 +31,10 @@ function Dashboard() {
 
       <div className="grid grid-cols-12 gap-5">
         {[
-          { label: "Active Conversations", value: "8,492", delta: "+12.4%", icon: MessageCircle, accent: "cyan" },
-          { label: "AI Resolved", value: "73.2%", delta: "+4.1%", icon: Bot, accent: "violet" },
-          { label: "MRR", value: "$184,902", delta: "+8.7%", icon: Zap, accent: "emerald" },
-          { label: "Workspaces", value: "1,204", delta: "+22", icon: Users, accent: "cyan" },
+          { label: "Conversas ativas", value: "8.492", delta: "+12,4%", icon: MessageCircle, accent: "cyan" },
+          { label: "Resolvidas por IA", value: "73,2%", delta: "+4,1%", icon: Bot, accent: "violet" },
+          { label: "Receita mensal", value: "R$ 184.902", delta: "+8,7%", icon: Zap, accent: "emerald" },
+          { label: "Revendas", value: "1.204", delta: "+22", icon: Users, accent: "cyan" },
         ].map((k, i) => (
           <motion.div key={k.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
             className="col-span-12 sm:col-span-6 xl:col-span-3">
