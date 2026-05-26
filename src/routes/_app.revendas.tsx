@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { MoneyInput } from "@/components/MoneyInput";
 import {
   Store, Plus, ChevronDown, Coins, Receipt, Package, Edit3, Trash2, X,
   Search, Mail, Phone, Lock, User as UserIcon, Eye, EyeOff, Check,
