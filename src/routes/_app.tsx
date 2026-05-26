@@ -3,7 +3,7 @@ import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
-import { Particles } from "@/components/Particles";
+
 import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/_app")({
@@ -34,19 +34,16 @@ function AppLayout() {
   }, []);
 
   return (
-    <div className="relative min-h-screen flex w-full">
-      <div className="pointer-events-none fixed inset-0 grid-bg opacity-30" />
-      <div className="pointer-events-none fixed inset-0">
-        <Particles density={40} />
-      </div>
+    <div className="relative min-h-screen flex w-full bg-[#0B0B0C]">
+      <div className="pointer-events-none fixed inset-0 grid-bg opacity-60" />
       <Sidebar />
       <div className="flex-1 min-w-0 flex flex-col">
         <Topbar />
-        <main className="flex-1 p-6 md:p-8 max-w-[1600px] w-full mx-auto">
+        <main className="flex-1 px-6 md:px-10 py-8 max-w-[1480px] w-full mx-auto">
           <Outlet />
         </main>
       </div>
-      <Toaster position="top-right" theme="dark" richColors />
+      <Toaster position="top-right" theme="dark" />
     </div>
   );
 }
