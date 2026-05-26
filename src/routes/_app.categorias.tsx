@@ -146,7 +146,10 @@ function Categorias() {
             >
               <GlassCard className="p-5">
                 <div className="flex items-start justify-between">
-                  <div className={`h-12 w-12 rounded-xl grid place-items-center border overflow-hidden ${c.imagem ? "bg-white/5 border-white/10" : corClass(c.cor)}`}>
+                  <div
+                    className={`h-12 w-12 rounded-xl grid place-items-center border overflow-hidden ${c.imagem ? "bg-white/5 border-white/10" : (c.corHex ? "" : corClass(c.cor))}`}
+                    style={c.imagem ? undefined : swatchStyle(c.corHex)}
+                  >
                     <CategoriaIcone c={c} className="h-6 w-6" />
                   </div>
                   <div className="flex gap-1">
