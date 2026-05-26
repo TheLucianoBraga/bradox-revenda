@@ -9,22 +9,22 @@
   --font-display: "Big Shoulders Display", "Saira Condensed", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
 
-  /* Override cyan -> amber, violet -> orange so existing utility classes adopt new palette */
-  --color-cyan-200: #fde6a8;
-  --color-cyan-300: #fcd34d;
-  --color-cyan-400: #fbbf24;
-  --color-cyan-500: #f59e0b;
-  --color-cyan-600: #d97706;
-  --color-violet-300: #fdba74;
-  --color-violet-400: #fb923c;
-  --color-violet-500: #f97316;
-  --color-violet-600: #ea580c;
-  --color-fuchsia-500: #f97316;
-  --color-pink-400: #fdba74;
-  --color-pink-500: #fb923c;
-  --color-sky-400: #fbbf24;
-  --color-sky-500: #f59e0b;
-  --color-blue-500: #f59e0b;
+  /* Palette extracted from BRADOX PLY logo: fiery orange + copper gold + steel silver on charcoal */
+  --color-cyan-200: #d6d8db;   /* steel silver light */
+  --color-cyan-300: #ffb347;   /* copper gold */
+  --color-cyan-400: #ff8a1f;   /* fiery orange */
+  --color-cyan-500: #f26a0f;   /* burnt orange */
+  --color-cyan-600: #c44a08;   /* deep ember */
+  --color-violet-300: #ffd28a; /* warm gold highlight */
+  --color-violet-400: #ffa64d; /* orange amber */
+  --color-violet-500: #ff7a18; /* signature orange */
+  --color-violet-600: #d44a04; /* copper red */
+  --color-fuchsia-500: #ff5a0a;
+  --color-pink-400: #ffc185;
+  --color-pink-500: #ff8a3d;
+  --color-sky-400: #ffb347;
+  --color-sky-500: #f26a0f;
+  --color-blue-500: #c9ced3;   /* steel silver for "blue" accents */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -70,42 +70,44 @@
 
 :root {
   --radius: 0.875rem;
-  /* Dark futuristic by default */
-  --background: oklch(0.08 0.005 60);
-  --foreground: oklch(0.98 0.01 60);
-  --card: oklch(0.12 0.01 60 / 60%);
-  --card-foreground: oklch(0.98 0.01 60);
-  --popover: oklch(0.10 0.01 60);
-  --popover-foreground: oklch(0.98 0.01 60);
-  --primary: oklch(0.78 0.17 65);
-  --primary-foreground: oklch(0.12 0.02 60);
-  --secondary: oklch(0.70 0.19 50);
-  --secondary-foreground: oklch(0.98 0.01 60);
-  --muted: oklch(0.22 0.01 60);
-  --muted-foreground: oklch(0.72 0.02 60);
-  --accent: oklch(0.30 0.05 60);
-  --accent-foreground: oklch(0.98 0.01 60);
-  --destructive: oklch(0.65 0.24 25);
+  /* Charcoal base from logo background */
+  --background: oklch(0.10 0.012 50);
+  --foreground: oklch(0.98 0.01 70);
+  --card: oklch(0.14 0.014 50 / 65%);
+  --card-foreground: oklch(0.98 0.01 70);
+  --popover: oklch(0.11 0.012 50);
+  --popover-foreground: oklch(0.98 0.01 70);
+  /* Primary = fiery orange #ff7a18 */
+  --primary: oklch(0.72 0.20 50);
+  --primary-foreground: oklch(0.12 0.02 50);
+  /* Secondary = copper gold #ffb347 */
+  --secondary: oklch(0.82 0.16 70);
+  --secondary-foreground: oklch(0.12 0.02 50);
+  --muted: oklch(0.22 0.012 50);
+  --muted-foreground: oklch(0.74 0.02 60);
+  --accent: oklch(0.30 0.05 50);
+  --accent-foreground: oklch(0.98 0.01 70);
+  --destructive: oklch(0.62 0.24 25);
   --destructive-foreground: oklch(0.98 0.01 240);
-  --border: oklch(0.98 0.01 60 / 8%);
-  --input: oklch(0.98 0.01 60 / 10%);
-  --ring: oklch(0.78 0.17 65);
-  --neon: oklch(0.78 0.17 65);
-  --neon-soft: oklch(0.78 0.17 65 / 40%);
-  --violet: oklch(0.70 0.19 50);
-  --chart-1: oklch(0.82 0.18 70);
-  --chart-2: oklch(0.70 0.19 50);
-  --chart-3: oklch(0.85 0.15 85);
-  --chart-4: oklch(0.65 0.20 40);
-  --chart-5: oklch(0.78 0.18 60);
-  --sidebar: oklch(0.12 0.005 60 / 80%);
-  --sidebar-foreground: oklch(0.98 0.01 60);
-  --sidebar-primary: oklch(0.78 0.17 65);
-  --sidebar-primary-foreground: oklch(0.12 0.02 60);
-  --sidebar-accent: oklch(0.22 0.02 60);
-  --sidebar-accent-foreground: oklch(0.98 0.01 60);
-  --sidebar-border: oklch(0.98 0.01 60 / 8%);
-  --sidebar-ring: oklch(0.78 0.17 65);
+  --border: oklch(0.98 0.01 70 / 8%);
+  --input: oklch(0.98 0.01 70 / 10%);
+  --ring: oklch(0.72 0.20 50);
+  --neon: oklch(0.72 0.20 50);
+  --neon-soft: oklch(0.72 0.20 50 / 40%);
+  --violet: oklch(0.82 0.16 70);
+  --chart-1: oklch(0.72 0.20 50);
+  --chart-2: oklch(0.82 0.16 70);
+  --chart-3: oklch(0.62 0.22 35);
+  --chart-4: oklch(0.78 0.05 80);  /* steel silver */
+  --chart-5: oklch(0.55 0.18 30);
+  --sidebar: oklch(0.10 0.010 50 / 85%);
+  --sidebar-foreground: oklch(0.98 0.01 70);
+  --sidebar-primary: oklch(0.72 0.20 50);
+  --sidebar-primary-foreground: oklch(0.12 0.02 50);
+  --sidebar-accent: oklch(0.22 0.02 50);
+  --sidebar-accent-foreground: oklch(0.98 0.01 70);
+  --sidebar-border: oklch(0.98 0.01 70 / 8%);
+  --sidebar-ring: oklch(0.72 0.20 50);
 }
 
 @layer base {
@@ -115,10 +117,10 @@
     font-family: var(--font-sans);
     color: var(--color-foreground);
     background:
-      radial-gradient(1200px 600px at 10% -10%, rgba(245,158,11,0.10), transparent 60%),
-      radial-gradient(900px 500px at 110% 10%, rgba(249,115,22,0.10), transparent 60%),
-      radial-gradient(800px 600px at 50% 110%, rgba(251,191,36,0.06), transparent 60%),
-      linear-gradient(180deg, #000000 0%, #0a0806 60%, #000000 100%);
+      radial-gradient(1200px 600px at 10% -10%, rgba(255,122,24,0.16), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, rgba(212,74,4,0.14), transparent 60%),
+      radial-gradient(800px 600px at 50% 110%, rgba(255,179,71,0.08), transparent 60%),
+      linear-gradient(180deg, #050403 0%, #0d0907 55%, #050403 100%);
     background-attachment: fixed;
   }
   h1, h2, h3, .font-display { font-family: var(--font-display); letter-spacing: 0.02em; text-transform: uppercase; }
@@ -138,13 +140,13 @@
     border: 1px solid rgba(255,255,255,0.1);
   }
   .glow-cyan {
-    box-shadow: 0 0 0 1px rgba(245,158,11,0.30), 0 10px 40px -10px rgba(245,158,11,0.55);
+    box-shadow: 0 0 0 1px rgba(255,138,31,0.40), 0 10px 40px -10px rgba(255,122,24,0.65);
   }
   .glow-violet {
-    box-shadow: 0 0 0 1px rgba(249,115,22,0.30), 0 10px 40px -10px rgba(249,115,22,0.55);
+    box-shadow: 0 0 0 1px rgba(255,179,71,0.35), 0 10px 40px -10px rgba(212,74,4,0.60);
   }
   .text-gradient {
-    background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 40%, #f97316 100%);
+    background: linear-gradient(90deg, #ffd28a 0%, #ffb347 35%, #ff7a18 70%, #d44a04 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -157,7 +159,7 @@
     position: absolute; inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(251,191,36,0.6), rgba(249,115,22,0.6), rgba(245,158,11,0.2));
+    background: linear-gradient(135deg, rgba(255,210,138,0.7), rgba(255,122,24,0.7), rgba(212,74,4,0.3));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -180,7 +182,7 @@
     100% { background-position: 200% 0; }
   }
   .animate-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(245,158,11,0.30), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,122,24,0.35), transparent);
     background-size: 200% 100%;
     animation: shimmer 2.5s linear infinite;
   }
