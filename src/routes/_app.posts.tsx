@@ -40,6 +40,7 @@ function Posts() {
   const [video, setVideo] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Post | null>(null);
+  const [viewing, setViewing] = useState<Post | null>(null);
 
   const list = items.filter((p) => filter === "all" || p.status === filter);
 
