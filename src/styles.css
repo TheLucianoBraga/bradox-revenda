@@ -14,21 +14,22 @@
 
 
   /* Burnished gold remapped onto legacy utility classes */
-  --color-cyan-200: #EFD08A;
-  --color-cyan-300: #E0B45C;
-  --color-cyan-400: #D6A84F;
-  --color-cyan-500: #C8932D;
-  --color-cyan-600: #A8791E;
-  --color-violet-300: #E0B45C;
-  --color-violet-400: #D6A84F;
-  --color-violet-500: #C8932D;
-  --color-violet-600: #A8791E;
-  --color-fuchsia-500: #C8932D;
-  --color-pink-400: #E0B45C;
-  --color-pink-500: #D6A84F;
-  --color-sky-400: #D6A84F;
-  --color-sky-500: #C8932D;
-  --color-blue-500: #D6A84F;
+  --color-cyan-200: #E0BC72;
+  --color-cyan-300: #CDA45C;
+  --color-cyan-400: #CDA45C;
+  --color-cyan-500: #B98A3D;
+  --color-cyan-600: #8E6A2D;
+  --color-violet-300: #E0BC72;
+  --color-violet-400: #CDA45C;
+  --color-violet-500: #B98A3D;
+  --color-violet-600: #8E6A2D;
+  --color-fuchsia-500: #B98A3D;
+  --color-pink-400: #E0BC72;
+  --color-pink-500: #CDA45C;
+  --color-sky-400: #CDA45C;
+  --color-sky-500: #B98A3D;
+  --color-blue-500: #CDA45C;
+
 
   --color-slate-300: #D4D4D8;
   --color-slate-400: #A1A1AA;
