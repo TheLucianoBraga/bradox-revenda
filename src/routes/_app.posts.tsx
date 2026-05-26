@@ -34,12 +34,8 @@ const seed: Post[] = [
 
 const typeIcon = { video: Play, foto: ImgIcon, link: Link2 };
 
-function stripHtml(html: string) {
-  if (typeof document === "undefined") return html.replace(/<[^>]*>/g, "");
-  const tmp = document.createElement("div");
-  tmp.innerHTML = html;
-  return (tmp.textContent || tmp.innerText || "").trim();
-}
+const stripHtml = (html: string) =>
+  (html || "").replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 
 function Posts() {
   const [items, setItems] = useState<Post[]>(seed);
