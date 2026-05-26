@@ -1,10 +1,12 @@
 import { Bell, Search, Command } from "lucide-react";
+import { MobileNav } from "@/components/MobileNav";
 
 export function Topbar() {
   return (
     <header className="sticky top-0 z-30">
       <div className="mx-3 mt-3 rounded-[14px] glass-strong shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_8px_24px_-16px_rgba(0,0,0,0.6)]">
         <div className="flex items-center gap-3 px-4 py-2.5">
+          <MobileNav />
           {/* Raycast-style command bar */}
           <div className="hidden md:flex items-center gap-2 flex-1 max-w-[460px]">
             <div className="relative w-full">
