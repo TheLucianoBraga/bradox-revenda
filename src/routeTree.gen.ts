@@ -13,13 +13,22 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
+import { Route as AppWaConexaoRouteImport } from './routes/_app.wa-conexao'
 import { Route as AppTelegramRouteImport } from './routes/_app.telegram'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppServidoresRouteImport } from './routes/_app.servidores'
+import { Route as AppRevendasRouteImport } from './routes/_app.revendas'
 import { Route as AppResellerRouteImport } from './routes/_app.reseller'
+import { Route as AppPostsRouteImport } from './routes/_app.posts'
+import { Route as AppPlanosRouteImport } from './routes/_app.planos'
+import { Route as AppPagamentosRouteImport } from './routes/_app.pagamentos'
 import { Route as AppInstagramRouteImport } from './routes/_app.instagram'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCustomersRouteImport } from './routes/_app.customers'
 import { Route as AppCrmRouteImport } from './routes/_app.crm'
+import { Route as AppCreditosRouteImport } from './routes/_app.creditos'
+import { Route as AppCategoriasRouteImport } from './routes/_app.categorias'
+import { Route as AppBroadcastRouteImport } from './routes/_app.broadcast'
 import { Route as AppBillingRouteImport } from './routes/_app.billing'
 import { Route as AppAutomationRouteImport } from './routes/_app.automation'
 import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
@@ -44,6 +53,11 @@ const AppWhatsappRoute = AppWhatsappRouteImport.update({
   path: '/whatsapp',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWaConexaoRoute = AppWaConexaoRouteImport.update({
+  id: '/wa-conexao',
+  path: '/wa-conexao',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppTelegramRoute = AppTelegramRouteImport.update({
   id: '/telegram',
   path: '/telegram',
@@ -54,9 +68,34 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppServidoresRoute = AppServidoresRouteImport.update({
+  id: '/servidores',
+  path: '/servidores',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRevendasRoute = AppRevendasRouteImport.update({
+  id: '/revendas',
+  path: '/revendas',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppResellerRoute = AppResellerRouteImport.update({
   id: '/reseller',
   path: '/reseller',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPostsRoute = AppPostsRouteImport.update({
+  id: '/posts',
+  path: '/posts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlanosRoute = AppPlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPagamentosRoute = AppPagamentosRouteImport.update({
+  id: '/pagamentos',
+  path: '/pagamentos',
   getParentRoute: () => AppRoute,
 } as any)
 const AppInstagramRoute = AppInstagramRouteImport.update({
@@ -77,6 +116,21 @@ const AppCustomersRoute = AppCustomersRouteImport.update({
 const AppCrmRoute = AppCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCreditosRoute = AppCreditosRouteImport.update({
+  id: '/creditos',
+  path: '/creditos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCategoriasRoute = AppCategoriasRouteImport.update({
+  id: '/categorias',
+  path: '/categorias',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBroadcastRoute = AppBroadcastRouteImport.update({
+  id: '/broadcast',
+  path: '/broadcast',
   getParentRoute: () => AppRoute,
 } as any)
 const AppBillingRoute = AppBillingRouteImport.update({
@@ -107,13 +161,22 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AppAnalyticsRoute
   '/automation': typeof AppAutomationRoute
   '/billing': typeof AppBillingRoute
+  '/broadcast': typeof AppBroadcastRoute
+  '/categorias': typeof AppCategoriasRoute
+  '/creditos': typeof AppCreditosRoute
   '/crm': typeof AppCrmRoute
   '/customers': typeof AppCustomersRoute
   '/dashboard': typeof AppDashboardRoute
   '/instagram': typeof AppInstagramRoute
+  '/pagamentos': typeof AppPagamentosRoute
+  '/planos': typeof AppPlanosRoute
+  '/posts': typeof AppPostsRoute
   '/reseller': typeof AppResellerRoute
+  '/revendas': typeof AppRevendasRoute
+  '/servidores': typeof AppServidoresRoute
   '/settings': typeof AppSettingsRoute
   '/telegram': typeof AppTelegramRoute
+  '/wa-conexao': typeof AppWaConexaoRoute
   '/whatsapp': typeof AppWhatsappRoute
 }
 export interface FileRoutesByTo {
@@ -123,13 +186,22 @@ export interface FileRoutesByTo {
   '/analytics': typeof AppAnalyticsRoute
   '/automation': typeof AppAutomationRoute
   '/billing': typeof AppBillingRoute
+  '/broadcast': typeof AppBroadcastRoute
+  '/categorias': typeof AppCategoriasRoute
+  '/creditos': typeof AppCreditosRoute
   '/crm': typeof AppCrmRoute
   '/customers': typeof AppCustomersRoute
   '/dashboard': typeof AppDashboardRoute
   '/instagram': typeof AppInstagramRoute
+  '/pagamentos': typeof AppPagamentosRoute
+  '/planos': typeof AppPlanosRoute
+  '/posts': typeof AppPostsRoute
   '/reseller': typeof AppResellerRoute
+  '/revendas': typeof AppRevendasRoute
+  '/servidores': typeof AppServidoresRoute
   '/settings': typeof AppSettingsRoute
   '/telegram': typeof AppTelegramRoute
+  '/wa-conexao': typeof AppWaConexaoRoute
   '/whatsapp': typeof AppWhatsappRoute
 }
 export interface FileRoutesById {
@@ -141,13 +213,22 @@ export interface FileRoutesById {
   '/_app/analytics': typeof AppAnalyticsRoute
   '/_app/automation': typeof AppAutomationRoute
   '/_app/billing': typeof AppBillingRoute
+  '/_app/broadcast': typeof AppBroadcastRoute
+  '/_app/categorias': typeof AppCategoriasRoute
+  '/_app/creditos': typeof AppCreditosRoute
   '/_app/crm': typeof AppCrmRoute
   '/_app/customers': typeof AppCustomersRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/instagram': typeof AppInstagramRoute
+  '/_app/pagamentos': typeof AppPagamentosRoute
+  '/_app/planos': typeof AppPlanosRoute
+  '/_app/posts': typeof AppPostsRoute
   '/_app/reseller': typeof AppResellerRoute
+  '/_app/revendas': typeof AppRevendasRoute
+  '/_app/servidores': typeof AppServidoresRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/telegram': typeof AppTelegramRoute
+  '/_app/wa-conexao': typeof AppWaConexaoRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
 }
 export interface FileRouteTypes {
@@ -159,13 +240,22 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/automation'
     | '/billing'
+    | '/broadcast'
+    | '/categorias'
+    | '/creditos'
     | '/crm'
     | '/customers'
     | '/dashboard'
     | '/instagram'
+    | '/pagamentos'
+    | '/planos'
+    | '/posts'
     | '/reseller'
+    | '/revendas'
+    | '/servidores'
     | '/settings'
     | '/telegram'
+    | '/wa-conexao'
     | '/whatsapp'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -175,13 +265,22 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/automation'
     | '/billing'
+    | '/broadcast'
+    | '/categorias'
+    | '/creditos'
     | '/crm'
     | '/customers'
     | '/dashboard'
     | '/instagram'
+    | '/pagamentos'
+    | '/planos'
+    | '/posts'
     | '/reseller'
+    | '/revendas'
+    | '/servidores'
     | '/settings'
     | '/telegram'
+    | '/wa-conexao'
     | '/whatsapp'
   id:
     | '__root__'
@@ -192,13 +291,22 @@ export interface FileRouteTypes {
     | '/_app/analytics'
     | '/_app/automation'
     | '/_app/billing'
+    | '/_app/broadcast'
+    | '/_app/categorias'
+    | '/_app/creditos'
     | '/_app/crm'
     | '/_app/customers'
     | '/_app/dashboard'
     | '/_app/instagram'
+    | '/_app/pagamentos'
+    | '/_app/planos'
+    | '/_app/posts'
     | '/_app/reseller'
+    | '/_app/revendas'
+    | '/_app/servidores'
     | '/_app/settings'
     | '/_app/telegram'
+    | '/_app/wa-conexao'
     | '/_app/whatsapp'
   fileRoutesById: FileRoutesById
 }
@@ -238,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWhatsappRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/wa-conexao': {
+      id: '/_app/wa-conexao'
+      path: '/wa-conexao'
+      fullPath: '/wa-conexao'
+      preLoaderRoute: typeof AppWaConexaoRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/telegram': {
       id: '/_app/telegram'
       path: '/telegram'
@@ -252,11 +367,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/servidores': {
+      id: '/_app/servidores'
+      path: '/servidores'
+      fullPath: '/servidores'
+      preLoaderRoute: typeof AppServidoresRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/revendas': {
+      id: '/_app/revendas'
+      path: '/revendas'
+      fullPath: '/revendas'
+      preLoaderRoute: typeof AppRevendasRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/reseller': {
       id: '/_app/reseller'
       path: '/reseller'
       fullPath: '/reseller'
       preLoaderRoute: typeof AppResellerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/posts': {
+      id: '/_app/posts'
+      path: '/posts'
+      fullPath: '/posts'
+      preLoaderRoute: typeof AppPostsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/planos': {
+      id: '/_app/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof AppPlanosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/pagamentos': {
+      id: '/_app/pagamentos'
+      path: '/pagamentos'
+      fullPath: '/pagamentos'
+      preLoaderRoute: typeof AppPagamentosRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/instagram': {
@@ -285,6 +435,27 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/crm'
       preLoaderRoute: typeof AppCrmRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/creditos': {
+      id: '/_app/creditos'
+      path: '/creditos'
+      fullPath: '/creditos'
+      preLoaderRoute: typeof AppCreditosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/categorias': {
+      id: '/_app/categorias'
+      path: '/categorias'
+      fullPath: '/categorias'
+      preLoaderRoute: typeof AppCategoriasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/broadcast': {
+      id: '/_app/broadcast'
+      path: '/broadcast'
+      fullPath: '/broadcast'
+      preLoaderRoute: typeof AppBroadcastRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/billing': {
@@ -323,13 +494,22 @@ interface AppRouteChildren {
   AppAnalyticsRoute: typeof AppAnalyticsRoute
   AppAutomationRoute: typeof AppAutomationRoute
   AppBillingRoute: typeof AppBillingRoute
+  AppBroadcastRoute: typeof AppBroadcastRoute
+  AppCategoriasRoute: typeof AppCategoriasRoute
+  AppCreditosRoute: typeof AppCreditosRoute
   AppCrmRoute: typeof AppCrmRoute
   AppCustomersRoute: typeof AppCustomersRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppInstagramRoute: typeof AppInstagramRoute
+  AppPagamentosRoute: typeof AppPagamentosRoute
+  AppPlanosRoute: typeof AppPlanosRoute
+  AppPostsRoute: typeof AppPostsRoute
   AppResellerRoute: typeof AppResellerRoute
+  AppRevendasRoute: typeof AppRevendasRoute
+  AppServidoresRoute: typeof AppServidoresRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTelegramRoute: typeof AppTelegramRoute
+  AppWaConexaoRoute: typeof AppWaConexaoRoute
   AppWhatsappRoute: typeof AppWhatsappRoute
 }
 
@@ -338,13 +518,22 @@ const AppRouteChildren: AppRouteChildren = {
   AppAnalyticsRoute: AppAnalyticsRoute,
   AppAutomationRoute: AppAutomationRoute,
   AppBillingRoute: AppBillingRoute,
+  AppBroadcastRoute: AppBroadcastRoute,
+  AppCategoriasRoute: AppCategoriasRoute,
+  AppCreditosRoute: AppCreditosRoute,
   AppCrmRoute: AppCrmRoute,
   AppCustomersRoute: AppCustomersRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppInstagramRoute: AppInstagramRoute,
+  AppPagamentosRoute: AppPagamentosRoute,
+  AppPlanosRoute: AppPlanosRoute,
+  AppPostsRoute: AppPostsRoute,
   AppResellerRoute: AppResellerRoute,
+  AppRevendasRoute: AppRevendasRoute,
+  AppServidoresRoute: AppServidoresRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTelegramRoute: AppTelegramRoute,
+  AppWaConexaoRoute: AppWaConexaoRoute,
   AppWhatsappRoute: AppWhatsappRoute,
 }
 
@@ -358,3 +547,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

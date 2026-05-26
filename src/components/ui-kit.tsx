@@ -17,7 +17,7 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
       <div>
-        <div className="text-[10px] uppercase tracking-[0.3em] text-cyan-300/80">Nexus OS</div>
+        <div className="text-[10px] uppercase tracking-[0.3em] text-cyan-300/80">Br Revenda</div>
         <h1 className="font-display text-3xl md:text-4xl text-white mt-1">{title}</h1>
         {subtitle && <p className="text-slate-400 mt-2 max-w-2xl">{subtitle}</p>}
       </div>
