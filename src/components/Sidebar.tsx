@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import {
   LayoutDashboard, FolderTree, FileVideo, Server, Coins, Receipt,
   Package, Store, MessageCircle, Megaphone, Settings, LogIn, Sparkles,
+  MessageSquareText,
 } from "lucide-react";
 
 const nav = [
@@ -24,6 +25,7 @@ const nav = [
   ]},
   { group: "WhatsApp", items: [
     { to: "/wa-conexao", label: "Conexão API", icon: MessageCircle },
+    { to: "/templates", label: "Templates", icon: MessageSquareText },
     { to: "/broadcast", label: "Envio em Massa", icon: Megaphone },
   ]},
   { group: "Sistema", items: [
