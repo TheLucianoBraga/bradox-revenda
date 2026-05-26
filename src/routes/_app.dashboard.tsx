@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Bar, BarChart, CartesianGrid, Line, LineChart } from "recharts";
@@ -45,7 +45,9 @@ function Dashboard() {
         actions={
           <>
             <NeonButton variant="ghost"><span className="flex items-center gap-2"><Activity className="h-4 w-4" /> Ao vivo</span></NeonButton>
-            <NeonButton><span className="flex items-center gap-2"><Plus className="h-4 w-4" /> Nova automação</span></NeonButton>
+            <Link to="/revendas" data-handled="true">
+              <NeonButton><span className="flex items-center gap-2"><Plus className="h-4 w-4" /> Nova revenda</span></NeonButton>
+            </Link>
           </>
         }
       />
