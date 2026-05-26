@@ -19,7 +19,7 @@ export function Topbar() {
 
         <div className="ml-auto flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/30 text-xs text-emerald-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" /> All systems operational
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" /> Sistemas operando normalmente
           </div>
           <button className="relative h-9 w-9 grid place-items-center rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/40 transition">
             <Zap className="h-4 w-4 text-cyan-300" />
