@@ -216,10 +216,11 @@
   .app-ambient {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background:
-      radial-gradient(1400px 900px at 12% -8%, rgba(214,168,79,0.06), transparent 60%),
-      radial-gradient(1200px 800px at 100% 8%, rgba(168,121,30,0.045), transparent 65%),
-      radial-gradient(900px 700px at 50% 110%, rgba(214,168,79,0.035), transparent 60%);
+      radial-gradient(1500px 1000px at 10% -10%, rgba(205,164,92,0.07), transparent 60%),
+      radial-gradient(1200px 900px at 105% 5%, rgba(142,106,45,0.05), transparent 65%),
+      radial-gradient(1000px 800px at 50% 115%, rgba(205,164,92,0.04), transparent 60%);
   }
+
   .app-grid {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background-image:
