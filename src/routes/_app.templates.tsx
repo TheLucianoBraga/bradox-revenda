@@ -406,19 +406,24 @@ function EditorModal({
                 ref={taRef}
                 value={template.conteudo}
                 onChange={(e) => onChange({ ...template, conteudo: e.target.value })}
-                rows={12}
+                rows={10}
                 className="w-full rounded-[12px] bg-[#0E1014] border border-white/[0.06] p-3 text-[13px] leading-[1.6] text-[#F5F7FA] font-mono focus:outline-none focus:border-[#FFC247]/40 resize-y"
               />
               <div className="mt-2 text-[10.5px] text-[#6B7280]">
                 {template.conteudo.length} caracteres
               </div>
             </div>
+
+            <MediaUploader
+              media={template.media ?? null}
+              onChange={(m) => onChange({ ...template, media: m })}
+            />
           </div>
 
           {/* Preview */}
           <div className="p-5 bg-[#0B0B0C]">
             <div className="text-[10.5px] uppercase tracking-[0.18em] text-[#6B7280] mb-2">Pré-visualização</div>
-            <WhatsPreview content={template.conteudo} />
+            <WhatsPreview content={template.conteudo} media={template.media ?? null} />
           </div>
         </div>
 
