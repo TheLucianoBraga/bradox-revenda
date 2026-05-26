@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { GlassCard, PageHeader, NeonButton, StatPill } from "@/components/ui-kit";
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Bar, BarChart, CartesianGrid } from "recharts";
-import { ArrowUpRight, MessageCircle, Bot, Users, Zap, Plus, Sparkles, Activity, Globe2 } from "lucide-react";
+import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Bar, BarChart, CartesianGrid, Line, LineChart } from "recharts";
+import { ArrowUpRight, MessageCircle, Bot, Users, Zap, Plus, Sparkles, Activity, Globe2, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: Dashboard });
 
@@ -14,6 +14,27 @@ const series = Array.from({ length: 24 }, (_, i) => ({
 const bars = ["WhatsApp", "Instagram", "Telegram", "E-mail", "Web", "API"].map((c) => ({
   c, v: Math.round(Math.random() * 80 + 20),
 }));
+
+// 7-day trend sparklines, one per KPI
+const makeSpark = (base: number, vol: number) =>
+  Array.from({ length: 7 }, (_, i) => ({ d: i, v: Math.round(base + Math.sin(i / 1.4) * vol + Math.random() * vol * 0.6) }));
+
+type Trend = "up" | "gold" | "down";
+type Kpi = {
+  label: string; value: string; delta: string; trend: Trend;
+  icon: typeof MessageCircle; spark: { d: number; v: number }[]; stroke: string;
+};
+
+const kpis: Kpi[] = [
+  { label: "Conversas ativas", value: "8.492", delta: "+12,4%", trend: "up",
+    icon: MessageCircle, spark: makeSpark(120, 40), stroke: "#6EE7B7" },
+  { label: "Resolvidas por IA", value: "73,2%", delta: "+4,1%", trend: "up",
+    icon: Bot, spark: makeSpark(80, 25), stroke: "#6EE7B7" },
+  { label: "Receita mensal", value: "R$ 184.902", delta: "+8,7%", trend: "gold",
+    icon: Zap, spark: makeSpark(140, 50), stroke: "#E8C886" },
+  { label: "Revendas", value: "1.204", delta: "+22", trend: "up",
+    icon: Users, spark: makeSpark(60, 18), stroke: "#6EE7B7" },
+];
 
 function Dashboard() {
   return (
@@ -30,29 +51,40 @@ function Dashboard() {
       />
 
       <div className="grid grid-cols-12 gap-5">
-        {[
-          { label: "Conversas ativas", value: "8.492", delta: "+12,4%", icon: MessageCircle, accent: "cyan" },
-          { label: "Resolvidas por IA", value: "73,2%", delta: "+4,1%", icon: Bot, accent: "violet" },
-          { label: "Receita mensal", value: "R$ 184.902", delta: "+8,7%", icon: Zap, accent: "emerald" },
-          { label: "Revendas", value: "1.204", delta: "+22", icon: Users, accent: "cyan" },
-        ].map((k, i) => (
+        {kpis.map((k, i) => (
           <motion.div key={k.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
             className="col-span-12 sm:col-span-6 xl:col-span-3">
             <GlassCard className="p-5 h-full">
               <div className="flex items-start justify-between">
-                <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 grid place-items-center">
-                  <k.icon className="h-5 w-5 text-cyan-300" />
+                <div className="h-10 w-10 rounded-xl bg-white/[0.04] border border-white/10 grid place-items-center">
+                  <k.icon className="h-[18px] w-[18px] text-[#E0BC72]" strokeWidth={1.6} />
                 </div>
-                <StatPill value={k.delta} label="vs 7d" accent={k.accent as any} />
+                <span className={`pill-delta ${k.trend}`}>
+                  <TrendingUp className="h-3 w-3" strokeWidth={2} />
+                  {k.delta}<span className="opacity-70 font-normal ml-0.5">vs 7d</span>
+                </span>
               </div>
-              <div className="mt-5 font-display text-3xl text-white">{k.value}</div>
-              <div className="text-xs text-slate-400 mt-1">{k.label}</div>
-              <div className="mt-4 h-1 rounded-full bg-white/5 overflow-hidden">
-                <div className="h-full w-2/3 bg-gradient-to-r from-cyan-400 to-violet-500" />
+              <div className="mt-5 metric-number font-display text-[30px] leading-none tracking-[-0.025em] font-semibold">
+                {k.value}
+              </div>
+              <div className="text-[12px] text-[#A1A1AA] mt-2">{k.label}</div>
+              <div className="mt-3 h-[34px] -mx-1">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={k.spark}>
+                    <defs>
+                      <linearGradient id={`sp-${i}`} x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor={k.stroke} stopOpacity={0.25} />
+                        <stop offset="100%" stopColor={k.stroke} stopOpacity={1} />
+                      </linearGradient>
+                    </defs>
+                    <Line type="monotone" dataKey="v" stroke={`url(#sp-${i})`} strokeWidth={1.75} dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             </GlassCard>
           </motion.div>
         ))}
+
 
         <GlassCard className="col-span-12 xl:col-span-8 p-6">
           <div className="flex items-center justify-between mb-4">
