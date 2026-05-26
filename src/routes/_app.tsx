@@ -11,7 +11,6 @@ export const Route = createFileRoute("/_app")({
 });
 
 function AppLayout() {
-  // Fallback handler: any <button> sem onClick recebe um toast amigável.
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
@@ -19,7 +18,6 @@ function AppLayout() {
       const btn = target.closest("button, [role='button']") as HTMLElement | null;
       if (!btn) return;
       if (btn.dataset.handled === "true") return;
-      // Heurística: se o React anexou onClick, o atributo data-rh ou propriedade __reactProps existirá.
       const keys = Object.keys(btn);
       const propKey = keys.find((k) => k.startsWith("__reactProps$"));
       // @ts-expect-error - acessando props internas
@@ -34,12 +32,16 @@ function AppLayout() {
   }, []);
 
   return (
-    <div className="relative min-h-screen flex w-full bg-[#0B0B0C]">
-      <div className="pointer-events-none fixed inset-0 grid-bg opacity-60" />
+    <div className="relative min-h-screen flex w-full bg-[#08090B]">
+      {/* Cinematic ambient stack */}
+      <div className="app-ambient" />
+      <div className="app-grid" />
+      <div className="app-grain" />
+
       <Sidebar />
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="relative z-10 flex-1 min-w-0 flex flex-col">
         <Topbar />
-        <main className="flex-1 px-6 md:px-10 py-8 max-w-[1480px] w-full mx-auto">
+        <main className="flex-1 px-6 md:px-10 py-10 max-w-[1480px] w-full mx-auto animate-fade-up">
           <Outlet />
         </main>
       </div>
