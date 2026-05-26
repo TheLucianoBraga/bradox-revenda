@@ -5,17 +5,22 @@ import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import {
   MessageSquareText, Plus, Search, Pencil, Trash2, Copy, X,
-  Bold, Italic, Strikethrough, Code, Check, CheckCheck, Tag,
+  Bold, Italic, Strikethrough, Code, CheckCheck, Tag,
+  ImagePlus, Film, Paperclip, FileImage,
 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/templates")({ component: TemplatesPage });
+
+type MediaKind = "image" | "video";
+type Media = { kind: MediaKind; url: string; name: string; size: number };
 
 type Template = {
   id: string;
   nome: string;
   categoria: string;
   conteudo: string;
+  media?: Media | null;
   updatedAt: number;
 };
 
@@ -234,6 +239,18 @@ function TemplatesPage() {
               </div>
             </div>
 
+            {t.media && (
+              <div className="mt-3 rounded-[10px] overflow-hidden border border-white/[0.06] bg-black/30">
+                {t.media.kind === "image" ? (
+                  <img src={t.media.url} alt="" className="w-full h-32 object-cover" />
+                ) : (
+                  <div className="relative w-full h-32 bg-black grid place-items-center">
+                    <Film className="h-6 w-6 text-white/60" />
+                    <span className="absolute bottom-1.5 left-2 text-[10px] text-white/70 truncate max-w-[90%]">{t.media.name}</span>
+                  </div>
+                )}
+              </div>
+            )}
             <div
               className="mt-3 text-[12.5px] text-[#A1A1AA] leading-[1.55] line-clamp-5 whitespace-pre-wrap break-words"
               dangerouslySetInnerHTML={{ __html: renderWhatsapp(t.conteudo, false) }}
@@ -389,19 +406,24 @@ function EditorModal({
                 ref={taRef}
                 value={template.conteudo}
                 onChange={(e) => onChange({ ...template, conteudo: e.target.value })}
-                rows={12}
+                rows={10}
                 className="w-full rounded-[12px] bg-[#0E1014] border border-white/[0.06] p-3 text-[13px] leading-[1.6] text-[#F5F7FA] font-mono focus:outline-none focus:border-[#FFC247]/40 resize-y"
               />
               <div className="mt-2 text-[10.5px] text-[#6B7280]">
                 {template.conteudo.length} caracteres
               </div>
             </div>
+
+            <MediaUploader
+              media={template.media ?? null}
+              onChange={(m) => onChange({ ...template, media: m })}
+            />
           </div>
 
           {/* Preview */}
           <div className="p-5 bg-[#0B0B0C]">
             <div className="text-[10.5px] uppercase tracking-[0.18em] text-[#6B7280] mb-2">Pré-visualização</div>
-            <WhatsPreview content={template.conteudo} />
+            <WhatsPreview content={template.conteudo} media={template.media ?? null} />
           </div>
         </div>
 
@@ -427,7 +449,7 @@ function ToolbarBtn({ children, onClick, title }: { children: React.ReactNode; o
   );
 }
 
-function WhatsPreview({ content }: { content: string }) {
+function WhatsPreview({ content, media }: { content: string; media?: Media | null }) {
   const now = new Date();
   const hh = String(now.getHours()).padStart(2, "0");
   const mm = String(now.getMinutes()).padStart(2, "0");
@@ -459,16 +481,27 @@ function WhatsPreview({ content }: { content: string }) {
       >
         <div className="flex justify-end">
           <div
-            className="max-w-[85%] rounded-[10px] rounded-br-[2px] px-3 py-2 text-[13px] leading-[1.5] text-[#E8F5E9] shadow"
+            className="max-w-[85%] rounded-[10px] rounded-br-[2px] p-1.5 text-[13px] leading-[1.5] text-[#E8F5E9] shadow"
             style={{ background: "#005c4b" }}
           >
-            <div
-              className="whitespace-pre-wrap break-words wa-body"
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-            <div className="mt-1 flex items-center justify-end gap-1 text-[10px] text-emerald-100/70">
-              {hh}:{mm}
-              <CheckCheck className="h-3 w-3" />
+            {media && (
+              <div className="rounded-[8px] overflow-hidden mb-1 bg-black/40">
+                {media.kind === "image" ? (
+                  <img src={media.url} alt="" className="w-full max-h-64 object-cover" />
+                ) : (
+                  <video src={media.url} controls className="w-full max-h-64 bg-black" />
+                )}
+              </div>
+            )}
+            <div className="px-2 pb-1 pt-0.5">
+              <div
+                className="whitespace-pre-wrap break-words wa-body"
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+              <div className="mt-1 flex items-center justify-end gap-1 text-[10px] text-emerald-100/70">
+                {hh}:{mm}
+                <CheckCheck className="h-3 w-3" />
+              </div>
             </div>
           </div>
         </div>
@@ -493,6 +526,101 @@ function WhatsPreview({ content }: { content: string }) {
           font-weight: 600;
         }
       `}</style>
+    </div>
+  );
+}
+
+/* ---------- Media Uploader ---------- */
+const MAX_BYTES = 4 * 1024 * 1024; // 4MB (localStorage budget)
+
+function MediaUploader({
+  media, onChange,
+}: {
+  media: Media | null;
+  onChange: (m: Media | null) => void;
+}) {
+  const imgRef = useRef<HTMLInputElement>(null);
+  const vidRef = useRef<HTMLInputElement>(null);
+
+  function handleFile(file: File, kind: MediaKind) {
+    if (file.size > MAX_BYTES) {
+      toast.error(`Arquivo muito grande (máx. 4MB). Atual: ${(file.size / 1024 / 1024).toFixed(1)}MB`);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      onChange({ kind, url: String(reader.result), name: file.name, size: file.size });
+      toast.success(`${kind === "image" ? "Imagem" : "Vídeo"} anexado`);
+    };
+    reader.onerror = () => toast.error("Falha ao ler arquivo");
+    reader.readAsDataURL(file);
+  }
+
+  return (
+    <div>
+      <label className="block text-[11px] text-[#9CA3AF] mb-1.5 flex items-center gap-1.5">
+        <Paperclip className="h-3 w-3" /> Mídia (opcional)
+      </label>
+
+      {!media ? (
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => imgRef.current?.click()}
+            className="flex items-center gap-2 h-10 px-3 rounded-[10px] bg-[#0E1014] border border-white/[0.06] hover:border-[#FFC247]/40 text-[12.5px] text-[#D4D4D8] transition"
+          >
+            <ImagePlus className="h-4 w-4 text-[#FFC247]" /> Anexar imagem
+          </button>
+          <button
+            onClick={() => vidRef.current?.click()}
+            className="flex items-center gap-2 h-10 px-3 rounded-[10px] bg-[#0E1014] border border-white/[0.06] hover:border-[#FFC247]/40 text-[12.5px] text-[#D4D4D8] transition"
+          >
+            <Film className="h-4 w-4 text-[#FFC247]" /> Anexar vídeo
+          </button>
+          <input
+            ref={imgRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0], "image")}
+          />
+          <input
+            ref={vidRef}
+            type="file"
+            accept="video/*"
+            className="hidden"
+            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0], "video")}
+          />
+        </div>
+      ) : (
+        <div className="flex items-center gap-3 p-2.5 rounded-[10px] bg-[#0E1014] border border-white/[0.06]">
+          <div className="h-12 w-12 rounded-[8px] overflow-hidden bg-black grid place-items-center shrink-0">
+            {media.kind === "image" ? (
+              <img src={media.url} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <Film className="h-5 w-5 text-white/70" />
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 text-[12px] text-[#F5F7FA] truncate">
+              {media.kind === "image" ? <FileImage className="h-3.5 w-3.5 text-[#FFC247]" /> : <Film className="h-3.5 w-3.5 text-[#FFC247]" />}
+              <span className="truncate">{media.name}</span>
+            </div>
+            <div className="text-[10.5px] text-[#6B7280] mt-0.5">
+              {(media.size / 1024).toFixed(0)} KB · {media.kind === "image" ? "Imagem" : "Vídeo"}
+            </div>
+          </div>
+          <button
+            onClick={() => onChange(null)}
+            className="h-8 w-8 grid place-items-center rounded-[8px] hover:bg-rose-500/10 text-rose-400/80"
+            title="Remover"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+      <div className="mt-1.5 text-[10.5px] text-[#6B7280]">
+        Máximo 4MB. Para vídeos maiores, use link no corpo da mensagem.
+      </div>
     </div>
   );
 }
