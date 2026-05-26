@@ -126,6 +126,7 @@ function Posts() {
                 )}
               </div>
             </GlassCard>
+            </div>
           );
         })}
         {list.length === 0 && (
