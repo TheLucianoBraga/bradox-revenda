@@ -266,7 +266,7 @@ function PostModal({
 
   const submit = () => {
     if (!titulo.trim()) return toast.error("Informe o título");
-    if (!resumo.trim()) return toast.error("Informe um resumo");
+    if (!stripHtml(resumo)) return toast.error("Informe um conteúdo");
     onSave({
       id: initial?.id,
       titulo: titulo.trim(),
