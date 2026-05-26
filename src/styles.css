@@ -433,15 +433,6 @@
     background: radial-gradient(circle, rgba(224,188,114,0.18), transparent 70%);
     pointer-events: none;
   }
-    content: "";
-    position: absolute;
-    left: 4px; top: 50%;
-    width: 22px; height: 22px;
-    transform: translateY(-50%);
-    border-radius: 8px;
-    background: radial-gradient(circle, rgba(224,188,114,0.18), transparent 70%);
-    pointer-events: none;
-  }
 
   .label-eyebrow {
     font-size: 11px;
