@@ -193,6 +193,7 @@ function CategoriaModal({
   const [slug, setSlug] = useState("");
   const [descricao, setDescricao] = useState("");
   const [cor, setCor] = useState<Cor>("cyan");
+  const [corHex, setCorHex] = useState<string | undefined>(undefined);
   const [icone, setIcone] = useState<string>("folder-tree");
   const [imagem, setImagem] = useState<string | undefined>(undefined);
   const [iconBusca, setIconBusca] = useState("");
@@ -206,6 +207,7 @@ function CategoriaModal({
       setSlug(editing?.slug ?? "");
       setDescricao(editing?.descricao ?? "");
       setCor(editing?.cor ?? "cyan");
+      setCorHex(editing?.corHex);
       setIcone(editing?.icone ?? "folder-tree");
       setImagem(editing?.imagem);
       setIconBusca("");
