@@ -6,8 +6,25 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Orbitron", system-ui, sans-serif;
+  --font-display: "Big Shoulders Display", "Saira Condensed", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
+
+  /* Override cyan -> amber, violet -> orange so existing utility classes adopt new palette */
+  --color-cyan-200: #fde6a8;
+  --color-cyan-300: #fcd34d;
+  --color-cyan-400: #fbbf24;
+  --color-cyan-500: #f59e0b;
+  --color-cyan-600: #d97706;
+  --color-violet-300: #fdba74;
+  --color-violet-400: #fb923c;
+  --color-violet-500: #f97316;
+  --color-violet-600: #ea580c;
+  --color-fuchsia-500: #f97316;
+  --color-pink-400: #fdba74;
+  --color-pink-500: #fb923c;
+  --color-sky-400: #fbbf24;
+  --color-sky-500: #f59e0b;
+  --color-blue-500: #f59e0b;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
