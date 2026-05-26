@@ -1,32 +1,33 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
-  LayoutDashboard, Kanban, Bot, MessageCircle, Instagram, CreditCard,
-  Workflow, Send, Users, Store, BarChart3, Settings, Sparkles, LogIn,
+  LayoutDashboard, FolderTree, FileVideo, Server, Coins, Receipt,
+  Package, Store, MessageCircle, Megaphone, Settings, Tv, LogIn,
 } from "lucide-react";
 
 const nav = [
   { group: "Overview", items: [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/analytics", label: "Analytics", icon: BarChart3 },
   ]},
-  { group: "Workspace", items: [
-    { to: "/crm", label: "CRM Kanban", icon: Kanban },
-    { to: "/ai-chat", label: "AI Chat", icon: Bot },
-    { to: "/automation", label: "Automation Flows", icon: Workflow },
+  { group: "Conteúdos", items: [
+    { to: "/categorias", label: "Categorias", icon: FolderTree },
+    { to: "/posts", label: "Posts & Mídias", icon: FileVideo },
   ]},
-  { group: "Inboxes", items: [
-    { to: "/whatsapp", label: "WhatsApp", icon: MessageCircle },
-    { to: "/instagram", label: "Instagram", icon: Instagram },
-    { to: "/telegram", label: "Telegram", icon: Send },
+  { group: "Operação", items: [
+    { to: "/revendas", label: "Revendas", icon: Store },
+    { to: "/servidores", label: "Servidores", icon: Server },
   ]},
-  { group: "Business", items: [
-    { to: "/billing", label: "Billing", icon: CreditCard },
-    { to: "/customers", label: "Customer Portal", icon: Users },
-    { to: "/reseller", label: "Reseller Portal", icon: Store },
+  { group: "Cobranças", items: [
+    { to: "/planos", label: "Planos", icon: Package },
+    { to: "/creditos", label: "Créditos (Pré)", icon: Coins },
+    { to: "/pagamentos", label: "Pagamentos (Pós)", icon: Receipt },
   ]},
-  { group: "System", items: [
-    { to: "/settings", label: "Settings", icon: Settings },
+  { group: "WhatsApp", items: [
+    { to: "/wa-conexao", label: "Conexão API", icon: MessageCircle },
+    { to: "/broadcast", label: "Envio em Massa", icon: Megaphone },
+  ]},
+  { group: "Sistema", items: [
+    { to: "/settings", label: "Configurações", icon: Settings },
     { to: "/login", label: "Login", icon: LogIn },
   ]},
 ];
@@ -37,11 +38,11 @@ export function Sidebar() {
     <aside className="hidden lg:flex flex-col w-64 shrink-0 h-screen sticky top-0 glass-strong border-r border-white/5">
       <div className="px-5 py-5 flex items-center gap-3">
         <div className="relative h-9 w-9 rounded-xl bg-gradient-to-br from-cyan-400 to-violet-600 grid place-items-center glow-cyan">
-          <Sparkles className="h-4 w-4 text-black" />
+          <Tv className="h-4 w-4 text-black" />
         </div>
         <div>
-          <div className="font-display text-sm tracking-widest text-white">NEXUS</div>
-          <div className="text-[10px] text-slate-400 tracking-[0.3em]">OS · v2.6</div>
+          <div className="font-display text-sm tracking-widest text-white">BR REVENDA</div>
+          <div className="text-[10px] text-slate-400 tracking-[0.3em]">IPTV · CONTROL</div>
         </div>
       </div>
 
@@ -77,10 +78,10 @@ export function Sidebar() {
       </nav>
 
       <div className="m-3 p-4 rounded-2xl glass border-gradient relative overflow-hidden">
-        <div className="text-xs font-display text-cyan-300 tracking-widest">UPGRADE</div>
-        <div className="mt-1 text-sm text-white">Nexus Quantum</div>
-        <p className="mt-1 text-xs text-slate-400">Unlimited agents · White-label · Priority AI</p>
-        <button className="mt-3 w-full text-xs py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-violet-500 text-black font-medium">Go Pro</button>
+        <div className="text-xs font-display text-cyan-300 tracking-widest">PRO</div>
+        <div className="mt-1 text-sm text-white">Br Revenda Master</div>
+        <p className="mt-1 text-xs text-slate-400">Revendas ilimitadas · WhatsApp API · Broadcast</p>
+        <button className="mt-3 w-full text-xs py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-violet-500 text-black font-medium">Fazer upgrade</button>
       </div>
     </aside>
   );

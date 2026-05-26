@@ -20,16 +20,16 @@ function LoginPage() {
             <Sparkles className="h-5 w-5 text-black" />
           </div>
           <div>
-            <div className="font-display tracking-widest">NEXUS</div>
-            <div className="text-[10px] tracking-[0.3em] text-slate-400">OPERATING SYSTEM</div>
+            <div className="font-display tracking-widest">BR REVENDA</div>
+            <div className="text-[10px] tracking-[0.3em] text-slate-400">IPTV CONTROL</div>
           </div>
         </div>
 
         <div className="relative">
           <h1 className="font-display text-5xl xl:text-6xl leading-[1.05]">
-            The <span className="text-gradient">command center</span><br />for AI-native ops.
+            O <span className="text-gradient">centro de controle</span><br />da sua revenda IPTV.
           </h1>
-          <p className="mt-5 text-slate-400 max-w-md">Omnichannel CRM, AI agents, automation flows, and reseller tooling — engineered for teams who ship at the speed of thought.</p>
+          <p className="mt-5 text-slate-400 max-w-md">Conteúdos, servidores, cobranças, planos e WhatsApp em massa — tudo em um lugar, com a performance que sua operação exige.</p>
 
           <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
             {[
@@ -54,8 +54,8 @@ function LoginPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           className="w-full max-w-md glass-strong rounded-3xl p-8 border-gradient relative">
           <div className="text-[10px] tracking-[0.3em] text-cyan-300/80 uppercase">Welcome back</div>
-          <h2 className="font-display text-3xl mt-1">Sign in to Nexus</h2>
-          <p className="text-sm text-slate-400 mt-2">Access your workspace and continue building the future.</p>
+          <h2 className="font-display text-3xl mt-1">Entrar no Br Revenda</h2>
+          <p className="text-sm text-slate-400 mt-2">Acesse seu painel e gerencie toda a sua operação IPTV.</p>
 
           <div className="mt-6 grid grid-cols-2 gap-3">
             <button className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/40 text-sm">
