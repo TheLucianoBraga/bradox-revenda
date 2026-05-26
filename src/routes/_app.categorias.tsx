@@ -25,6 +25,7 @@ type Categoria = {
   descricao: string;
   posts: number;
   cor: Cor;
+  corHex?: string;
   icone: string;
   imagem?: string;
 };
