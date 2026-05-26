@@ -62,15 +62,20 @@ export function Sidebar() {
                   return (
                     <li key={to}>
                       <Link to={to} className="relative block" data-handled="true">
+                        {active && (
+                          <motion.span
+                            layoutId="sidebar-rail"
+                            className="absolute -left-[7px] top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-full"
+                            style={{
+                              background: "linear-gradient(180deg,#E8C886,#B98A3D)",
+                              boxShadow: "0 0 12px rgba(224,188,114,0.55), 0 0 2px rgba(224,188,114,0.9)",
+                            }}
+                            transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                          />
+                        )}
                         <div className={`nav-item ${active ? "active" : ""}`}>
-                          <Icon className="h-[14px] w-[14px] shrink-0 opacity-90" strokeWidth={1.6} />
+                          <Icon className="h-[15px] w-[15px] shrink-0 opacity-90" strokeWidth={1.5} />
                           <span className="truncate">{label}</span>
-                          {active && (
-                            <motion.span
-                              layoutId="sidebar-dot"
-                              className="ml-auto h-1 w-1 rounded-full bg-[#E0B45C] shadow-[0_0_8px_rgba(224,180,92,0.6)]"
-                            />
-                          )}
                         </div>
                       </Link>
                     </li>
@@ -80,6 +85,7 @@ export function Sidebar() {
             </div>
           ))}
         </nav>
+
 
         {/* Upgrade dock */}
         <div className="m-2.5 p-3.5 rounded-[14px] relative overflow-hidden
