@@ -19,12 +19,12 @@ function Dashboard() {
   return (
     <>
       <PageHeader
-        title="Mission Control"
-        subtitle="Real-time pulse across every channel, every agent, every customer."
+        title="Central de Controle"
+        subtitle="Pulso em tempo real de cada canal, cada agente e cada cliente."
         actions={
           <>
-            <NeonButton variant="ghost"><span className="flex items-center gap-2"><Activity className="h-4 w-4" /> Live</span></NeonButton>
-            <NeonButton><span className="flex items-center gap-2"><Plus className="h-4 w-4" /> New automation</span></NeonButton>
+            <NeonButton variant="ghost"><span className="flex items-center gap-2"><Activity className="h-4 w-4" /> Ao vivo</span></NeonButton>
+            <NeonButton><span className="flex items-center gap-2"><Plus className="h-4 w-4" /> Nova automação</span></NeonButton>
           </>
         }
       />
