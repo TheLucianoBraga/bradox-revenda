@@ -89,16 +89,16 @@ function Settings() {
             <div className="space-y-4">
               <div className="font-display text-xl text-white">{tabs.find(t => t.id === tab)?.l}</div>
               {[
-                "Receive realtime alerts on Slack and email.",
-                "Enable AI auto-suggestions in every inbox.",
-                "Two-factor authentication for all admins.",
-                "Allow reseller portals to override branding.",
-                "Geo-pin data storage to EU region.",
+                "Receber alertas em tempo real por e-mail e Slack.",
+                "Habilitar sugestões automáticas de IA em todas as caixas.",
+                "Autenticação em dois fatores para todos os administradores.",
+                "Permitir que portais de revenda sobrescrevam a marca.",
+                "Fixar armazenamento de dados na região Brasil.",
               ].map((t, i) => (
                 <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
                   <div>
                     <div className="text-sm text-white">{t}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">Recommended for production workspaces.</div>
+                    <div className="text-xs text-slate-400 mt-0.5">Recomendado para workspaces em produção.</div>
                   </div>
                   <Toggle on={i % 2 === 0} />
                 </div>
