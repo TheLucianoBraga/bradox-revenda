@@ -296,12 +296,57 @@ function CategoriaModal({
 
           <div className="mt-4">
             <label className="text-xs text-slate-400">Cor</label>
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex items-center gap-2 flex-wrap">
               {cores.map((c) => (
-                <button key={c.v} type="button" data-handled="true" onClick={() => setCor(c.v)} className={`h-9 w-9 rounded-lg border-2 transition ${c.cls} ${cor === c.v ? "ring-2 ring-white/40" : "opacity-60 hover:opacity-100"}`} />
+                <button
+                  key={c.v}
+                  type="button"
+                  data-handled="true"
+                  onClick={() => { setCor(c.v); setCorHex(undefined); }}
+                  className={`h-9 w-9 rounded-lg border-2 transition ${c.cls} ${cor === c.v && !corHex ? "ring-2 ring-white/40" : "opacity-60 hover:opacity-100"}`}
+                />
               ))}
+              <div className="mx-1 h-6 w-px bg-white/10" />
+              <label
+                className={`relative h-9 w-9 rounded-lg border-2 cursor-pointer overflow-hidden transition ${corHex ? "ring-2 ring-white/40 border-white/30" : "border-white/15 opacity-80 hover:opacity-100"}`}
+                style={corHex ? { backgroundColor: corHex } : undefined}
+                title="Escolher cor personalizada"
+              >
+                {!corHex && (
+                  <span className="absolute inset-0 bg-[conic-gradient(from_0deg,#ef4444,#f59e0b,#10b981,#06b6d4,#8b5cf6,#ec4899,#ef4444)] opacity-80" />
+                )}
+                <input
+                  type="color"
+                  value={corHex ?? "#CDA45C"}
+                  onChange={(e) => setCorHex(e.target.value)}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+              </label>
+              {corHex && (
+                <>
+                  <input
+                    type="text"
+                    value={corHex}
+                    onChange={(e) => {
+                      const v = e.target.value.trim();
+                      if (/^#[0-9a-fA-F]{0,6}$/.test(v) || v === "") setCorHex(v || undefined);
+                    }}
+                    placeholder="#CDA45C"
+                    className="h-9 w-[110px] px-2.5 rounded-lg bg-white/5 border border-white/10 text-xs font-mono tracking-wide focus:outline-none focus:border-cyan-400/50"
+                  />
+                  <button
+                    type="button"
+                    data-handled="true"
+                    onClick={() => setCorHex(undefined)}
+                    className="text-[11px] text-slate-400 hover:text-white"
+                  >
+                    Limpar
+                  </button>
+                </>
+              )}
             </div>
           </div>
+
 
           {/* Imagem upload */}
           <div className="mt-5">
