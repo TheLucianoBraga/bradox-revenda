@@ -6,13 +6,13 @@ import { User, Bell, Palette, Shield, Globe, Key, Bot } from "lucide-react";
 export const Route = createFileRoute("/_app/settings")({ component: Settings });
 
 const tabs = [
-  { id: "profile", l: "Profile", i: User },
-  { id: "branding", l: "White-label", i: Palette },
-  { id: "ai", l: "AI", i: Bot },
-  { id: "notifications", l: "Notifications", i: Bell },
-  { id: "security", l: "Security", i: Shield },
-  { id: "api", l: "API & Webhooks", i: Key },
-  { id: "regions", l: "Regions", i: Globe },
+  { id: "profile", l: "Perfil", i: User },
+  { id: "branding", l: "Marca branca", i: Palette },
+  { id: "ai", l: "IA", i: Bot },
+  { id: "notifications", l: "Notificações", i: Bell },
+  { id: "security", l: "Segurança", i: Shield },
+  { id: "api", l: "API e Webhooks", i: Key },
+  { id: "regions", l: "Regiões", i: Globe },
 ];
 
 function Toggle({ on = true }: { on?: boolean }) {
