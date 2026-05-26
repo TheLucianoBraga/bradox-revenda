@@ -449,7 +449,7 @@ function ToolbarBtn({ children, onClick, title }: { children: React.ReactNode; o
   );
 }
 
-function WhatsPreview({ content }: { content: string }) {
+function WhatsPreview({ content, media }: { content: string; media?: Media | null }) {
   const now = new Date();
   const hh = String(now.getHours()).padStart(2, "0");
   const mm = String(now.getMinutes()).padStart(2, "0");
