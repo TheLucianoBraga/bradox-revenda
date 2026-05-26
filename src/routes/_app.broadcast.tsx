@@ -46,6 +46,65 @@ const FILA_INICIAL = [
   { id: "c-011", nome: "Boas-vindas novos", status: "Concluída", total: 88, enviadas: 86, falhas: 2, rate: 25, eta: "0m", canal: "WhatsApp" },
 ];
 
+const TEMPLATES = [
+  {
+    id: "t1",
+    nome: "Aviso de vencimento",
+    categoria: "Cobrança",
+    cor: "amber",
+    conteudo:
+      "Olá *{nome}*! 👋\n\nSeu plano *{plano}* no servidor _{servidor}_ vence em *{vencimento}*.\n\nRenove agora e ganhe *10% OFF* 🚀\n\n— Equipe {revenda}",
+  },
+  {
+    id: "t2",
+    nome: "Boas-vindas",
+    categoria: "Onboarding",
+    cor: "emerald",
+    conteudo:
+      "Seja muito bem-vindo(a), *{nome}*! 🎉\n\nSeu acesso ao *{plano}* já está ativo no servidor _{servidor}_.\n\nQualquer dúvida, fale com a *{revenda}*. Bom streaming! 📺",
+  },
+  {
+    id: "t3",
+    nome: "Reativação cliente inativo",
+    categoria: "Retenção",
+    cor: "violet",
+    conteudo:
+      "Oi, *{nome}*! Sentimos sua falta. 💜\n\nVoltando hoje no plano *{plano}*, você ganha *7 dias extras* grátis.\n\nResponda *EU QUERO* que ativamos pra você.\n\n— {revenda}",
+  },
+  {
+    id: "t4",
+    nome: "Promo flash",
+    categoria: "Promoção",
+    cor: "rose",
+    conteudo:
+      "🔥 *PROMO RELÂMPAGO* 🔥\n\n*{nome}*, só hoje: *50% OFF* na renovação do *{plano}*!\n\n⏰ Válido até às 23h59.\n\nClique para garantir 👉",
+  },
+  {
+    id: "t5",
+    nome: "Aviso de manutenção",
+    categoria: "Operacional",
+    cor: "cyan",
+    conteudo:
+      "⚙️ *Aviso técnico*\n\nOlá, *{nome}*. O servidor _{servidor}_ passará por manutenção em *{vencimento}*, das 03h às 05h.\n\nAgradecemos a compreensão.\n— {revenda}",
+  },
+  {
+    id: "t6",
+    nome: "Confirmação de pagamento",
+    categoria: "Financeiro",
+    cor: "emerald",
+    conteudo:
+      "✅ Pagamento confirmado!\n\n*{nome}*, recebemos sua renovação do *{plano}*.\n\nNovo vencimento: *{vencimento}*\nServidor: _{servidor}_\n\nObrigado pela confiança! 💛",
+  },
+];
+
+const VARIAVEIS = [
+  { tag: "{nome}", desc: "Nome do cliente", exemplo: "Lucas" },
+  { tag: "{plano}", desc: "Plano contratado", exemplo: "Pro" },
+  { tag: "{vencimento}", desc: "Data de vencimento", exemplo: "10/12/2026" },
+  { tag: "{servidor}", desc: "Servidor IPTV", exemplo: "SX Server" },
+  { tag: "{revenda}", desc: "Nome da revenda", exemplo: "Master BR" },
+];
+
 /* ---------- Component ---------- */
 
 function Broadcast() {
