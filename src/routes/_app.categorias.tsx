@@ -25,6 +25,7 @@ type Categoria = {
   descricao: string;
   posts: number;
   cor: Cor;
+  corHex?: string;
   icone: string;
   imagem?: string;
 };
@@ -64,6 +65,8 @@ const cores: { v: Cor; cls: string }[] = [
 ];
 
 const corClass = (c: Cor) => cores.find((x) => x.v === c)!.cls;
+const swatchStyle = (hex?: string): React.CSSProperties | undefined =>
+  hex ? { backgroundColor: `${hex}33`, borderColor: `${hex}88`, color: hex } : undefined;
 const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
@@ -143,7 +146,10 @@ function Categorias() {
             >
               <GlassCard className="p-5">
                 <div className="flex items-start justify-between">
-                  <div className={`h-12 w-12 rounded-xl grid place-items-center border overflow-hidden ${c.imagem ? "bg-white/5 border-white/10" : corClass(c.cor)}`}>
+                  <div
+                    className={`h-12 w-12 rounded-xl grid place-items-center border overflow-hidden ${c.imagem ? "bg-white/5 border-white/10" : (c.corHex ? "" : corClass(c.cor))}`}
+                    style={c.imagem ? undefined : swatchStyle(c.corHex)}
+                  >
                     <CategoriaIcone c={c} className="h-6 w-6" />
                   </div>
                   <div className="flex gap-1">
@@ -187,6 +193,7 @@ function CategoriaModal({
   const [slug, setSlug] = useState("");
   const [descricao, setDescricao] = useState("");
   const [cor, setCor] = useState<Cor>("cyan");
+  const [corHex, setCorHex] = useState<string | undefined>(undefined);
   const [icone, setIcone] = useState<string>("folder-tree");
   const [imagem, setImagem] = useState<string | undefined>(undefined);
   const [iconBusca, setIconBusca] = useState("");
@@ -200,6 +207,7 @@ function CategoriaModal({
       setSlug(editing?.slug ?? "");
       setDescricao(editing?.descricao ?? "");
       setCor(editing?.cor ?? "cyan");
+      setCorHex(editing?.corHex);
       setIcone(editing?.icone ?? "folder-tree");
       setImagem(editing?.imagem);
       setIconBusca("");
@@ -234,7 +242,7 @@ function CategoriaModal({
     if (!n) return setErro("Informe o nome da categoria.");
     if (!s) return setErro("Slug inválido.");
     if (existing.some((c) => c.slug === s && c.id !== editing?.id)) return setErro("Já existe uma categoria com este slug.");
-    onSave({ nome: n, slug: s, descricao: descricao.trim(), cor, icone, imagem });
+    onSave({ nome: n, slug: s, descricao: descricao.trim(), cor, corHex, icone, imagem });
   };
 
   const iconsFiltrados = ICON_KEYS.filter((k) => k.includes(iconBusca.toLowerCase()));
@@ -263,7 +271,10 @@ function CategoriaModal({
 
           {/* Preview + Nome / Slug */}
           <div className="flex gap-4 items-start">
-            <div className={`h-20 w-20 shrink-0 rounded-2xl grid place-items-center border overflow-hidden ${imagem ? "bg-white/5 border-white/10" : corClass(cor)}`}>
+            <div
+              className={`h-20 w-20 shrink-0 rounded-2xl grid place-items-center border overflow-hidden ${imagem ? "bg-white/5 border-white/10" : (corHex ? "" : corClass(cor))}`}
+              style={imagem ? undefined : swatchStyle(corHex)}
+            >
               {imagem ? <img src={imagem} alt="" className="h-full w-full object-cover" /> : <PreviewIcon className="h-9 w-9" />}
             </div>
             <div className="flex-1 space-y-3">
@@ -285,12 +296,57 @@ function CategoriaModal({
 
           <div className="mt-4">
             <label className="text-xs text-slate-400">Cor</label>
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex items-center gap-2 flex-wrap">
               {cores.map((c) => (
-                <button key={c.v} type="button" data-handled="true" onClick={() => setCor(c.v)} className={`h-9 w-9 rounded-lg border-2 transition ${c.cls} ${cor === c.v ? "ring-2 ring-white/40" : "opacity-60 hover:opacity-100"}`} />
+                <button
+                  key={c.v}
+                  type="button"
+                  data-handled="true"
+                  onClick={() => { setCor(c.v); setCorHex(undefined); }}
+                  className={`h-9 w-9 rounded-lg border-2 transition ${c.cls} ${cor === c.v && !corHex ? "ring-2 ring-white/40" : "opacity-60 hover:opacity-100"}`}
+                />
               ))}
+              <div className="mx-1 h-6 w-px bg-white/10" />
+              <label
+                className={`relative h-9 w-9 rounded-lg border-2 cursor-pointer overflow-hidden transition ${corHex ? "ring-2 ring-white/40 border-white/30" : "border-white/15 opacity-80 hover:opacity-100"}`}
+                style={corHex ? { backgroundColor: corHex } : undefined}
+                title="Escolher cor personalizada"
+              >
+                {!corHex && (
+                  <span className="absolute inset-0 bg-[conic-gradient(from_0deg,#ef4444,#f59e0b,#10b981,#06b6d4,#8b5cf6,#ec4899,#ef4444)] opacity-80" />
+                )}
+                <input
+                  type="color"
+                  value={corHex ?? "#CDA45C"}
+                  onChange={(e) => setCorHex(e.target.value)}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+              </label>
+              {corHex && (
+                <>
+                  <input
+                    type="text"
+                    value={corHex}
+                    onChange={(e) => {
+                      const v = e.target.value.trim();
+                      if (/^#[0-9a-fA-F]{0,6}$/.test(v) || v === "") setCorHex(v || undefined);
+                    }}
+                    placeholder="#CDA45C"
+                    className="h-9 w-[110px] px-2.5 rounded-lg bg-white/5 border border-white/10 text-xs font-mono tracking-wide focus:outline-none focus:border-cyan-400/50"
+                  />
+                  <button
+                    type="button"
+                    data-handled="true"
+                    onClick={() => setCorHex(undefined)}
+                    className="text-[11px] text-slate-400 hover:text-white"
+                  >
+                    Limpar
+                  </button>
+                </>
+              )}
             </div>
           </div>
+
 
           {/* Imagem upload */}
           <div className="mt-5">
