@@ -212,52 +212,60 @@
 
 @layer utilities {
   /* === AMBIENT BACKGROUND === */
-  /* Cinematic environment: huge soft radial glows + tech grid + grain */
+  /* Deep charcoal base with a near-imperceptible blue-violet wash */
+  .app-bg {
+    background:
+      radial-gradient(1200px 800px at 12% -8%, rgba(96, 92, 140, 0.10), transparent 60%),
+      radial-gradient(1100px 750px at 100% 0%, rgba(205, 164, 92, 0.045), transparent 65%),
+      radial-gradient(1000px 900px at 50% 120%, rgba(72, 80, 120, 0.08), transparent 60%),
+      linear-gradient(180deg, #08090C 0%, #07080A 100%);
+  }
   .app-ambient {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background:
-      radial-gradient(1500px 1000px at 10% -10%, rgba(205,164,92,0.07), transparent 60%),
-      radial-gradient(1200px 900px at 105% 5%, rgba(142,106,45,0.05), transparent 65%),
-      radial-gradient(1000px 800px at 50% 115%, rgba(205,164,92,0.04), transparent 60%);
-  }
-
-  .app-grid {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 90%);
+      radial-gradient(900px 700px at 18% 8%, rgba(130, 120, 180, 0.05), transparent 60%),
+      radial-gradient(800px 600px at 92% 12%, rgba(205, 164, 92, 0.04), transparent 65%);
   }
   .app-grain {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    opacity: 0.035;
+    opacity: 0.028;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
+  /* Kept for compatibility — now a no-op */
+  .app-grid { display: none; }
 
   /* === SURFACES === */
-  /* Premium card: directional light from top, radial center glow, hairline border */
+  /* Premium glassmorphism: subtle frost, hairline border that glows on hover, layered depth shadow */
   .glass {
     position: relative;
     background:
-      radial-gradient(120% 80% at 50% -20%, rgba(255,255,255,0.025), transparent 55%),
-      linear-gradient(180deg, rgba(255,255,255,0.012) 0%, transparent 30%),
-      var(--surface);
-    border: 1px solid var(--hairline);
-    box-shadow: var(--elev-2);
+      radial-gradient(120% 80% at 50% -20%, rgba(255,255,255,0.028), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,0.014) 0%, transparent 30%),
+      color-mix(in oklab, var(--surface) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.055);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 14px 36px -16px rgba(0,0,0,0.7),
+      0 4px 12px -4px rgba(0,0,0,0.5);
     transition: transform 0.4s var(--ease-premium), border-color 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium);
   }
   .glass::after {
     content: ""; position: absolute; inset: 0; border-radius: inherit;
     pointer-events: none;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-    opacity: 0.025;
+    opacity: 0.02;
     mix-blend-mode: overlay;
   }
   .glass:hover {
-    border-color: var(--hairline-strong);
-    box-shadow: var(--elev-3);
+    border-color: rgba(224,188,114,0.22);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 0 0 1px rgba(224,188,114,0.10),
+      0 24px 48px -18px rgba(0,0,0,0.8),
+      0 6px 18px -8px rgba(0,0,0,0.55);
   }
   .glass-strong {
     background: color-mix(in oklab, var(--bg-2) 72%, transparent);
@@ -331,16 +339,17 @@
     pointer-events: none;
   }
   .btn-primary:hover {
-    background: linear-gradient(180deg, #E8C886 0%, #CDA45C 100%);
-    transform: translateY(-1px);
+    background:
+      linear-gradient(180deg, #F0CE8E 0%, #D6A84F 60%, #B98A3D 100%);
+    transform: translateY(-1px) scale(1.015);
     box-shadow:
-      0 1px 0 rgba(255,255,255,0.45) inset,
+      0 1px 0 rgba(255,255,255,0.55) inset,
       0 -1px 0 rgba(0,0,0,0.14) inset,
-      0 4px 16px -4px rgba(205,164,92,0.5),
-      0 8px 24px -10px rgba(205,164,92,0.35);
+      0 6px 22px -6px rgba(232,200,134,0.55),
+      0 10px 32px -10px rgba(205,164,92,0.45);
   }
 
-  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:active { transform: translateY(0) scale(1); }
 
   .btn-secondary {
     background:
@@ -407,12 +416,22 @@
     color: var(--text-1);
   }
   .nav-item.active {
-    background: linear-gradient(180deg, rgba(205,164,92,0.11), rgba(205,164,92,0.04));
+    background: linear-gradient(180deg, rgba(205,164,92,0.10), rgba(205,164,92,0.025));
     color: #F2DCA8;
     box-shadow:
-      inset 0 0 0 1px rgba(205,164,92,0.20),
       inset 0 1px 0 rgba(255,255,255,0.05),
       0 1px 2px rgba(0,0,0,0.3);
+  }
+  /* Soft halo behind icon when active (rail itself comes from <motion.span> in Sidebar) */
+  .nav-item.active::after {
+    content: "";
+    position: absolute;
+    left: 4px; top: 50%;
+    width: 22px; height: 22px;
+    transform: translateY(-50%);
+    border-radius: 8px;
+    background: radial-gradient(circle, rgba(224,188,114,0.18), transparent 70%);
+    pointer-events: none;
   }
 
   .label-eyebrow {
@@ -422,6 +441,79 @@
     letter-spacing: 0.18em;
     color: var(--text-4);
     font-family: var(--font-sans);
+  }
+
+  /* === METRIC NUMBER GRADIENT === */
+  .metric-number {
+    background: linear-gradient(180deg, #FFFFFF 0%, #EDEDEA 55%, #C9B98E 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-feature-settings: "ss01", "tnum", "lnum";
+    text-shadow: 0 1px 0 rgba(255,255,255,0.02);
+  }
+
+  /* === FLOATING DELTA PILLS === */
+  .pill-delta {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid transparent;
+    transition: transform 0.25s var(--ease-premium), box-shadow 0.25s var(--ease-premium);
+  }
+  .pill-delta.up {
+    color: #6EE7B7;
+    background: rgba(16,185,129,0.10);
+    border-color: rgba(110,231,183,0.25);
+    box-shadow:
+      0 0 0 1px rgba(110,231,183,0.04),
+      0 0 14px -2px rgba(16,185,129,0.30),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .pill-delta.gold {
+    color: #E8C886;
+    background: rgba(205,164,92,0.10);
+    border-color: rgba(224,188,114,0.25);
+    box-shadow:
+      0 0 14px -3px rgba(205,164,92,0.30),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .pill-delta.down {
+    color: #FCA5A5;
+    background: rgba(239,68,68,0.10);
+    border-color: rgba(252,165,165,0.25);
+    box-shadow: 0 0 14px -3px rgba(239,68,68,0.25);
+  }
+
+  /* === PRO UPGRADE CARD === */
+  .pro-card {
+    position: relative;
+    border-radius: 14px;
+    padding: 14px;
+    background:
+      radial-gradient(120% 120% at 0% 0%, rgba(224,188,114,0.07), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,0.025), transparent 60%),
+      var(--surface);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      0 14px 28px -14px rgba(0,0,0,0.7);
+    overflow: hidden;
+  }
+  .pro-card::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(232,200,134,0.55), rgba(184,138,61,0.18) 45%, rgba(255,255,255,0.05) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
   }
 
 

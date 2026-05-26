@@ -32,10 +32,9 @@ function AppLayout() {
   }, []);
 
   return (
-    <div className="relative min-h-screen flex w-full bg-[#08090B]">
-      {/* Cinematic ambient stack */}
+    <div className="relative min-h-screen flex w-full app-bg">
+      {/* Deep ambient gradient: charcoal w/ faint blue-violet wash */}
       <div className="app-ambient" />
-      <div className="app-grid" />
       <div className="app-grain" />
 
       <Sidebar />

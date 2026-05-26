@@ -62,15 +62,20 @@ export function Sidebar() {
                   return (
                     <li key={to}>
                       <Link to={to} className="relative block" data-handled="true">
+                        {active && (
+                          <motion.span
+                            layoutId="sidebar-rail"
+                            className="absolute -left-[7px] top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-full"
+                            style={{
+                              background: "linear-gradient(180deg,#E8C886,#B98A3D)",
+                              boxShadow: "0 0 12px rgba(224,188,114,0.55), 0 0 2px rgba(224,188,114,0.9)",
+                            }}
+                            transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                          />
+                        )}
                         <div className={`nav-item ${active ? "active" : ""}`}>
-                          <Icon className="h-[14px] w-[14px] shrink-0 opacity-90" strokeWidth={1.6} />
+                          <Icon className="h-[15px] w-[15px] shrink-0 opacity-90" strokeWidth={1.5} />
                           <span className="truncate">{label}</span>
-                          {active && (
-                            <motion.span
-                              layoutId="sidebar-dot"
-                              className="ml-auto h-1 w-1 rounded-full bg-[#E0B45C] shadow-[0_0_8px_rgba(224,180,92,0.6)]"
-                            />
-                          )}
                         </div>
                       </Link>
                     </li>
@@ -81,24 +86,25 @@ export function Sidebar() {
           ))}
         </nav>
 
-        {/* Upgrade dock */}
-        <div className="m-2.5 p-3.5 rounded-[14px] relative overflow-hidden
-                        bg-[linear-gradient(180deg,rgba(255,255,255,0.02),transparent_60%),var(--surface)]
-                        border border-[rgba(255,255,255,0.06)]
-                        shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_8px_24px_-12px_rgba(0,0,0,0.6)]">
-          <div className="absolute -top-14 -right-14 h-32 w-32 rounded-full bg-[#D6A84F]/12 blur-3xl" />
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(214,168,79,0.35)] to-transparent" />
+
+        {/* Upgrade dock — luxury gradient border */}
+        <div className="m-2.5 pro-card">
+          <div className="absolute -top-14 -right-14 h-32 w-32 rounded-full bg-[#D6A84F]/15 blur-3xl pointer-events-none" />
           <div className="relative">
-            <div className="text-[9.5px] font-semibold tracking-[0.22em] text-[#D6A84F]">PRO</div>
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="h-3 w-3 text-[#E8C886]" strokeWidth={2} />
+              <div className="text-[9.5px] font-semibold tracking-[0.22em] text-[#E8C886]">PRO</div>
+            </div>
             <div className="mt-1.5 text-[12.5px] font-semibold text-white tracking-[-0.01em]">Br Revenda Master</div>
             <p className="mt-1 text-[10.5px] text-[#A1A1AA] leading-relaxed">
               Revendas ilimitadas, WhatsApp API e broadcast.
             </p>
-            <button className="mt-3 w-full h-7.5 py-1.5 text-[11.5px] rounded-[8px] btn-primary" data-handled="true">
+            <button className="mt-3 w-full py-1.5 text-[11.5px] rounded-[8px] btn-primary" data-handled="true">
               Fazer upgrade
             </button>
           </div>
         </div>
+
       </div>
     </aside>
   );
