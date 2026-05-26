@@ -26,7 +26,7 @@ export function Topbar() {
           </button>
           <button className="relative h-9 w-9 grid place-items-center rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/40 transition">
             <Bell className="h-4 w-4 text-slate-300" />
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]" />
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" />
           </button>
           <div className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-xl bg-white/5 border border-white/10">
             <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-cyan-400 to-violet-500" />

@@ -61,8 +61,8 @@ function Dashboard() {
               <div className="font-display text-xl text-white">Messages · AI Handovers</div>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]" /> Messages</span>
-              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-violet-400 shadow-[0_0_8px_#9333EA]" /> AI</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" /> Messages</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-violet-400 shadow-[0_0_8px_#F97316]" /> AI</span>
             </div>
           </div>
           <div className="h-72">
@@ -70,20 +70,20 @@ function Dashboard() {
               <AreaChart data={series}>
                 <defs>
                   <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#00E5FF" stopOpacity={0.6} />
-                    <stop offset="100%" stopColor="#00E5FF" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#F59E0B" stopOpacity={0.6} />
+                    <stop offset="100%" stopColor="#F59E0B" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#9333EA" stopOpacity={0.5} />
-                    <stop offset="100%" stopColor="#9333EA" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#F97316" stopOpacity={0.5} />
+                    <stop offset="100%" stopColor="#F97316" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
                 <XAxis dataKey="t" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ background: "rgba(11,15,20,0.9)", border: "1px solid rgba(0,216,255,0.3)", borderRadius: 12 }} />
-                <Area type="monotone" dataKey="msgs" stroke="#00E5FF" strokeWidth={2} fill="url(#g1)" />
-                <Area type="monotone" dataKey="ai" stroke="#9333EA" strokeWidth={2} fill="url(#g2)" />
+                <Area type="monotone" dataKey="msgs" stroke="#F59E0B" strokeWidth={2} fill="url(#g1)" />
+                <Area type="monotone" dataKey="ai" stroke="#F97316" strokeWidth={2} fill="url(#g2)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -100,8 +100,8 @@ function Dashboard() {
                 <Tooltip contentStyle={{ background: "rgba(11,15,20,0.9)", border: "1px solid rgba(0,216,255,0.3)", borderRadius: 12 }} />
                 <defs>
                   <linearGradient id="gb" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#00D8FF" />
-                    <stop offset="100%" stopColor="#9333EA" />
+                    <stop offset="0%" stopColor="#FBBF24" />
+                    <stop offset="100%" stopColor="#F97316" />
                   </linearGradient>
                 </defs>
                 <Bar dataKey="v" fill="url(#gb)" radius={[6, 6, 6, 6]} />
@@ -158,7 +158,7 @@ function Dashboard() {
                 "Suggested: throttle Telegram broadcasts after 21:00 UTC.",
               ].map((t, i) => (
                 <li key={i} className="flex gap-3">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00E5FF]" />
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#F59E0B]" />
                   <span className="text-slate-300">{t}</span>
                 </li>
               ))}

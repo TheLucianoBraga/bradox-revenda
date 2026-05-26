@@ -69,8 +69,8 @@ function Automation() {
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1080 560" preserveAspectRatio="none">
             <defs>
               <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#00E5FF" />
-                <stop offset="100%" stopColor="#9333EA" />
+                <stop offset="0%" stopColor="#F59E0B" />
+                <stop offset="100%" stopColor="#F97316" />
               </linearGradient>
             </defs>
             {edges.map((e, i) => {
@@ -93,8 +93,8 @@ function Automation() {
                 <div className="text-[10px] tracking-[0.25em] uppercase text-slate-400">{n.title}</div>
               </div>
               <div className="mt-2 text-sm text-white leading-tight">{n.sub}</div>
-              <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#00E5FF]" />
-              <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-violet-400 shadow-[0_0_10px_#9333EA]" />
+              <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#F59E0B]" />
+              <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-violet-400 shadow-[0_0_10px_#F97316]" />
             </div>
           ))}
         </GlassCard>
