@@ -82,37 +82,38 @@
 
   /* === DESIGN TOKENS === */
   /* Obsidian / graphite stack — never pure black */
-  --obsidian: #08090B;
-  --graphite: #0E0F12;
-  --zinc-1: #131418;
-  --zinc-2: #181A1F;
-  --zinc-3: #1F2127;
-  --smoke: #2A2D34;
+  --obsidian: #050506;
+  --graphite: #0B0D10;
+  --zinc-1: #111318;
+  --zinc-2: #161920;
+  --zinc-3: #1C2028;
+  --smoke: #272B33;
 
-  --bg-1: #08090B;
-  --bg-2: #0E0F12;
-  --surface: #131418;
-  --surface-2: #181A1F;
-  --surface-3: #1F2127;
+  --bg-1: #050506;
+  --bg-2: #0B0D10;
+  --surface: #111318;
+  --surface-2: #161920;
+  --surface-3: #1C2028;
 
   /* Hairline borders — ultra subtle, layered */
-  --hairline: rgba(255,255,255,0.05);
-  --hairline-strong: rgba(255,255,255,0.09);
-  --hairline-gold: rgba(214,168,79,0.18);
+  --hairline: rgba(255,255,255,0.045);
+  --hairline-strong: rgba(255,255,255,0.085);
+  --hairline-gold: rgba(205,164,92,0.18);
 
-  /* Brand — burnished gold (NOT vibrant yellow) */
-  --brand: #D6A84F;
-  --brand-2: #C8932D;
-  --brand-hi: #E0B45C;
-  --brand-lo: #A8791E;
-  --brand-soft: rgba(214,168,79,0.10);
-  --brand-glow: rgba(214,168,79,0.22);
+  /* Brand — burnished gold */
+  --brand: #CDA45C;
+  --brand-2: #B98A3D;
+  --brand-hi: #E0BC72;
+  --brand-lo: #8E6A2D;
+  --brand-soft: rgba(205,164,92,0.10);
+  --brand-glow: rgba(205,164,92,0.22);
 
   /* Text scale */
-  --text-1: #F4F4F5;
+  --text-1: #F5F5F3;
   --text-2: #A1A1AA;
   --text-3: #71717A;
   --text-4: #52525B;
+
 
   /* Elevation shadows — ambient + key light */
   --elev-1: 0 1px 0 rgba(255,255,255,0.04) inset, 0 1px 2px rgba(0,0,0,0.4);
