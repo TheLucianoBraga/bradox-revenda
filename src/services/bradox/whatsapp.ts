@@ -42,3 +42,30 @@ export async function enqueueWhatsappTextMessage(sessionId: string, recipientPho
   if (!data) throw new Error("Nao foi possivel enfileirar a mensagem.");
   return data as WhatsappQueueRow;
 }
+
+export async function startWhatsappRemoteSession(sessionId: string) {
+  return callWhatsappEndpoint("/api/bradox/whatsapp/session/start", { sessionId });
+}
+
+export async function refreshWhatsappRemoteSession(sessionId: string) {
+  return callWhatsappEndpoint("/api/bradox/whatsapp/session/status", { sessionId });
+}
+
+async function callWhatsappEndpoint(path: string, body: Record<string, unknown>): Promise<{ session: WhatsappSessionRow; qr: string | null; remote: unknown }> {
+  const { data: sessionData, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  const token = sessionData.session?.access_token;
+  if (!token) throw new Error("Sessao expirada. Entre novamente.");
+
+  const response = await fetch(path, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(typeof payload.error === "string" ? payload.error : "Falha na API WhatsApp.");
+  return payload as { session: WhatsappSessionRow; qr: string | null; remote: unknown };
+}

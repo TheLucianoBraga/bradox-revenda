@@ -14,7 +14,7 @@ Este arquivo fica somente com o que ainda precisa ser executado. Quando uma entr
 ### P0 - Paridade minima para desligamento
 
 - Finalizar pagamento automatico: checkout/PIX por provedor, webhook HTTP, validacao de assinatura, retry operacional e tela de conciliacao.
-- Finalizar WhatsApp isolado no `bradox_revenda`: integrar worker WAHA, QR Code real, webhook HTTP, envio, midias, logs e retries.
+- Finalizar WhatsApp isolado no `bradox_revenda`: configurar chave WAHA no runtime, validar QR Code real, envio, midias, logs e retries.
 - Implementar worker de cobranca/renovacao sem chamar funcoes do `network-hub`.
 - Implementar notification hub: eventos, jobs, preferencias, logs, retry e painel de falhas.
 - Revisar RLS final por role: admin, revenda, cliente e anon.
@@ -50,3 +50,4 @@ Este arquivo fica somente com o que ainda precisa ser executado. Quando uma entr
 - 2026-05-28: Implementado navegador interno por abas para links abertos dentro do PWA. O app permanece como aba principal e os links externos abrem em abas fechaveis dentro do proprio PWA.
 - 2026-05-28: Criada e aplicada na VPS a fundacao WAHA Plus isolada. Novas tabelas `whatsapp_gateway_settings`, `whatsapp_sessions`, `whatsapp_webhook_events`, `whatsapp_message_queue` e `whatsapp_messages`, com namespace obrigatorio `bradox-revenda_` para nao tocar sessoes de outros projetos no gateway compartilhado.
 - 2026-05-28: Tela `WhatsApp · Conexao API` deixou de usar dados fake. Agora carrega a sessao real da rede ativa, prepara a sessao via RPC `ensure_whatsapp_session` e exibe o nome externo namespaced que o worker WAHA deve usar.
+- 2026-05-28: Criada ponte server-side WAHA em `/api/bradox/whatsapp/*`. O frontend agora chama o servidor para iniciar/consultar sessao, o servidor usa `SERVICE_ROLE_KEY` e `WAHA_PLUS_API_KEY`, valida auth admin/revenda, impede sessao fora do namespace `bradox-revenda_` e registra webhooks ignorados/processados no banco.

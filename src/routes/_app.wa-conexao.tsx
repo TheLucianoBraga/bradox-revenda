@@ -4,13 +4,14 @@ import { toast } from "sonner";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { CheckCircle2, Clock3, MessageCircle, QrCode, RefreshCw, ShieldCheck, Smartphone, Wifi, XCircle } from "lucide-react";
 import { useAppSession } from "@/contexts/AppSessionContext";
-import { ensureWhatsappSession, fetchWhatsappSession, type WhatsappSessionRow } from "@/services/bradox/whatsapp";
+import { ensureWhatsappSession, fetchWhatsappSession, refreshWhatsappRemoteSession, startWhatsappRemoteSession, type WhatsappSessionRow } from "@/services/bradox/whatsapp";
 
 export const Route = createFileRoute("/_app/wa-conexao")({ component: WaConexao });
 
 function WaConexao() {
   const { activeNetworkId, activeNetwork } = useAppSession();
   const [session, setSession] = useState<WhatsappSessionRow | null>(null);
+  const [qr, setQr] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -20,6 +21,7 @@ function WaConexao() {
     setLoading(true);
     try {
       setSession(await fetchWhatsappSession(activeNetworkId));
+      setQr(null);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Nao foi possivel carregar a conexao WhatsApp");
     } finally {
@@ -36,9 +38,43 @@ function WaConexao() {
     try {
       const prepared = await ensureWhatsappSession(activeNetworkId);
       setSession(prepared);
+      setQr(null);
       toast.success("Sessao WhatsApp preparada", { description: prepared.external_session_name });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Nao foi possivel preparar a sessao WhatsApp");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleStartSession = async () => {
+    setSaving(true);
+    try {
+      const prepared = session ?? await ensureWhatsappSession(activeNetworkId);
+      const result = await startWhatsappRemoteSession(prepared.id);
+      setSession(result.session);
+      setQr(result.qr);
+      toast.success(result.qr ? "QR Code carregado" : "Sessao WhatsApp iniciada");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Nao foi possivel iniciar a sessao WhatsApp");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleRefreshRemote = async () => {
+    if (!session) {
+      await reload();
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const result = await refreshWhatsappRemoteSession(session.id);
+      setSession(result.session);
+      setQr(result.qr);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Nao foi possivel consultar o WAHA");
     } finally {
       setSaving(false);
     }
@@ -49,7 +85,7 @@ function WaConexao() {
       <PageHeader
         title="WhatsApp · Conexão API"
         subtitle="Conecte uma instância isolada do WhatsApp para esta rede sem tocar em sessões de outros projetos."
-        actions={<NeonButton variant="ghost" onClick={reload} disabled={loading}><span className="flex items-center gap-2"><RefreshCw className="h-4 w-4" /> Atualizar status</span></NeonButton>}
+        actions={<NeonButton variant="ghost" onClick={() => void handleRefreshRemote()} disabled={loading || saving}><span className="flex items-center gap-2"><RefreshCw className="h-4 w-4" /> Atualizar status</span></NeonButton>}
       />
 
       <div className="grid grid-cols-12 gap-5">
@@ -83,7 +119,8 @@ function WaConexao() {
           </div>
 
           <div className="mt-6 flex gap-2">
-            <NeonButton onClick={handleEnsureSession} disabled={saving || !activeNetworkId}>{saving ? "Preparando..." : session ? "Garantir sessão" : "Preparar sessão"}</NeonButton>
+            <NeonButton onClick={handleStartSession} disabled={saving || !activeNetworkId}>{saving ? "Conectando..." : session ? "Iniciar conexão" : "Preparar e iniciar"}</NeonButton>
+            <NeonButton variant="ghost" onClick={handleEnsureSession} disabled={saving || !activeNetworkId}>Só preparar</NeonButton>
             <NeonButton variant="ghost" disabled>Desconectar</NeonButton>
           </div>
         </GlassCard>
@@ -96,15 +133,21 @@ function WaConexao() {
             <p className="text-xs text-slate-400 mt-1">O sistema só cria e consulta sessões com prefixo <span className="text-cyan-300">bradox-revenda_</span>.</p>
 
             <div className="mt-6 flex flex-col md:flex-row gap-6 items-center">
-              <div className="h-56 w-56 rounded-2xl border border-white/10 bg-white/[0.04] grid place-items-center relative">
-                <div className="grid h-28 w-28 place-items-center rounded-3xl border border-cyan-300/20 bg-cyan-400/10 text-cyan-200">
-                  {status.Icon ? <status.Icon className="h-12 w-12" /> : <QrCode className="h-12 w-12" />}
-                </div>
+              <div className="h-56 w-56 rounded-2xl border border-white/10 bg-white/[0.04] grid place-items-center relative overflow-hidden">
+                {qr?.startsWith("data:image/") ? (
+                  <img src={qr} alt="QR Code WhatsApp" className="h-full w-full bg-white object-contain p-3" />
+                ) : qr ? (
+                  <div className="px-4 text-center text-xs text-cyan-100 break-all">{qr}</div>
+                ) : (
+                  <div className="grid h-28 w-28 place-items-center rounded-3xl border border-cyan-300/20 bg-cyan-400/10 text-cyan-200">
+                    {status.Icon ? <status.Icon className="h-12 w-12" /> : <QrCode className="h-12 w-12" />}
+                  </div>
+                )}
               </div>
               <div className="flex-1 text-sm text-slate-300 space-y-2">
-                <p>1. Prepare a sessão para a rede ativa.</p>
-                <p>2. O worker WAHA usará exatamente o nome <span className="text-cyan-300">{session?.external_session_name ?? "bradox-revenda_[rede]"}</span>.</p>
-                <p>3. QR Code, webhook HTTP e envio real entram na próxima fatia, usando esta sessão já registrada.</p>
+                <p>1. Clique em iniciar conexão para criar/iniciar a sessão no WAHA Plus.</p>
+                <p>2. O gateway usará exatamente o nome <span className="text-cyan-300">{session?.external_session_name ?? "bradox-revenda_[rede]"}</span>.</p>
+                <p>3. Quando o QR aparecer, conecte pelo WhatsApp em Aparelhos conectados.</p>
                 <p className="flex items-center gap-2 pt-2 text-xs text-emerald-300"><ShieldCheck className="h-4 w-4" /> Regra aplicada: nunca listar, reiniciar ou apagar sessões fora do namespace Bradox.</p>
               </div>
             </div>
