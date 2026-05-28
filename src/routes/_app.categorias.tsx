@@ -265,7 +265,7 @@ function CategoriaModal({
   };
 
   return (
-    <ModalPortal>
+    <ModalPortal open={open} onClose={onClose}>
       <AnimatePresence>
         <motion.div className="fixed inset-0 z-50 grid place-items-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
@@ -342,7 +342,7 @@ function CategoriaModal({
 function ConfirmDelete({ item, onCancel, onConfirm }: { item: CategoriaView | null; onCancel: () => void; onConfirm: () => void }) {
   if (!item) return null;
   return (
-    <ModalPortal>
+    <ModalPortal open={!!item} onClose={onCancel}>
       <AnimatePresence>
         <motion.div className="fixed inset-0 z-50 grid place-items-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onCancel} />

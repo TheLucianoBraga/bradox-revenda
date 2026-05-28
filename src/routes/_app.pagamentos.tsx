@@ -154,7 +154,7 @@ function InvoiceModal({ open, networkId, onClose, onCreated }: { open: boolean; 
   };
 
   return (
-    <ModalPortal>
+    <ModalPortal open={open} onClose={onClose}>
       <div className="fixed inset-0 z-[60] grid place-items-center bg-black/70 p-4 backdrop-blur-sm" onClick={onClose}>
         <form onSubmit={submit} onClick={(event) => event.stopPropagation()} className="w-full max-w-xl rounded-2xl border border-white/10 bg-[#0f1115] p-5 shadow-2xl">
           <div className="flex items-center justify-between gap-3">

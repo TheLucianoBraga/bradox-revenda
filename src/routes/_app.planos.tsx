@@ -243,7 +243,7 @@ function PlanModal({ state, networkId, servers, onClose, onSaved }: {
   };
 
   return (
-    <ModalPortal>
+    <ModalPortal open={!!state} onClose={onClose}>
       <div className="fixed inset-0 z-[60] grid place-items-center bg-black/70 p-4 backdrop-blur-sm" onClick={onClose}>
         <form onSubmit={submit} onClick={(event) => event.stopPropagation()} className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0f1115] p-5 shadow-2xl">
           <div className="flex items-center justify-between gap-3">

@@ -6,8 +6,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useModalBackGuard } from "@/hooks/use-modal-back-guard";
 
-const Sheet = SheetPrimitive.Root;
+function Sheet({ open, onOpenChange, ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
+  useModalBackGuard(open === true, () => onOpenChange?.(false));
+
+  return <SheetPrimitive.Root open={open} onOpenChange={onOpenChange} {...props} />;
+}
 
 const SheetTrigger = SheetPrimitive.Trigger;
 

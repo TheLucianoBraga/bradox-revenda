@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Database, FileText, Network, Package, Server, Users } from "lucide-react";
+import { ArrowUpRight, Database, FileText, Link2, Network, Package, Server, Users, Wrench } from "lucide-react";
 import { GlassCard, NeonButton, PageHeader } from "@/components/ui-kit";
 import { useAppSession } from "@/contexts/AppSessionContext";
 import { fetchDashboardCounts } from "@/services/bradox/dashboard";
+import { fetchUsefulLinks, type UsefulLinkRow } from "@/services/bradox/tools";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: Dashboard });
 
@@ -12,8 +13,11 @@ type Counts = { networks: number; servers: number; plans: number; templates: num
 function Dashboard() {
   const { activeNetwork, activeNetworkId, profile } = useAppSession();
   const canManageUsers = profile?.role === "admin" || profile?.role === "revenda";
+  const isClient = profile?.role === "cliente";
   const [counts, setCounts] = useState<Counts>({ networks: 0, servers: 0, plans: 0, templates: 0 });
+  const [tools, setTools] = useState<UsefulLinkRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [toolsLoading, setToolsLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -23,6 +27,22 @@ function Dashboard() {
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [activeNetworkId, profile?.role]);
+
+  useEffect(() => {
+    let active = true;
+    if (!isClient || !activeNetworkId) {
+      setTools([]);
+      return () => { active = false; };
+    }
+
+    setToolsLoading(true);
+    fetchUsefulLinks(activeNetworkId)
+      .then((links) => { if (active) setTools(links); })
+      .catch(() => { if (active) setTools([]); })
+      .finally(() => { if (active) setToolsLoading(false); });
+
+    return () => { active = false; };
+  }, [activeNetworkId, isClient]);
 
   const cards = [
     { label: "Redes", value: counts.networks, icon: Network },
@@ -71,6 +91,50 @@ function Dashboard() {
             </div>
           </div>
         </GlassCard>
+
+        {isClient && (
+          <GlassCard className="col-span-12 p-6">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-200/80">
+                  <Wrench className="h-3.5 w-3.5" /> Ferramentas
+                </div>
+                <div className="mt-2 font-display text-xl text-white">Acessos da sua rede</div>
+              </div>
+              <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-400">
+                {toolsLoading ? "Carregando" : `${tools.length} links`}
+              </div>
+            </div>
+
+            {tools.length > 0 ? (
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {tools.slice(0, 9).map((tool) => (
+                  <a
+                    key={tool.id}
+                    href={tool.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-pwa-browser="true"
+                    className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-3 transition hover:border-amber-300/35 hover:bg-white/[0.06]"
+                  >
+                    <span className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/10 bg-amber-400/10 text-amber-200">
+                      {tool.image_url ? <img src={tool.image_url} alt="" className="h-full w-full object-cover" /> : <Link2 className="h-5 w-5" />}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold text-white">{tool.title}</span>
+                      <span className="mt-0.5 block truncate text-[11px] text-slate-500">{tool.url}</span>
+                    </span>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-500 transition group-hover:text-amber-200" />
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm text-slate-400">
+                {toolsLoading ? "Carregando ferramentas..." : "Nenhuma ferramenta cadastrada para esta rede."}
+              </div>
+            )}
+          </GlassCard>
+        )}
       </div>
     </>
   );

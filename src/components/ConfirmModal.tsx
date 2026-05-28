@@ -29,7 +29,7 @@ export function ConfirmModal({
   }, [open, onClose]);
 
   return (
-    <ModalPortal>
+    <ModalPortal open={open} onClose={onClose}>
       <AnimatePresence>
       {open && (
         <motion.div

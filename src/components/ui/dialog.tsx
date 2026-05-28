@@ -5,8 +5,13 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useModalBackGuard } from "@/hooks/use-modal-back-guard";
 
-const Dialog = DialogPrimitive.Root;
+function Dialog({ open, onOpenChange, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  useModalBackGuard(open === true, () => onOpenChange?.(false));
+
+  return <DialogPrimitive.Root open={open} onOpenChange={onOpenChange} {...props} />;
+}
 
 const DialogTrigger = DialogPrimitive.Trigger;
 

@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { BottomNavigation } from "@/components/BottomNavigation";
 import { Topbar } from "@/components/Topbar";
 import { PwaAutoUpdater } from "@/components/PwaAutoUpdater";
+import { InAppBrowserTabs } from "@/components/InAppBrowserTabs";
 import { AppSessionProvider, useAppSession } from "@/contexts/AppSessionContext";
 import { canAccessPanel, canAccessPath } from "@/services/bradox/acl";
 import { supabase } from "@/integrations/supabase/client";
@@ -99,6 +100,7 @@ function AuthenticatedAppShell() {
           </main>
         </div>
         <BottomNavigation />
+        <InAppBrowserTabs />
         <Toaster position="top-right" theme="dark" />
       </div>
   );

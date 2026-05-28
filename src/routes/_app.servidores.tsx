@@ -307,7 +307,7 @@ function ServidorModal({
   };
 
   return (
-    <ModalPortal>
+    <ModalPortal open onClose={onClose}>
       <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

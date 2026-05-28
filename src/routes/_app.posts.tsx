@@ -466,7 +466,7 @@ function PostViewModal({
   };
 
   return (
-    <ModalPortal>
+    <ModalPortal open onClose={onClose}>
       <AnimatePresence>
         <motion.div className="fixed inset-0 z-50 grid place-items-center bg-black/80 backdrop-blur-sm p-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
           <motion.div initial={{ y: 16, opacity: 0, scale: 0.98 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 16, opacity: 0, scale: 0.98 }} onClick={(event) => event.stopPropagation()} className="w-full max-w-[720px] max-h-[92vh] overflow-hidden rounded-[18px] border border-white/10 bg-[#0f1115] text-slate-100 shadow-2xl shadow-black/60">
@@ -665,7 +665,7 @@ function PostModal({
   const label = "text-[11px] uppercase tracking-wider text-slate-400";
 
   return (
-    <ModalPortal>
+    <ModalPortal open={open} onClose={onClose}>
       <AnimatePresence>
         <motion.div className="fixed inset-0 z-50 grid place-items-center bg-black/70 backdrop-blur-sm p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
           <motion.div initial={{ y: 16, opacity: 0, scale: 0.98 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 16, opacity: 0, scale: 0.98 }} onClick={(event) => event.stopPropagation()} className="w-full max-w-3xl rounded-2xl border border-white/10 bg-[#0f1115] shadow-2xl overflow-hidden">
