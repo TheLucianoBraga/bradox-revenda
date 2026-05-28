@@ -1,7 +1,26 @@
-import { Bell, Search, Command } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Bell, Command, LogOut, Search } from "lucide-react";
 import { MobileNav } from "@/components/MobileNav";
+import { NetworkSwitcher } from "@/components/NetworkSwitcher";
+import { useAppSession } from "@/contexts/AppSessionContext";
+import { signOut } from "@/services/bradox/auth";
 
 export function Topbar() {
+  const navigate = useNavigate();
+  const { profile } = useAppSession();
+
+  const initials = (profile?.full_name || profile?.email || "U")
+    .split(/\s|@/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+
+  const logout = async () => {
+    await signOut();
+    await navigate({ to: "/login", replace: true });
+  };
+
   return (
     <header className="sticky top-0 z-30">
       <div className="mx-3 mt-3 rounded-[14px] glass-strong shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_8px_24px_-16px_rgba(0,0,0,0.6)]">
@@ -23,6 +42,8 @@ export function Topbar() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+            <NetworkSwitcher />
+
             {/* Status */}
             <div className="hidden md:flex items-center gap-2 h-8 px-3 rounded-full
                             bg-[rgba(34,197,94,0.07)] border border-[rgba(34,197,94,0.18)]
@@ -49,13 +70,21 @@ export function Topbar() {
               <div className="h-7 w-7 rounded-[7px] grid place-items-center text-[11px] font-bold text-[#1A1308]
                               bg-gradient-to-br from-[#E0B45C] to-[#A8791E]
                               shadow-[0_1px_0_rgba(255,255,255,0.3)_inset]">
-                AM
+                {initials || "U"}
               </div>
               <div className="hidden md:block leading-tight">
-                <div className="text-[11.5px] font-semibold text-white tracking-[-0.005em]">Alex Mercer</div>
-                <div className="text-[9.5px] text-[#71717A]">Administrador</div>
+                <div className="text-[11.5px] font-semibold text-white tracking-[-0.005em]">{profile?.full_name || profile?.email || "Usuario"}</div>
+                <div className="text-[9.5px] text-[#71717A] capitalize">{profile?.role || "usuario"}</div>
               </div>
             </div>
+            <button
+              data-handled="true"
+              onClick={logout}
+              className="h-9 w-9 grid place-items-center rounded-[10px] btn-secondary"
+              title="Sair"
+            >
+              <LogOut className="h-[14px] w-[14px] text-[#A1A1AA]" strokeWidth={1.6} />
+            </button>
           </div>
         </div>
       </div>

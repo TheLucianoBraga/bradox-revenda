@@ -1,59 +1,84 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useMemo, type ComponentType } from "react";
 import {
   LayoutDashboard, FolderTree, FileVideo, Server, Coins, Receipt,
-  Package, Store, MessageCircle, Megaphone, Settings, LogIn, Sparkles,
-  MessageSquareText,
+  Package, Users, MessageCircle, Megaphone, Settings, Sparkles,
+  MessageSquareText, Network, Wrench,
 } from "lucide-react";
+import { useAppSession } from "@/contexts/AppSessionContext";
 
-const nav = [
+export type AppRole = "admin" | "revenda" | "cliente";
+export type NavItem = {
+  to: string;
+  label: string;
+  icon: ComponentType<{ className?: string; strokeWidth?: number }>;
+  roles: AppRole[];
+  showInBottomNav?: AppRole[];
+};
+type NavGroup = { group: string; items: NavItem[] };
+
+const nav: NavGroup[] = [
   { group: "Overview", items: [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["admin", "revenda", "cliente"], showInBottomNav: ["cliente"] },
   ]},
   { group: "Conteúdo", items: [
-    { to: "/categorias", label: "Categorias", icon: FolderTree },
-    { to: "/posts", label: "Posts & Mídias", icon: FileVideo },
+    { to: "/categorias", label: "Categorias", icon: FolderTree, roles: ["admin", "revenda"] },
+    { to: "/posts", label: "Posts & Mídias", icon: FileVideo, roles: ["admin", "revenda", "cliente"], showInBottomNav: ["admin", "revenda", "cliente"] },
   ]},
   { group: "Operação", items: [
-    { to: "/revendas", label: "Revendas", icon: Store },
-    { to: "/servidores", label: "Servidores", icon: Server },
+    { to: "/redes", label: "Redes", icon: Network, roles: ["admin"] },
+    { to: "/usuarios", label: "Usuarios", icon: Users, roles: ["admin", "revenda"] },
+    { to: "/servidores", label: "Servidores", icon: Server, roles: ["admin", "revenda"] },
+    { to: "/ferramentas", label: "Ferramentas", icon: Wrench, roles: ["admin", "revenda"], showInBottomNav: ["admin", "revenda"] },
   ]},
   { group: "Cobrança", items: [
-    { to: "/planos", label: "Planos", icon: Package },
-    { to: "/creditos", label: "Créditos", icon: Coins },
-    { to: "/pagamentos", label: "Pagamentos", icon: Receipt },
+    { to: "/planos", label: "Planos", icon: Package, roles: ["admin", "revenda", "cliente"], showInBottomNav: ["cliente"] },
+    { to: "/creditos", label: "Créditos", icon: Coins, roles: ["admin", "revenda", "cliente"], showInBottomNav: ["cliente"] },
+    { to: "/pagamentos", label: "Pagamentos", icon: Receipt, roles: ["admin", "revenda", "cliente"], showInBottomNav: ["admin", "revenda", "cliente"] },
   ]},
   { group: "WhatsApp", items: [
-    { to: "/wa-conexao", label: "Conexão API", icon: MessageCircle },
-    { to: "/templates", label: "Templates", icon: MessageSquareText },
-    { to: "/broadcast", label: "Envio em Massa", icon: Megaphone },
+    { to: "/wa-conexao", label: "Conexão API", icon: MessageCircle, roles: ["admin", "revenda"] },
+    { to: "/templates", label: "Templates", icon: MessageSquareText, roles: ["admin", "revenda"] },
+    { to: "/broadcast", label: "Envio em Massa", icon: Megaphone, roles: ["admin", "revenda"], showInBottomNav: ["admin", "revenda"] },
   ]},
   { group: "Sistema", items: [
-    { to: "/settings", label: "Configurações", icon: Settings },
-    { to: "/login", label: "Entrar", icon: LogIn },
+    { to: "/settings", label: "Configurações", icon: Settings, roles: ["admin", "revenda"] },
   ]},
 ];
 
-export function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
+export function getBottomNavItems(role: AppRole): NavItem[] {
+  return nav
+    .flatMap((group) => group.items)
+    .filter((item) => item.roles.includes(role) && item.showInBottomNav?.includes(role));
+}
+
+export function SidebarBody({ onNavigate, excludePaths }: { onNavigate?: () => void; excludePaths?: string[] }) {
+  const { profile } = useAppSession();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const role = (profile?.role ?? "cliente") as AppRole;
+  const blockedPaths = new Set(excludePaths ?? []);
+  const groups = useMemo(() => nav
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => item.roles.includes(role) && !blockedPaths.has(item.to)),
+    }))
+    .filter((group) => group.items.length > 0), [blockedPaths, role]);
+
   return (
     <div className="flex flex-col w-full h-full glass-float rounded-[18px] overflow-hidden">
       <div className="px-4 pt-4 pb-5 flex items-center gap-2.5">
-        <div className="relative h-8 w-8 rounded-[9px] grid place-items-center
-                        bg-gradient-to-br from-[#E0B45C] to-[#A8791E]
-                        shadow-[0_1px_0_rgba(255,255,255,0.3)_inset,0_4px_12px_-4px_rgba(214,168,79,0.5)]">
-          <Sparkles className="h-3.5 w-3.5 text-[#1A1308]" strokeWidth={2.25} />
-        </div>
+        <img src="/bradox-play-logo.png" alt="Bradox Play" className="h-10 w-10 object-contain drop-shadow-[0_0_14px_rgba(214,168,79,0.3)]" />
         <div className="leading-tight">
-          <div className="font-display text-[15px] font-semibold text-white tracking-[-0.025em]">BR Revenda</div>
-          <div className="text-[9.5px] text-[#52525B] font-semibold tracking-[0.18em] uppercase mt-1">IPTV Control</div>
+          <div className="font-display text-[15px] font-semibold text-white tracking-[-0.025em]">Bradox Play</div>
+          <div className="text-[9.5px] text-[#52525B] font-semibold tracking-[0.18em] uppercase mt-1">Tv Online Control</div>
         </div>
       </div>
 
       <div className="hairline mx-3" />
 
       <nav className="flex-1 overflow-y-auto scrollbar-thin px-2.5 pt-4 pb-4 space-y-4">
-        {nav.map((g) => (
+        {groups.map((g) => (
           <div key={g.group}>
             <div className="px-2.5 mb-1 label-eyebrow">{g.group}</div>
             <ul className="space-y-px">
@@ -93,7 +118,7 @@ export function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
             <Sparkles className="h-3 w-3 text-[#E8C886]" strokeWidth={2} />
             <div className="text-[9.5px] font-semibold tracking-[0.22em] text-[#E8C886]">PRO</div>
           </div>
-          <div className="mt-1.5 text-[12.5px] font-semibold text-white tracking-[-0.01em]">Br Revenda Master</div>
+          <div className="mt-1.5 text-[12.5px] font-semibold text-white tracking-[-0.01em]">Bradox Play Master</div>
           <p className="mt-1 text-[10.5px] text-[#A1A1AA] leading-relaxed">
             Revendas ilimitadas, WhatsApp API e broadcast.
           </p>

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertTriangle, X } from "lucide-react";
 import { useEffect } from "react";
+import { ModalPortal } from "@/components/ModalPortal";
 
 export function ConfirmModal({
   open,
@@ -28,7 +29,8 @@ export function ConfirmModal({
   }, [open, onClose]);
 
   return (
-    <AnimatePresence>
+    <ModalPortal>
+      <AnimatePresence>
       {open && (
         <motion.div
           className="fixed inset-0 z-[60] grid place-items-center bg-black/70 backdrop-blur-sm p-4"
@@ -93,6 +95,7 @@ export function ConfirmModal({
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+    </ModalPortal>
   );
 }

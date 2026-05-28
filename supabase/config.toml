@@ -1,0 +1,7 @@
+project_id = "bradox-revenda"
+
+[api]
+schemas = ["bradox_revenda"]
+
+[functions]
+verify_jwt = true

@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 
+import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -72,20 +73,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Bradox Revenda - Gestão de IPTV" },
-      { name: "description", content: "Bradox Revenda - Gestão de revendas, centralizado" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Bradox Revenda - Gestão de IPTV" },
-      { property: "og:description", content: "Bradox Revenda - Gestão de revendas, centralizado" },
+      { title: "Bradox Play - Gestão de Tv Online" },
+      { name: "description", content: "Bradox Play - Gestão de revendas, centralizado" },
+      { name: "author", content: "Bradox Play" },
+      { property: "og:title", content: "Bradox Play - Gestão de Tv Online" },
+      { property: "og:description", content: "Bradox Play - Gestão de revendas, centralizado" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Bradox Revenda - Gestão de IPTV" },
-      { name: "twitter:description", content: "Bradox Revenda - Gestão de revendas, centralizado" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337a2146-0356-4386-9e38-bcee21eb72ad/id-preview-524da5c7--91d4425e-6dc3-442e-a2fb-81f2c5e72acf.lovable.app-1779808650833.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/337a2146-0356-4386-9e38-bcee21eb72ad/id-preview-524da5c7--91d4425e-6dc3-442e-a2fb-81f2c5e72acf.lovable.app-1779808650833.png" },
+      { name: "twitter:site", content: "@bradoxplay" },
+      { name: "twitter:title", content: "Bradox Play - Gestão de Tv Online" },
+      { name: "twitter:description", content: "Bradox Play - Gestão de revendas, centralizado" },
+      { property: "og:image", content: "/bradox-play-logo.png" },
+      { name: "twitter:image", content: "/bradox-play-logo.png" },
     ],
     links: [
+      { rel: "icon", type: "image/png", href: "/bradox-play-logo.png" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       {
         rel: "stylesheet",
         href: appCss,
@@ -118,6 +121,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      <Toaster position="top-right" richColors closeButton />
     </QueryClientProvider>
   );
 }

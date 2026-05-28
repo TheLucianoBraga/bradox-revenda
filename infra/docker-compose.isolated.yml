@@ -1,0 +1,185 @@
+networks:
+  bradox-revenda-private:
+    name: bradox-revenda-private
+    internal: true
+  infra-network:
+    external: true
+    name: infra-network
+
+volumes:
+  bradox-revenda-db-data:
+  bradox-revenda-storage-data:
+
+services:
+  bradox-revenda-db:
+    image: postgres:15-alpine
+    container_name: bradox-revenda-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - bradox-revenda-db-data:/var/lib/postgresql/data
+      - ./volumes/db/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - bradox-revenda-private
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  bradox-revenda-auth:
+    image: supabase/gotrue:v2.143.0
+    container_name: bradox-revenda-auth
+    restart: unless-stopped
+    depends_on:
+      bradox-revenda-db:
+        condition: service_healthy
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: ${API_EXTERNAL_URL}
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@bradox-revenda-db:${POSTGRES_PORT}/${POSTGRES_DB}
+      GOTRUE_DB_NAMESPACE: auth
+      GOTRUE_SITE_URL: ${SITE_URL}
+      GOTRUE_URI_ALLOW_LIST: ${ADDITIONAL_REDIRECT_URLS}
+      GOTRUE_DISABLE_SIGNUP: ${DISABLE_SIGNUP}
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: ${JWT_EXPIRY}
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: ${ENABLE_EMAIL_AUTOCONFIRM}
+      GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_USER}
+      GOTRUE_SMTP_HOST: ${SMTP_HOST}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT}
+      GOTRUE_SMTP_USER: ${SMTP_USER}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS}
+      GOTRUE_SMTP_SENDER_NAME: ${SMTP_SENDER_NAME}
+      GOTRUE_EXTERNAL_PHONE_ENABLED: "false"
+      GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
+    networks:
+      - bradox-revenda-private
+
+  bradox-revenda-rest:
+    image: postgrest/postgrest:v12.2.3
+    container_name: bradox-revenda-rest
+    restart: unless-stopped
+    depends_on:
+      bradox-revenda-db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@bradox-revenda-db:${POSTGRES_PORT}/${POSTGRES_DB}
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_DB_EXTRA_SEARCH_PATH: public
+    networks:
+      - bradox-revenda-private
+
+  bradox-revenda-realtime:
+    image: supabase/realtime:v2.28.32
+    container_name: bradox-revenda-realtime
+    restart: unless-stopped
+    depends_on:
+      bradox-revenda-db:
+        condition: service_healthy
+    environment:
+      APP_NAME: realtime
+      FLY_APP_NAME: realtime
+      PORT: 4000
+      DB_HOST: bradox-revenda-db
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USER: supabase_admin
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      DB_AFTER_CONNECT_QUERY: "SET search_path TO _realtime"
+      DB_ENC_KEY: supabaserealtime
+      API_JWT_SECRET: ${JWT_SECRET}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      ERL_AFLAGS: -proto_dist inet_tcp
+      ENABLE_TAILSCALE: "false"
+      DNS_NODES: "''"
+    networks:
+      - bradox-revenda-private
+
+  bradox-revenda-storage:
+    image: supabase/storage-api:v1.0.6
+    container_name: bradox-revenda-storage
+    restart: unless-stopped
+    depends_on:
+      bradox-revenda-db:
+        condition: service_healthy
+      bradox-revenda-rest:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5000/status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    environment:
+      ANON_KEY: ${ANON_KEY}
+      SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      POSTGREST_URL: http://bradox-revenda-rest:3000
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgres://supabase_storage_admin:${POSTGRES_PASSWORD}@bradox-revenda-db:${POSTGRES_PORT}/${POSTGRES_DB}
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: file
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      TENANT_ID: stub
+      REGION: stub
+      GLOBAL_S3_BUCKET: stub
+      ENABLE_IMAGE_TRANSFORMATION: "false"
+    volumes:
+      - bradox-revenda-storage-data:/var/lib/storage
+    networks:
+      - bradox-revenda-private
+
+  bradox-revenda-kong:
+    image: kong:2.8.1
+    container_name: bradox-revenda-kong
+    restart: unless-stopped
+    depends_on:
+      - bradox-revenda-auth
+      - bradox-revenda-rest
+      - bradox-revenda-realtime
+      - bradox-revenda-storage
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /tmp/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+    command:
+      - /bin/sh
+      - -c
+      - |
+        sed \
+          -e 's|$${SUPABASE_ANON_KEY}|'"$${SUPABASE_ANON_KEY}"'|g' \
+          -e 's|$${SUPABASE_SERVICE_KEY}|'"$${SUPABASE_SERVICE_KEY}"'|g' \
+          /var/lib/kong/kong.template.yml > /tmp/kong.yml
+        exec /docker-entrypoint.sh kong docker-start
+    volumes:
+      - ./volumes/api/kong.yml:/var/lib/kong/kong.template.yml:ro
+    networks:
+      - bradox-revenda-private
+      - infra-network
+    expose:
+      - "8000"
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.bradox-revenda-api.loadbalancer.server.port: "8000"
+      traefik.http.routers.bradox-revenda-api-https.rule: "Host(`${API_DOMAIN}`)"
+      traefik.http.routers.bradox-revenda-api-https.entrypoints: "websecure"
+      traefik.http.routers.bradox-revenda-api-https.tls.certresolver: "letsencrypt"
+      traefik.http.routers.bradox-revenda-api-https.service: "bradox-revenda-api"
+      traefik.http.routers.bradox-revenda-api-http.rule: "Host(`${API_DOMAIN}`)"
+      traefik.http.routers.bradox-revenda-api-http.entrypoints: "web"
+      traefik.http.routers.bradox-revenda-api-http.middlewares: "redirect-https@file"

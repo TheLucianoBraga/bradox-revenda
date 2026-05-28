@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+*.tgz
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -15,6 +16,11 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+.env
+.env.*
+!.env.example
+!*.env.example
+infra/.env
 
 # Wrangler / Cloudflare
 .wrangler/

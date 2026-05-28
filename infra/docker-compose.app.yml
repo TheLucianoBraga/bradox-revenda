@@ -1,0 +1,42 @@
+networks:
+  ai-private:
+    external: true
+    name: ai-private
+  infra-network:
+    external: true
+    name: infra-network
+
+services:
+  bradox-revenda-app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        VITE_BRADOX_SUPABASE_URL: ${VITE_BRADOX_SUPABASE_URL}
+        VITE_BRADOX_SUPABASE_ANON_KEY: ${VITE_BRADOX_SUPABASE_ANON_KEY}
+        VITE_BRADOX_SUPABASE_SCHEMA: ${VITE_BRADOX_SUPABASE_SCHEMA}
+    image: bradox-revenda-app:latest
+    container_name: bradox-revenda-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "8080"
+      APP_DOMAIN: ${APP_DOMAIN}
+      VITE_BRADOX_SUPABASE_URL: ${VITE_BRADOX_SUPABASE_URL}
+      VITE_BRADOX_SUPABASE_ANON_KEY: ${VITE_BRADOX_SUPABASE_ANON_KEY}
+      VITE_BRADOX_SUPABASE_SCHEMA: ${VITE_BRADOX_SUPABASE_SCHEMA}
+    expose:
+      - "8080"
+    networks:
+      - ai-private
+      - infra-network
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.bradox-revenda-app.loadbalancer.server.port: "8080"
+      traefik.http.routers.bradox-revenda-app-https.rule: "Host(`${APP_DOMAIN}`)"
+      traefik.http.routers.bradox-revenda-app-https.entrypoints: "websecure"
+      traefik.http.routers.bradox-revenda-app-https.tls.certresolver: "letsencrypt"
+      traefik.http.routers.bradox-revenda-app-https.service: "bradox-revenda-app"
+      traefik.http.routers.bradox-revenda-app-http.rule: "Host(`${APP_DOMAIN}`)"
+      traefik.http.routers.bradox-revenda-app-http.entrypoints: "web"
+      traefik.http.routers.bradox-revenda-app-http.middlewares: "redirect-https@file"

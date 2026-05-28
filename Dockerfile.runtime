@@ -1,0 +1,14 @@
+FROM node:22-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=8080
+COPY package*.json ./
+RUN npm ci --include=dev
+COPY dist ./dist
+COPY src ./src
+COPY tsconfig.json ./tsconfig.json
+COPY vite.config.ts ./vite.config.ts
+COPY wrangler.jsonc ./wrangler.jsonc
+RUN cp dist/server/index.js dist/server/server.js
+EXPOSE 8080
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "8080"]

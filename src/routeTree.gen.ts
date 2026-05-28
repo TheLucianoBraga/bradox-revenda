@@ -12,22 +12,27 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FaturaOrderIdRouteImport } from './routes/fatura.$orderId'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppWaConexaoRouteImport } from './routes/_app.wa-conexao'
+import { Route as AppUsuariosRouteImport } from './routes/_app.usuarios'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTelegramRouteImport } from './routes/_app.telegram'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppServidoresRouteImport } from './routes/_app.servidores'
 import { Route as AppRevendasRouteImport } from './routes/_app.revendas'
 import { Route as AppResellerRouteImport } from './routes/_app.reseller'
+import { Route as AppRedesRouteImport } from './routes/_app.redes'
 import { Route as AppPostsRouteImport } from './routes/_app.posts'
 import { Route as AppPlanosRouteImport } from './routes/_app.planos'
 import { Route as AppPagamentosRouteImport } from './routes/_app.pagamentos'
 import { Route as AppInstagramRouteImport } from './routes/_app.instagram'
+import { Route as AppFerramentasRouteImport } from './routes/_app.ferramentas'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCustomersRouteImport } from './routes/_app.customers'
 import { Route as AppCrmRouteImport } from './routes/_app.crm'
 import { Route as AppCreditosRouteImport } from './routes/_app.creditos'
+import { Route as AppClientesRouteImport } from './routes/_app.clientes'
 import { Route as AppCategoriasRouteImport } from './routes/_app.categorias'
 import { Route as AppBroadcastRouteImport } from './routes/_app.broadcast'
 import { Route as AppBillingRouteImport } from './routes/_app.billing'
@@ -49,6 +54,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FaturaOrderIdRoute = FaturaOrderIdRouteImport.update({
+  id: '/fatura/$orderId',
+  path: '/fatura/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppWhatsappRoute = AppWhatsappRouteImport.update({
   id: '/whatsapp',
   path: '/whatsapp',
@@ -57,6 +67,11 @@ const AppWhatsappRoute = AppWhatsappRouteImport.update({
 const AppWaConexaoRoute = AppWaConexaoRouteImport.update({
   id: '/wa-conexao',
   path: '/wa-conexao',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUsuariosRoute = AppUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTemplatesRoute = AppTemplatesRouteImport.update({
@@ -89,6 +104,11 @@ const AppResellerRoute = AppResellerRouteImport.update({
   path: '/reseller',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRedesRoute = AppRedesRouteImport.update({
+  id: '/redes',
+  path: '/redes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPostsRoute = AppPostsRouteImport.update({
   id: '/posts',
   path: '/posts',
@@ -109,6 +129,11 @@ const AppInstagramRoute = AppInstagramRouteImport.update({
   path: '/instagram',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFerramentasRoute = AppFerramentasRouteImport.update({
+  id: '/ferramentas',
+  path: '/ferramentas',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -127,6 +152,11 @@ const AppCrmRoute = AppCrmRouteImport.update({
 const AppCreditosRoute = AppCreditosRouteImport.update({
   id: '/creditos',
   path: '/creditos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppClientesRoute = AppClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
   getParentRoute: () => AppRoute,
 } as any)
 const AppCategoriasRoute = AppCategoriasRouteImport.update({
@@ -169,22 +199,27 @@ export interface FileRoutesByFullPath {
   '/billing': typeof AppBillingRoute
   '/broadcast': typeof AppBroadcastRoute
   '/categorias': typeof AppCategoriasRoute
+  '/clientes': typeof AppClientesRoute
   '/creditos': typeof AppCreditosRoute
   '/crm': typeof AppCrmRoute
   '/customers': typeof AppCustomersRoute
   '/dashboard': typeof AppDashboardRoute
+  '/ferramentas': typeof AppFerramentasRoute
   '/instagram': typeof AppInstagramRoute
   '/pagamentos': typeof AppPagamentosRoute
   '/planos': typeof AppPlanosRoute
   '/posts': typeof AppPostsRoute
+  '/redes': typeof AppRedesRoute
   '/reseller': typeof AppResellerRoute
   '/revendas': typeof AppRevendasRoute
   '/servidores': typeof AppServidoresRoute
   '/settings': typeof AppSettingsRoute
   '/telegram': typeof AppTelegramRoute
   '/templates': typeof AppTemplatesRoute
+  '/usuarios': typeof AppUsuariosRoute
   '/wa-conexao': typeof AppWaConexaoRoute
   '/whatsapp': typeof AppWhatsappRoute
+  '/fatura/$orderId': typeof FaturaOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -195,22 +230,27 @@ export interface FileRoutesByTo {
   '/billing': typeof AppBillingRoute
   '/broadcast': typeof AppBroadcastRoute
   '/categorias': typeof AppCategoriasRoute
+  '/clientes': typeof AppClientesRoute
   '/creditos': typeof AppCreditosRoute
   '/crm': typeof AppCrmRoute
   '/customers': typeof AppCustomersRoute
   '/dashboard': typeof AppDashboardRoute
+  '/ferramentas': typeof AppFerramentasRoute
   '/instagram': typeof AppInstagramRoute
   '/pagamentos': typeof AppPagamentosRoute
   '/planos': typeof AppPlanosRoute
   '/posts': typeof AppPostsRoute
+  '/redes': typeof AppRedesRoute
   '/reseller': typeof AppResellerRoute
   '/revendas': typeof AppRevendasRoute
   '/servidores': typeof AppServidoresRoute
   '/settings': typeof AppSettingsRoute
   '/telegram': typeof AppTelegramRoute
   '/templates': typeof AppTemplatesRoute
+  '/usuarios': typeof AppUsuariosRoute
   '/wa-conexao': typeof AppWaConexaoRoute
   '/whatsapp': typeof AppWhatsappRoute
+  '/fatura/$orderId': typeof FaturaOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -223,22 +263,27 @@ export interface FileRoutesById {
   '/_app/billing': typeof AppBillingRoute
   '/_app/broadcast': typeof AppBroadcastRoute
   '/_app/categorias': typeof AppCategoriasRoute
+  '/_app/clientes': typeof AppClientesRoute
   '/_app/creditos': typeof AppCreditosRoute
   '/_app/crm': typeof AppCrmRoute
   '/_app/customers': typeof AppCustomersRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/ferramentas': typeof AppFerramentasRoute
   '/_app/instagram': typeof AppInstagramRoute
   '/_app/pagamentos': typeof AppPagamentosRoute
   '/_app/planos': typeof AppPlanosRoute
   '/_app/posts': typeof AppPostsRoute
+  '/_app/redes': typeof AppRedesRoute
   '/_app/reseller': typeof AppResellerRoute
   '/_app/revendas': typeof AppRevendasRoute
   '/_app/servidores': typeof AppServidoresRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/telegram': typeof AppTelegramRoute
   '/_app/templates': typeof AppTemplatesRoute
+  '/_app/usuarios': typeof AppUsuariosRoute
   '/_app/wa-conexao': typeof AppWaConexaoRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
+  '/fatura/$orderId': typeof FaturaOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -251,22 +296,27 @@ export interface FileRouteTypes {
     | '/billing'
     | '/broadcast'
     | '/categorias'
+    | '/clientes'
     | '/creditos'
     | '/crm'
     | '/customers'
     | '/dashboard'
+    | '/ferramentas'
     | '/instagram'
     | '/pagamentos'
     | '/planos'
     | '/posts'
+    | '/redes'
     | '/reseller'
     | '/revendas'
     | '/servidores'
     | '/settings'
     | '/telegram'
     | '/templates'
+    | '/usuarios'
     | '/wa-conexao'
     | '/whatsapp'
+    | '/fatura/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -277,22 +327,27 @@ export interface FileRouteTypes {
     | '/billing'
     | '/broadcast'
     | '/categorias'
+    | '/clientes'
     | '/creditos'
     | '/crm'
     | '/customers'
     | '/dashboard'
+    | '/ferramentas'
     | '/instagram'
     | '/pagamentos'
     | '/planos'
     | '/posts'
+    | '/redes'
     | '/reseller'
     | '/revendas'
     | '/servidores'
     | '/settings'
     | '/telegram'
     | '/templates'
+    | '/usuarios'
     | '/wa-conexao'
     | '/whatsapp'
+    | '/fatura/$orderId'
   id:
     | '__root__'
     | '/'
@@ -304,28 +359,34 @@ export interface FileRouteTypes {
     | '/_app/billing'
     | '/_app/broadcast'
     | '/_app/categorias'
+    | '/_app/clientes'
     | '/_app/creditos'
     | '/_app/crm'
     | '/_app/customers'
     | '/_app/dashboard'
+    | '/_app/ferramentas'
     | '/_app/instagram'
     | '/_app/pagamentos'
     | '/_app/planos'
     | '/_app/posts'
+    | '/_app/redes'
     | '/_app/reseller'
     | '/_app/revendas'
     | '/_app/servidores'
     | '/_app/settings'
     | '/_app/telegram'
     | '/_app/templates'
+    | '/_app/usuarios'
     | '/_app/wa-conexao'
     | '/_app/whatsapp'
+    | '/fatura/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  FaturaOrderIdRoute: typeof FaturaOrderIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -351,6 +412,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fatura/$orderId': {
+      id: '/fatura/$orderId'
+      path: '/fatura/$orderId'
+      fullPath: '/fatura/$orderId'
+      preLoaderRoute: typeof FaturaOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/whatsapp': {
       id: '/_app/whatsapp'
       path: '/whatsapp'
@@ -363,6 +431,13 @@ declare module '@tanstack/react-router' {
       path: '/wa-conexao'
       fullPath: '/wa-conexao'
       preLoaderRoute: typeof AppWaConexaoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/usuarios': {
+      id: '/_app/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof AppUsuariosRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/templates': {
@@ -407,6 +482,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppResellerRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/redes': {
+      id: '/_app/redes'
+      path: '/redes'
+      fullPath: '/redes'
+      preLoaderRoute: typeof AppRedesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/posts': {
       id: '/_app/posts'
       path: '/posts'
@@ -435,6 +517,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInstagramRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/ferramentas': {
+      id: '/_app/ferramentas'
+      path: '/ferramentas'
+      fullPath: '/ferramentas'
+      preLoaderRoute: typeof AppFerramentasRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -461,6 +550,13 @@ declare module '@tanstack/react-router' {
       path: '/creditos'
       fullPath: '/creditos'
       preLoaderRoute: typeof AppCreditosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/clientes': {
+      id: '/_app/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AppClientesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/categorias': {
@@ -515,20 +611,24 @@ interface AppRouteChildren {
   AppBillingRoute: typeof AppBillingRoute
   AppBroadcastRoute: typeof AppBroadcastRoute
   AppCategoriasRoute: typeof AppCategoriasRoute
+  AppClientesRoute: typeof AppClientesRoute
   AppCreditosRoute: typeof AppCreditosRoute
   AppCrmRoute: typeof AppCrmRoute
   AppCustomersRoute: typeof AppCustomersRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppFerramentasRoute: typeof AppFerramentasRoute
   AppInstagramRoute: typeof AppInstagramRoute
   AppPagamentosRoute: typeof AppPagamentosRoute
   AppPlanosRoute: typeof AppPlanosRoute
   AppPostsRoute: typeof AppPostsRoute
+  AppRedesRoute: typeof AppRedesRoute
   AppResellerRoute: typeof AppResellerRoute
   AppRevendasRoute: typeof AppRevendasRoute
   AppServidoresRoute: typeof AppServidoresRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTelegramRoute: typeof AppTelegramRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
+  AppUsuariosRoute: typeof AppUsuariosRoute
   AppWaConexaoRoute: typeof AppWaConexaoRoute
   AppWhatsappRoute: typeof AppWhatsappRoute
 }
@@ -540,20 +640,24 @@ const AppRouteChildren: AppRouteChildren = {
   AppBillingRoute: AppBillingRoute,
   AppBroadcastRoute: AppBroadcastRoute,
   AppCategoriasRoute: AppCategoriasRoute,
+  AppClientesRoute: AppClientesRoute,
   AppCreditosRoute: AppCreditosRoute,
   AppCrmRoute: AppCrmRoute,
   AppCustomersRoute: AppCustomersRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppFerramentasRoute: AppFerramentasRoute,
   AppInstagramRoute: AppInstagramRoute,
   AppPagamentosRoute: AppPagamentosRoute,
   AppPlanosRoute: AppPlanosRoute,
   AppPostsRoute: AppPostsRoute,
+  AppRedesRoute: AppRedesRoute,
   AppResellerRoute: AppResellerRoute,
   AppRevendasRoute: AppRevendasRoute,
   AppServidoresRoute: AppServidoresRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTelegramRoute: AppTelegramRoute,
   AppTemplatesRoute: AppTemplatesRoute,
+  AppUsuariosRoute: AppUsuariosRoute,
   AppWaConexaoRoute: AppWaConexaoRoute,
   AppWhatsappRoute: AppWhatsappRoute,
 }
@@ -564,7 +668,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  FaturaOrderIdRoute: FaturaOrderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

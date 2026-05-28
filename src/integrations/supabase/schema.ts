@@ -1,0 +1,1 @@
+export const BRADOX_SCHEMA = import.meta.env.VITE_BRADOX_SUPABASE_SCHEMA || "bradox_revenda";

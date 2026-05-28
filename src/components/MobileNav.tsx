@@ -1,10 +1,17 @@
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-import { SidebarBody } from "@/components/Sidebar";
-import { useState } from "react";
+import { SidebarBody, getBottomNavItems, type AppRole } from "@/components/Sidebar";
+import { useMemo, useState } from "react";
+import { useAppSession } from "@/contexts/AppSessionContext";
 
 export function MobileNav() {
+  const { profile } = useAppSession();
+  const role = (profile?.role ?? "cliente") as AppRole;
   const [open, setOpen] = useState(false);
+  const hiddenPaths = useMemo(() => getBottomNavItems(role).map((item) => item.to), [role]);
+
+  if (role === "cliente") return null;
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -21,7 +28,7 @@ export function MobileNav() {
         className="p-2 w-[280px] bg-transparent border-0 shadow-none"
       >
         <SheetTitle className="sr-only">Navegação</SheetTitle>
-        <SidebarBody onNavigate={() => setOpen(false)} />
+        <SidebarBody onNavigate={() => setOpen(false)} excludePaths={hiddenPaths} />
       </SheetContent>
     </Sheet>
   );

@@ -4,31 +4,47 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { ConfirmModal } from "@/components/ConfirmModal";
-import { Server, Plus, Calendar, Coins, Edit3, Trash2, X, Search } from "lucide-react";
+import { ModalPortal } from "@/components/ModalPortal";
+import { useAppSession } from "@/contexts/AppSessionContext";
+import { Server, Plus, Calendar, Hash, Edit3, Trash2, X, Search } from "lucide-react";
+import { deleteServer, fetchServers, saveServer, type ServerRow } from "@/services/bradox/catalog";
 
 export const Route = createFileRoute("/_app/servidores")({ component: Servidores });
 
 type Tipo = "pre" | "pos";
+type TipoFiltro = "todos" | Tipo;
 type Status = "ativo" | "atencao" | "vencido";
 type Servidor = {
-  id: number;
+  id: string;
   nome: string;
   host?: string;
   tipo: Tipo;
-  clientes: number;
   vencimento?: string;
-  creditos?: number;
+  quantidadeMinima?: number;
+  valorCredito?: number;
+  diaAcerto?: number;
   status: Status;
 };
 
-const seed: Servidor[] = [
-  { id: 1, nome: "SX Server", host: "sx.painel.tv", tipo: "pos", clientes: 482, vencimento: "2026-12-10", status: "ativo" },
-  { id: 2, nome: "P2 Premium", host: "p2.cdn.io", tipo: "pre", clientes: 261, creditos: 1840, status: "ativo" },
-  { id: 3, nome: "ZTech Cloud", host: "ztech.cloud", tipo: "pos", clientes: 154, vencimento: "2026-11-28", status: "atencao" },
-  { id: 4, nome: "FastPlay", host: "fast.play", tipo: "pre", clientes: 98, creditos: 320, status: "ativo" },
-  { id: 5, nome: "GoldTV", host: "gold.tv", tipo: "pos", clientes: 73, vencimento: "2026-11-05", status: "vencido" },
-  { id: 6, nome: "UltraServer", host: "ultra.srv", tipo: "pre", clientes: 312, creditos: 5400, status: "ativo" },
-];
+const toServidor = (row: ServerRow): Servidor => {
+  const metadata = typeof row.metadata === "object" && row.metadata !== null && !Array.isArray(row.metadata) ? row.metadata : {};
+  const metadataMinCredits = typeof metadata.min_credits === "number" ? metadata.min_credits : undefined;
+  const metadataCreditPrice = typeof metadata.credit_price === "number" ? metadata.credit_price : undefined;
+  const legacyCreditPrice = typeof metadata.legacy_credit_price === "number" ? metadata.legacy_credit_price : undefined;
+  const settlementDay = typeof metadata.settlement_day === "number" ? metadata.settlement_day : undefined;
+  const quantidadeMinima = row.minimum_credits || metadataMinCredits || 0;
+  const valorCredito = Number(row.credit_price || metadataCreditPrice || legacyCreditPrice || 0);
+  return {
+    id: row.id,
+    nome: row.name,
+    host: row.base_url ?? undefined,
+    tipo: row.billing_type === "postpaid" ? "pos" : "pre",
+    quantidadeMinima,
+    valorCredito,
+    diaAcerto: settlementDay,
+    status: row.status === "active" ? "ativo" : row.status === "attention" ? "atencao" : "vencido",
+  };
+};
 
 const statusStyle: Record<Status, string> = {
   ativo: "bg-emerald-400/15 border-emerald-400/40 text-emerald-200",
@@ -43,18 +59,32 @@ const fmtData = (iso?: string) => {
   return `${d}/${m}/${y}`;
 };
 
+function formatMoney(value: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+}
+
 function Servidores() {
-  const [items, setItems] = useState<Servidor[]>(seed);
+  const { activeNetworkId } = useAppSession();
+  const [items, setItems] = useState<Servidor[]>([]);
   const [q, setQ] = useState("");
+  const [tipoFiltro, setTipoFiltro] = useState<TipoFiltro>("todos");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Servidor | null>(null);
   const [toDelete, setToDelete] = useState<Servidor | null>(null);
 
-  const filtered = items.filter(
-    (s) =>
-      s.nome.toLowerCase().includes(q.toLowerCase()) ||
-      (s.host ?? "").toLowerCase().includes(q.toLowerCase()),
-  );
+  useEffect(() => {
+    let active = true;
+    fetchServers(activeNetworkId)
+      .then((rows) => { if (active) setItems(rows.map(toServidor)); })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, [activeNetworkId]);
+
+  const filtered = items.filter((s) => {
+    const matchesType = tipoFiltro === "todos" || s.tipo === tipoFiltro;
+    const matchesSearch = s.nome.toLowerCase().includes(q.toLowerCase()) || (s.host ?? "").toLowerCase().includes(q.toLowerCase());
+    return matchesType && matchesSearch;
+  });
 
   const onNew = () => {
     setEditing(null);
@@ -65,29 +95,43 @@ function Servidores() {
     setOpen(true);
   };
   const onDelete = (s: Servidor) => setToDelete(s);
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!toDelete) return;
-    setItems((prev) => prev.filter((i) => i.id !== toDelete.id));
-    toast.success("Servidor removido");
+    try {
+      await deleteServer(toDelete.id);
+      setItems((prev) => prev.filter((i) => i.id !== toDelete.id));
+      toast.success("Servidor removido");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Nao foi possivel remover servidor");
+    }
   };
 
-  const onSave = (data: Omit<Servidor, "id"> & { id?: number }) => {
-    if (data.id != null) {
-      setItems((prev) => prev.map((i) => (i.id === data.id ? ({ ...i, ...data } as Servidor) : i)));
-      toast.success("Servidor atualizado");
-    } else {
-      const id = Math.max(0, ...items.map((i) => i.id)) + 1;
-      setItems((prev) => [{ ...(data as Servidor), id }, ...prev]);
-      toast.success("Servidor criado");
+  const onSave = async (data: Omit<Servidor, "id"> & { id?: string }) => {
+    try {
+      const saved = await saveServer({
+        id: data.id ?? null,
+        networkId: activeNetworkId,
+        name: data.nome,
+        baseUrl: data.host ?? null,
+        billingType: data.tipo === "pre" ? "prepaid" : "postpaid",
+        creditPrice: data.valorCredito ?? 0,
+        minimumCredits: data.quantidadeMinima ?? 0,
+        status: data.status === "ativo" ? "active" : data.status === "atencao" ? "attention" : "inactive",
+      });
+      const nextItem = toServidor(saved);
+      setItems((prev) => data.id ? prev.map((item) => (item.id === data.id ? nextItem : item)) : [nextItem, ...prev]);
+      toast.success(data.id ? "Servidor atualizado" : "Servidor criado");
+      setOpen(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Nao foi possivel salvar servidor");
     }
-    setOpen(false);
   };
 
   return (
     <>
       <PageHeader
         title="Servidores"
-        subtitle="Cadastre servidores nos modelos pré-pago (créditos) e pós-pago (vencimento mensal)."
+        subtitle="Cadastre servidores nos modelos pré-pago (quantidade mínima) e pós-pago (vencimento mensal)."
         actions={
           <NeonButton onClick={onNew}>
             <span className="flex items-center gap-2">
@@ -97,7 +141,7 @@ function Servidores() {
         }
       />
 
-      <div className="mb-5 flex items-center gap-3">
+      <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
           <input
@@ -107,7 +151,23 @@ function Servidores() {
             className="input-ghost w-full pl-9 pr-3 py-2 text-sm rounded-xl"
           />
         </div>
-        <div className="text-xs text-white/40">{filtered.length} de {items.length}</div>
+        <div className="flex flex-wrap items-center gap-2">
+          {([
+            ["todos", "Todos"],
+            ["pre", "Pré-pago"],
+            ["pos", "Pós-pago"],
+          ] as const).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setTipoFiltro(value)}
+              className={`rounded-xl border px-3 py-2 text-xs transition ${tipoFiltro === value ? "border-amber-300/50 bg-amber-300/15 text-amber-100" : "border-white/10 bg-white/[0.03] text-white/55 hover:text-white"}`}
+            >
+              {label}
+            </button>
+          ))}
+          <div className="pl-1 text-xs text-white/40">{filtered.length} de {items.length}</div>
+        </div>
       </div>
 
       <div className="grid grid-cols-12 gap-5">
@@ -130,20 +190,36 @@ function Servidores() {
             </div>
 
             <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
-                <div className="text-white/50">Clientes</div>
-                <div className="text-white text-lg font-display mt-0.5">{s.clientes}</div>
-              </div>
               {s.tipo === "pre" ? (
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
-                  <div className="text-white/50 flex items-center gap-1"><Coins className="h-3 w-3" /> Créditos</div>
-                  <div className="text-amber-300 text-lg font-display mt-0.5">{s.creditos ?? 0}</div>
-                </div>
+                <>
+                  <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <div className="text-white/50 flex items-center gap-1"><Hash className="h-3 w-3" /> Credito</div>
+                    <div className="text-amber-300 text-lg font-display mt-0.5">{formatMoney(s.valorCredito ?? 0)}</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <div className="text-white/50 flex items-center gap-1"><Hash className="h-3 w-3" /> Compra minima</div>
+                    <div className="text-white text-sm font-display mt-1">{s.quantidadeMinima ?? 0} creditos</div>
+                  </div>
+                  <div className="col-span-2 p-3 rounded-xl bg-amber-300/10 border border-amber-300/20">
+                    <div className="text-amber-100/70 flex items-center gap-1"><Hash className="h-3 w-3" /> Total para comprar no painel externo</div>
+                    <div className="text-amber-100 text-sm font-display mt-1">{formatMoney((s.valorCredito ?? 0) * (s.quantidadeMinima ?? 0))}</div>
+                  </div>
+                </>
               ) : (
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
-                  <div className="text-white/50 flex items-center gap-1"><Calendar className="h-3 w-3" /> Vence em</div>
-                  <div className="text-white text-sm font-display mt-1">{fmtData(s.vencimento)}</div>
-                </div>
+                <>
+                  <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <div className="text-white/50 flex items-center gap-1"><Hash className="h-3 w-3" /> Credito</div>
+                    <div className="text-amber-300 text-lg font-display mt-0.5">{formatMoney(s.valorCredito ?? 0)}</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <div className="text-white/50 flex items-center gap-1"><Hash className="h-3 w-3" /> Minimo</div>
+                    <div className="text-white text-sm font-display mt-1">{s.quantidadeMinima ?? 0} creditos</div>
+                  </div>
+                  <div className="col-span-2 p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                    <div className="text-white/50 flex items-center gap-1"><Calendar className="h-3 w-3" /> Dia de acerto</div>
+                    <div className="text-white text-sm font-display mt-1">{s.diaAcerto ? `Dia ${s.diaAcerto}` : fmtData(s.vencimento)}</div>
+                  </div>
+                </>
               )}
             </div>
 
@@ -199,14 +275,14 @@ function ServidorModal({
 }: {
   initial: Servidor | null;
   onClose: () => void;
-  onSave: (s: Omit<Servidor, "id"> & { id?: number }) => void;
+  onSave: (s: Omit<Servidor, "id"> & { id?: string }) => void;
 }) {
   const [nome, setNome] = useState(initial?.nome ?? "");
   const [host, setHost] = useState(initial?.host ?? "");
   const [tipo, setTipo] = useState<Tipo>(initial?.tipo ?? "pos");
-  const [clientes, setClientes] = useState<number>(initial?.clientes ?? 0);
   const [vencimento, setVencimento] = useState(initial?.vencimento ?? "");
-  const [creditos, setCreditos] = useState<number>(initial?.creditos ?? 0);
+  const [quantidadeMinima, setQuantidadeMinima] = useState<number>(initial?.quantidadeMinima ?? 0);
+  const [valorCredito, setValorCredito] = useState<number>(initial?.valorCredito ?? 0);
   const [status, setStatus] = useState<Status>(initial?.status ?? "ativo");
 
   useEffect(() => {
@@ -223,15 +299,16 @@ function ServidorModal({
       nome: nome.trim(),
       host: host.trim() || undefined,
       tipo,
-      clientes: Number(clientes) || 0,
       vencimento: tipo === "pos" ? vencimento || undefined : undefined,
-      creditos: tipo === "pre" ? Number(creditos) || 0 : undefined,
+      quantidadeMinima: Number(quantidadeMinima) || 0,
+      valorCredito: Number(valorCredito) || 0,
       status,
     });
   };
 
   return (
-    <motion.div
+    <ModalPortal>
+      <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -266,7 +343,7 @@ function ServidorModal({
 
         <div className="grid grid-cols-2 gap-4">
           <Field label="Nome" className="col-span-2">
-            <input value={nome} onChange={(e) => setNome(e.target.value)} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" placeholder="Ex.: SX Server" />
+            <input value={nome} onChange={(e) => setNome(e.target.value)} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" placeholder="Nome do servidor" />
           </Field>
           <Field label="Host / domínio" className="col-span-2">
             <input value={host} onChange={(e) => setHost(e.target.value)} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" placeholder="sx.painel.tv" />
@@ -303,18 +380,30 @@ function ServidorModal({
             </select>
           </Field>
 
-          <Field label="Clientes">
-            <input type="number" min={0} value={clientes} onChange={(e) => setClientes(Number(e.target.value))} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" />
-          </Field>
-
           {tipo === "pos" ? (
-            <Field label="Vencimento">
-              <input type="date" value={vencimento} onChange={(e) => setVencimento(e.target.value)} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" />
-            </Field>
+            <>
+              <Field label="Valor por credito">
+                <input type="number" min={0} step="0.01" value={valorCredito} onChange={(e) => setValorCredito(Number(e.target.value))} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" />
+              </Field>
+              <Field label="Quantidade minima">
+                <input type="number" min={0} value={quantidadeMinima} onChange={(e) => setQuantidadeMinima(Number(e.target.value))} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" />
+              </Field>
+              <Field label="Vencimento / acerto" className="col-span-2">
+                <input type="date" value={vencimento} onChange={(e) => setVencimento(e.target.value)} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" />
+              </Field>
+            </>
           ) : (
-            <Field label="Créditos">
-              <input type="number" min={0} value={creditos} onChange={(e) => setCreditos(Number(e.target.value))} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" />
-            </Field>
+            <>
+              <Field label="Valor por credito">
+                <input type="number" min={0} step="0.01" value={valorCredito} onChange={(e) => setValorCredito(Number(e.target.value))} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" />
+              </Field>
+              <Field label="Quantidade minima">
+                <input type="number" min={0} value={quantidadeMinima} onChange={(e) => setQuantidadeMinima(Number(e.target.value))} className="input-ghost w-full px-3 py-2 rounded-xl text-sm" />
+              </Field>
+              <div className="col-span-2 rounded-xl border border-amber-300/20 bg-amber-400/10 px-3 py-2 text-sm text-amber-100">
+                Total minimo: {formatMoney((Number(valorCredito) || 0) * (Number(quantidadeMinima) || 0))}
+              </div>
+            </>
           )}
         </div>
 
@@ -327,7 +416,8 @@ function ServidorModal({
           </button>
         </div>
       </motion.form>
-    </motion.div>
+      </motion.div>
+    </ModalPortal>
   );
 }
 

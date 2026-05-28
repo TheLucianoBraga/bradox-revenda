@@ -37,7 +37,7 @@ function TelegramAuto() {
               { n: "@nexus_support_bot", role: "Support · L1", subs: "84,210", state: "Live" },
               { n: "@nexus_signals_bot", role: "Crypto signals", subs: "120,043", state: "Live" },
               { n: "@nexus_drops_bot",   role: "Marketing drops", subs: "42,019", state: "Paused" },
-              { n: "@nexus_iptv_bot",    role: "IPTV provisioning", subs: "1,820", state: "Live" },
+              { n: "@nexus_tvonline_bot", role: "Tv Online provisioning", subs: "1,820", state: "Live" },
             ].map((b, i) => (
               <div key={i} className="flex items-center gap-4 py-3">
                 <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-400 to-cyan-400" />

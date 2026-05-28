@@ -34,7 +34,7 @@ export function PageHeader({
   title,
   subtitle,
   actions,
-  eyebrow = "BR Revenda",
+  eyebrow = "Bradox Play",
 }: {
   title: string;
   subtitle?: string;

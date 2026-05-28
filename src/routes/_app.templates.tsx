@@ -3,6 +3,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard, PageHeader, NeonButton } from "@/components/ui-kit";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { ModalPortal } from "@/components/ModalPortal";
+import { useAppSession } from "@/contexts/AppSessionContext";
+import { deleteMessageTemplate, fetchMessageTemplates, upsertMessageTemplate, type MessageTemplateRow } from "@/services/bradox/templates";
 import {
   MessageSquareText, Plus, Search, Pencil, Trash2, Copy, X,
   Bold, Italic, Strikethrough, Code, CheckCheck, Tag,
@@ -24,8 +27,6 @@ type Template = {
   updatedAt: number;
 };
 
-const STORAGE_KEY = "wa_templates_v1";
-
 const VARIAVEIS = [
   { token: "{saudacao}", label: "Saudação", sample: saudacaoAtual() },
   { token: "{nome}", label: "Nome", sample: "João Silva" },
@@ -33,8 +34,8 @@ const VARIAVEIS = [
   { token: "{valor}", label: "Valor", sample: "R$ 49,90" },
   { token: "{vencimento}", label: "Vencimento", sample: "12/06/2026" },
   { token: "{dias_restantes}", label: "Dias restantes", sample: "3" },
-  { token: "{servidor}", label: "Servidor", sample: "SX Server" },
-  { token: "{revenda}", label: "Revenda", sample: "Master BR" },
+  { token: "{servidor}", label: "Servidor", sample: "Nome do servidor" },
+  { token: "{revenda}", label: "Revenda", sample: "Nome da revenda" },
   { token: "{whatsapp}", label: "WhatsApp", sample: "(11) 99999-9999" },
   { token: "{usuario}", label: "Usuário", sample: "joaosilva" },
   { token: "{senha}", label: "Senha", sample: "••••••" },
@@ -51,33 +52,6 @@ function saudacaoAtual() {
 }
 
 const CATEGORIAS = ["Cobrança", "Boas-vindas", "Promoção", "Suporte", "Aviso", "Outros"];
-
-const DEFAULTS: Template[] = [
-  {
-    id: "t1",
-    nome: "Aviso de vencimento",
-    categoria: "Cobrança",
-    conteudo:
-      "Olá *{nome}*! 👋\n\nSeu plano *{plano}* no servidor _{servidor}_ vence em *{vencimento}*.\n\nRenove agora e ganhe *10% OFF* 🚀\n\n— Equipe {revenda}",
-    updatedAt: Date.now(),
-  },
-  {
-    id: "t2",
-    nome: "Boas-vindas",
-    categoria: "Boas-vindas",
-    conteudo:
-      "Olá *{nome}*, seja bem-vindo(a) à *{revenda}*! 🎉\n\nSeu plano *{plano}* já está ativo no servidor _{servidor}_.\n\nQualquer dúvida estamos por aqui.",
-    updatedAt: Date.now(),
-  },
-  {
-    id: "t3",
-    nome: "Promoção relâmpago",
-    categoria: "Promoção",
-    conteudo:
-      "🔥 *{nome}*, oferta só hoje!\n\nUpgrade do *{plano}* com *20% OFF* — válido até *{vencimento}*.\n\nResponda *EU QUERO* para liberar.",
-    updatedAt: Date.now(),
-  },
-];
 
 /* ---------- WhatsApp-style formatting renderer ---------- */
 function renderWhatsapp(text: string, withSamples = true): string {
@@ -112,29 +86,30 @@ function renderWhatsapp(text: string, withSamples = true): string {
   return out;
 }
 
-function loadTemplates(): Template[] {
-  if (typeof window === "undefined") return DEFAULTS;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULTS;
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length) return parsed;
-    return DEFAULTS;
-  } catch {
-    return DEFAULTS;
-  }
-}
-
 function TemplatesPage() {
-  const [items, setItems] = useState<Template[]>(() => loadTemplates());
+  const { activeNetworkId } = useAppSession();
+  const [items, setItems] = useState<Template[]>([]);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Template | null>(null);
   const [open, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Template | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch {}
-  }, [items]);
+    let active = true;
+    setLoading(true);
+    if (!activeNetworkId) {
+      setItems([]);
+      setLoading(false);
+      return () => { active = false; };
+    }
+
+    fetchMessageTemplates(activeNetworkId)
+      .then((rows) => { if (active) setItems(rows.map(toTemplate)); })
+      .catch((error) => toast.error(error instanceof Error ? error.message : "Nao foi possivel carregar templates"))
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [activeNetworkId]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -146,7 +121,7 @@ function TemplatesPage() {
 
   function novo() {
     setEditing({
-      id: `t_${Date.now()}`,
+      id: "",
       nome: "Novo template",
       categoria: "Outros",
       conteudo: "Olá *{nome}*! ",
@@ -160,30 +135,44 @@ function TemplatesPage() {
     setOpen(true);
   }
 
-  function salvar(t: Template) {
+  async function salvar(t: Template) {
+    if (!activeNetworkId) { toast.error("Selecione uma rede antes de salvar"); return; }
     if (!t.nome.trim()) { toast.error("Informe um nome"); return; }
     if (!t.conteudo.trim()) { toast.error("Mensagem vazia"); return; }
-    setItems((arr) => {
-      const exists = arr.some((x) => x.id === t.id);
-      const next = { ...t, updatedAt: Date.now() };
-      return exists ? arr.map((x) => (x.id === t.id ? next : x)) : [next, ...arr];
-    });
-    toast.success("Template salvo");
-    setOpen(false);
-    setEditing(null);
+    try {
+      const saved = await upsertMessageTemplate({
+        ...(t.id ? { id: t.id } : {}),
+        network_id: activeNetworkId,
+        name: t.nome.trim(),
+        category: t.categoria || null,
+        content: t.conteudo,
+        media: t.media ?? null,
+      });
+      const next = toTemplate(saved);
+      setItems((arr) => arr.some((item) => item.id === next.id) ? arr.map((item) => (item.id === next.id ? next : item)) : [next, ...arr]);
+      toast.success("Template salvo");
+      setOpen(false);
+      setEditing(null);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Nao foi possivel salvar o template");
+    }
   }
 
-  function duplicar(t: Template) {
-    const copy: Template = { ...t, id: `t_${Date.now()}`, nome: `${t.nome} (cópia)`, updatedAt: Date.now() };
-    setItems((arr) => [copy, ...arr]);
-    toast.success("Template duplicado");
+  async function duplicar(t: Template) {
+    await salvar({ ...t, id: "", nome: `${t.nome} (cópia)` });
   }
 
-  function confirmarExcluir() {
+  async function confirmarExcluir() {
     if (!toDelete) return;
-    setItems((arr) => arr.filter((x) => x.id !== toDelete.id));
-    toast.success("Template excluído");
-    setToDelete(null);
+    if (!activeNetworkId) { toast.error("Selecione uma rede antes de excluir"); return; }
+    try {
+      await deleteMessageTemplate(activeNetworkId, toDelete.id);
+      setItems((arr) => arr.filter((x) => x.id !== toDelete.id));
+      toast.success("Template excluído");
+      setToDelete(null);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Nao foi possivel excluir o template");
+    }
   }
 
   return (
@@ -213,7 +202,10 @@ function TemplatesPage() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      {loading ? (
+        <GlassCard className="p-10 text-center text-sm text-slate-400">Carregando templates...</GlassCard>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filtered.map((t) => (
           <GlassCard key={t.id} className="p-4">
             <div className="flex items-start justify-between gap-3">
@@ -262,7 +254,8 @@ function TemplatesPage() {
             Nenhum template encontrado.
           </div>
         )}
-      </div>
+        </div>
+      )}
 
       {/* Editor modal */}
       <AnimatePresence>
@@ -330,7 +323,8 @@ function EditorModal({
   }
 
   return (
-    <motion.div
+    <ModalPortal>
+      <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm grid place-items-center p-4"
       onClick={onClose}
@@ -433,8 +427,21 @@ function EditorModal({
           <NeonButton onClick={onSave}>Salvar template</NeonButton>
         </div>
       </motion.div>
-    </motion.div>
+      </motion.div>
+    </ModalPortal>
   );
+}
+
+function toTemplate(row: MessageTemplateRow): Template {
+  const media = row.media && typeof row.media === "object" && !Array.isArray(row.media) ? row.media as Partial<Media> : null;
+  return {
+    id: row.id,
+    nome: row.name,
+    categoria: row.category ?? "Outros",
+    conteudo: row.content,
+    media: media?.kind && media?.url ? media as Media : null,
+    updatedAt: new Date(row.updated_at).getTime(),
+  };
 }
 
 function ToolbarBtn({ children, onClick, title }: { children: React.ReactNode; onClick: () => void; title: string }) {
@@ -464,9 +471,9 @@ function WhatsPreview({ content, media }: { content: string; media?: Media | nul
     >
       {/* header */}
       <div className="px-3.5 py-2.5 flex items-center gap-2.5" style={{ background: "#1f2c2a" }}>
-        <div className="h-8 w-8 rounded-full bg-[#FFC247]/20 grid place-items-center text-[#FFC247] text-[12px] font-semibold">BR</div>
+        <img src="/bradox-play-logo.png" alt="Bradox Play" className="h-8 w-8 rounded-full object-contain bg-[#080B0D]" />
         <div className="leading-tight">
-          <div className="text-[12.5px] text-white font-semibold">BR Revenda</div>
+          <div className="text-[12.5px] text-white font-semibold">Bradox Play</div>
           <div className="text-[10px] text-emerald-300/80">online</div>
         </div>
       </div>
