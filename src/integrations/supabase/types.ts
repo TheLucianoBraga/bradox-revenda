@@ -325,6 +325,80 @@ export type BradoxDatabase = {
         };
         Update: Partial<BradoxDatabase["bradox_revenda"]["Tables"]["useful_links"]["Insert"]>;
       };
+      whatsapp_sessions: {
+        Row: {
+          id: string;
+          network_id: string;
+          owner_profile_id: string | null;
+          provider: string;
+          external_session_name: string;
+          phone_number: string | null;
+          display_name: string | null;
+          status: "not_configured" | "starting" | "qr" | "connected" | "disconnected" | "failed" | "stopped";
+          last_status_payload: Json;
+          last_seen_at: string | null;
+          connected_at: string | null;
+          disconnected_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          network_id: string;
+          owner_profile_id?: string | null;
+          provider?: string;
+          external_session_name: string;
+          phone_number?: string | null;
+          display_name?: string | null;
+          status?: "not_configured" | "starting" | "qr" | "connected" | "disconnected" | "failed" | "stopped";
+          last_status_payload?: Json;
+          last_seen_at?: string | null;
+          connected_at?: string | null;
+          disconnected_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<BradoxDatabase["bradox_revenda"]["Tables"]["whatsapp_sessions"]["Insert"]>;
+      };
+      whatsapp_message_queue: {
+        Row: {
+          id: string;
+          network_id: string;
+          session_id: string | null;
+          recipient_phone: string;
+          message_type: "text" | "image" | "audio" | "document";
+          body: string | null;
+          media_url: string | null;
+          metadata: Json;
+          status: "queued" | "processing" | "sent" | "failed" | "cancelled";
+          attempts: number;
+          next_attempt_at: string;
+          last_error: string | null;
+          sent_at: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          network_id: string;
+          session_id?: string | null;
+          recipient_phone: string;
+          message_type?: "text" | "image" | "audio" | "document";
+          body?: string | null;
+          media_url?: string | null;
+          metadata?: Json;
+          status?: "queued" | "processing" | "sent" | "failed" | "cancelled";
+          attempts?: number;
+          next_attempt_at?: string;
+          last_error?: string | null;
+          sent_at?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<BradoxDatabase["bradox_revenda"]["Tables"]["whatsapp_message_queue"]["Insert"]>;
+      };
       content_categories: {
         Row: {
           id: string;
@@ -732,6 +806,14 @@ export type BradoxDatabase = {
       upsert_payment_provider_setting: {
         Args: { provider: string; status: string; display_name: string; public_config: Json; private_config?: Json };
         Returns: BradoxDatabase["bradox_revenda"]["Tables"]["payment_provider_settings"]["Row"];
+      };
+      ensure_whatsapp_session: {
+        Args: { target_network_id?: string | null };
+        Returns: BradoxDatabase["bradox_revenda"]["Tables"]["whatsapp_sessions"]["Row"];
+      };
+      enqueue_whatsapp_text_message: {
+        Args: { target_session_id: string; recipient_phone: string; body: string; metadata?: Json };
+        Returns: BradoxDatabase["bradox_revenda"]["Tables"]["whatsapp_message_queue"]["Row"];
       };
     };
     Enums: {
